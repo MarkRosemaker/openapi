@@ -1,6 +1,7 @@
 package yaml
 
 import (
+	"bytes"
 	"fmt"
 	"strconv"
 
@@ -10,84 +11,77 @@ import (
 
 // ToJSON converts a YAML node to a JSON.
 func ToJSON(n *yaml.Node) (jsontext.Value, error) {
-	val := jsontext.Value{}
-	if err := writeToJSON(&val, n); err != nil {
+	w := &bytes.Buffer{}
+	enc := jsontext.NewEncoder(w)
+	if err := encodeToJSON(enc, n); err != nil {
 		return nil, err
 	}
 
-	return val, nil
+	return jsontext.Value(w.Bytes()), nil
 }
 
-func writeToJSON(val *jsontext.Value, n *yaml.Node) error {
+func encodeToJSON(enc *jsontext.Encoder, n *yaml.Node) error {
 	switch n.Kind {
 	case yaml.DocumentNode:
 		if len(n.Content) != 1 {
 			return fmt.Errorf("expected 1 content node, got %d", len(n.Content))
 		}
 
-		return writeToJSON(val, n.Content[0])
+		return encodeToJSON(enc, n.Content[0])
 	case yaml.SequenceNode:
-		*val = append(*val, '[')
+		if err := enc.WriteToken(jsontext.ArrayStart); err != nil {
+			return err
+		}
 
-		lastIdx := len(n.Content) - 1
-		for i, c := range n.Content {
-			if err := writeToJSON(val, c); err != nil {
+		for _, c := range n.Content {
+			if err := encodeToJSON(enc, c); err != nil {
 				return err
-			}
-
-			if i != lastIdx {
-				*val = append(*val, ',')
 			}
 		}
 
-		*val = append(*val, ']')
-
-		return nil
+		return enc.WriteToken(jsontext.ArrayEnd)
 	case yaml.MappingNode:
 		l := len(n.Content)
 		if l%2 != 0 {
 			return fmt.Errorf("unbalanced mapping node")
 		}
 
-		*val = append(*val, '{')
+		if err := enc.WriteToken(jsontext.ObjectStart); err != nil {
+			return err
+		}
 
 		for i := 0; i < l; i += 2 {
-			if i > 0 {
-				*val = append(*val, ',')
-			}
-
-			if err := writeToJSON(val, n.Content[i]); err != nil {
+			if err := encodeToJSON(enc, n.Content[i]); err != nil {
 				return err
 			}
 
-			*val = append(*val, ':')
-
-			if err := writeToJSON(val, n.Content[i+1]); err != nil {
+			if err := encodeToJSON(enc, n.Content[i+1]); err != nil {
 				return err
 			}
 		}
 
-		*val = append(*val, '}')
-
-		return nil
+		return enc.WriteToken(jsontext.ObjectEnd)
 	case yaml.ScalarNode:
 		if n.Style == 0 {
 			switch n.Value {
-			case "null", "true", "false":
-				*val = append(*val, n.Value...)
-				return nil
+			case "null":
+				return enc.WriteToken(jsontext.Null)
+			case "true":
+				return enc.WriteToken(jsontext.True)
+			case "false":
+				return enc.WriteToken(jsontext.False)
 			}
 
-			// do not quote numbers
-			if _, err := strconv.ParseFloat(n.Value, 64); err == nil {
-				*val = append(*val, n.Value...)
-				return nil
+			if n, err := strconv.ParseInt(n.Value, 10, 64); err == nil {
+				return enc.WriteToken(jsontext.Int(n))
+			}
+
+			if n, err := strconv.ParseFloat(n.Value, 64); err == nil {
+				return enc.WriteToken(jsontext.Float(n))
 			}
 		}
 
-		*val = append(*val, fmt.Sprintf("%q", n.Value)...)
-
-		return nil
+		return enc.WriteToken(jsontext.String(n.Value))
 	// case yaml.AliasNode:
 	default:
 		return fmt.Errorf("unsupported node kind: %v", n.Kind)

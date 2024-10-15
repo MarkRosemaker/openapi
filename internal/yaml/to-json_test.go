@@ -79,7 +79,36 @@ func TestToJSON_Error(t *testing.T) {
 			t.Fatalf("got: %q, want: %q", err.Error(), want)
 		}
 	})
+
+	t.Run("even mapping child node fails", func(t *testing.T) {
+		if _, err := _yaml.ToJSON(&yaml.Node{
+			Kind: yaml.MappingNode,
+			Content: []*yaml.Node{
+				{Kind: yaml.ScalarNode},
+				{}, // invalid node kind
+			},
+		}); err == nil {
+			t.Fatal("expected error")
+		} else if want := "unsupported node kind: 0"; err.Error() != want {
+			t.Fatalf("got: %q, want: %q", err.Error(), want)
+		}
+	})
+
+	t.Run("odd mapping child node fails", func(t *testing.T) {
+		if _, err := _yaml.ToJSON(&yaml.Node{
+			Kind: yaml.MappingNode,
+			Content: []*yaml.Node{
+				{}, // invalid node kind
+				{Kind: yaml.ScalarNode},
+			},
+		}); err == nil {
+			t.Fatal("expected error")
+		} else if want := "unsupported node kind: 0"; err.Error() != want {
+			t.Fatalf("got: %q, want: %q", err.Error(), want)
+		}
+	})
 }
+
 
 func equalJSON(t *testing.T, got, want jsontext.Value) {
 	t.Helper()

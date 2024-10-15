@@ -3,6 +3,7 @@ string: "Hello, World!"
 int: 42
 float: 3.14
 bool: true
+bool2: false
 null_value: null
 
 # Sequences (Lists)

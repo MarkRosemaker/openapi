@@ -3,6 +3,7 @@
     "int": 42,
     "float": 3.14,
     "bool": true,
+    "bool2": false,
     "null_value": null,
     "list": [
       "item1",
