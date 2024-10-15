@@ -109,7 +109,6 @@ func TestToJSON_Error(t *testing.T) {
 	})
 }
 
-
 func equalJSON(t *testing.T, got, want jsontext.Value) {
 	t.Helper()
 
