@@ -1,7 +1,6 @@
 package yaml
 
 import (
-	"bytes"
 	"fmt"
 	"strconv"
 
@@ -11,37 +10,37 @@ import (
 
 // ToJSON converts a YAML node to a JSON.
 func ToJSON(n *yaml.Node) (jsontext.Value, error) {
-	w := &bytes.Buffer{}
-	if err := writeToJSON(w, n); err != nil {
+	val := jsontext.Value{}
+	if err := writeToJSON(&val, n); err != nil {
 		return nil, err
 	}
 
-	return jsontext.Value(w.Bytes()), nil
+	return val, nil
 }
 
-func writeToJSON(w *bytes.Buffer, n *yaml.Node) error {
+func writeToJSON(val *jsontext.Value, n *yaml.Node) error {
 	switch n.Kind {
 	case yaml.DocumentNode:
 		if len(n.Content) != 1 {
 			return fmt.Errorf("expected 1 content node, got %d", len(n.Content))
 		}
 
-		return writeToJSON(w, n.Content[0])
+		return writeToJSON(val, n.Content[0])
 	case yaml.SequenceNode:
-		_ = w.WriteByte('[')
+		*val = append(*val, '[')
 
 		lastIdx := len(n.Content) - 1
 		for i, c := range n.Content {
-			if err := writeToJSON(w, c); err != nil {
+			if err := writeToJSON(val, c); err != nil {
 				return err
 			}
 
 			if i != lastIdx {
-				_ = w.WriteByte(',')
+				*val = append(*val, ',')
 			}
 		}
 
-		_ = w.WriteByte(']')
+		*val = append(*val, ']')
 
 		return nil
 	case yaml.MappingNode:
@@ -50,43 +49,43 @@ func writeToJSON(w *bytes.Buffer, n *yaml.Node) error {
 			return fmt.Errorf("unbalanced mapping node")
 		}
 
-		_ = w.WriteByte('{')
+		*val = append(*val, '{')
 
 		for i := 0; i < l; i += 2 {
 			if i > 0 {
-				_ = w.WriteByte(',')
+				*val = append(*val, ',')
 			}
 
-			if err := writeToJSON(w, n.Content[i]); err != nil {
+			if err := writeToJSON(val, n.Content[i]); err != nil {
 				return err
 			}
 
-			_ = w.WriteByte(':')
+			*val = append(*val, ':')
 
-			if err := writeToJSON(w, n.Content[i+1]); err != nil {
+			if err := writeToJSON(val, n.Content[i+1]); err != nil {
 				return err
 			}
 		}
 
-		_ = w.WriteByte('}')
+		*val = append(*val, '}')
 
 		return nil
 	case yaml.ScalarNode:
 		if n.Style == 0 {
 			switch n.Value {
 			case "null", "true", "false":
-				_, _ = w.WriteString(n.Value)
+				*val = append(*val, n.Value...)
 				return nil
 			}
 
 			// do not quote numbers
 			if _, err := strconv.ParseFloat(n.Value, 64); err == nil {
-				_, _ = w.WriteString(n.Value)
+				*val = append(*val, n.Value...)
 				return nil
 			}
 		}
 
-		_, _ = fmt.Fprintf(w, "%q", n.Value)
+		*val = append(*val, fmt.Sprintf("%q", n.Value)...)
 
 		return nil
 	// case yaml.AliasNode:
