@@ -7,7 +7,7 @@ import "regexp"
 // An OpenAPI document uses and conforms to the OpenAPI Specification.
 // ([Source])
 //
-// [Source]: https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#openapi-document
+// [Source]: https://spec.openapis.org/oas/v3.1.0#openapi-document
 type Document struct {
 	// REQUIRED. This string MUST be the version number of the OpenAPI Specification that the OpenAPI document uses. The openapi field SHOULD be used by tooling to interpret the OpenAPI document. This is not related to the API info.version string.
 	OpenAPI string `json:"openapi,strictcase" yaml:"openapi"`
