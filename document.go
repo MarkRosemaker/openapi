@@ -11,6 +11,8 @@ import "regexp"
 type Document struct {
 	// REQUIRED. This string MUST be the version number of the OpenAPI Specification that the OpenAPI document uses. The openapi field SHOULD be used by tooling to interpret the OpenAPI document. This is not related to the API info.version string.
 	OpenAPI string `json:"openapi,strictcase" yaml:"openapi"`
+	// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
+	Info *Info `json:"info,strictcase" yaml:"info"`
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.
@@ -19,17 +21,24 @@ var reOpenAPIVersion = regexp.MustCompile(`^3\.(0|1)\.\d+(-.+)?$`)
 
 // Validate checks the OpenAPI document for correctness.
 func (d *Document) Validate() error {
-	// validate and canonicalize the openapi version
 	if d.OpenAPI == "" {
-		return &ErrRequired{Target: "openapi.version"}
+		return &ErrRequired{Target: "openapi field"}
 	}
 
 	if !reOpenAPIVersion.MatchString(d.OpenAPI) {
 		return &ErrInvalid{
-			Target:  "openapi.version",
+			Target:  "openapi field",
 			Value:   d.OpenAPI,
 			Message: "must be a valid version (3.0.x or 3.1.x)",
 		}
+	}
+
+	if d.Info == nil {
+		return &ErrRequired{Target: "info"}
+	}
+
+	if err := d.Info.Validate(); err != nil {
+		return &ErrField{Field: "info", Err: err}
 	}
 
 	// TODO

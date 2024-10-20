@@ -1,3 +1,5 @@
+github.com/go-api-libs/types v0.0.0-20241018234418-7b7d63d674a1 h1:OxkuiFLdBXzlPp4/X++QM1KFCSr1WqitVhaJBfNLhso=
+github.com/go-api-libs/types v0.0.0-20241018234418-7b7d63d674a1/go.mod h1:063p7ZQdS0JBGdTTqC6lvtVGWXx4IRsOFm+Ucm27HmE=
 github.com/go-json-experiment/json v0.0.0-20240815175050-ebd3a8989ca1 h1:xcuWappghOVI8iNWoF2OKahVejd1LSVi/v4JED44Amo=
 github.com/go-json-experiment/json v0.0.0-20240815175050-ebd3a8989ca1/go.mod h1:BWmvoE1Xia34f3l/ibJweyhrT+aROb/FQ6d+37F0e2s=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

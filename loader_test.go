@@ -126,8 +126,8 @@ func TestLoadFromReader_Error(t *testing.T) {
 
 		if _, err := openapi.LoadFromReader(strings.NewReader(`   {"extra":"foo"}`)); err == nil {
 			t.Fatal("expected error")
-		} else if want := `json: cannot unmarshal Go value of type openapi.Document: unknown name "extra"`; err.Error() != want {
-			t.Fatalf("got: %v, want: %v", err, want)
+		} else if want := `json: cannot unmarshal Go value of type openapi.Document: unknown name "extra"`; unifyErr(err) != want {
+			t.Fatalf("got: %s, want: %s", unifyErr(err), want)
 		}
 	})
 
@@ -202,8 +202,8 @@ func TestLoadFromData_Error(t *testing.T) {
 
 		if _, err := openapi.LoadFromData([]byte(`   {"extra":"foo"}`)); err == nil {
 			t.Fatal("expected error")
-		} else if want := `json: cannot unmarshal Go value of type openapi.Document: unknown name "extra"`; err.Error() != want {
-			t.Fatalf("got: %v, want: %v", err, want)
+		} else if want := `json: cannot unmarshal Go value of type openapi.Document: unknown name "extra"`; unifyErr(err) != want {
+			t.Fatalf("got: %s, want: %s", unifyErr(err), want)
 		}
 	})
 
@@ -218,4 +218,10 @@ func TestLoadFromData_Error(t *testing.T) {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})
+}
+
+func unifyErr(err error) string {
+	return strings.Replace(err.Error(),
+		// sometimes the error message is "unable to" and sometimes "cannot"
+		"unable to", "cannot", 1)
 }

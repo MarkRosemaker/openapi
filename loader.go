@@ -24,7 +24,7 @@ func LoadFromFile(location string) (*Document, error) {
 	return newLoader().LoadFromFile(location)
 }
 
-// LoadFromFile reads an OpenAPI specification from a file and parses it into a structured format
+// LoadFromFile reads an OpenAPI specification from a file and parses it into a structured format.
 func (l *loader) LoadFromFile(location string) (*Document, error) {
 	f, err := os.Open(location)
 	if err != nil {
@@ -36,7 +36,7 @@ func (l *loader) LoadFromFile(location string) (*Document, error) {
 	switch ext := filepath.Ext(location); ext {
 	case ".json":
 		return l.LoadFromReaderJSON(f)
-	case ".yaml", ".yml":
+	case ".yaml", ".yml": // NOTE: openapi.yaml is recommended by the spec
 		return l.LoadFromReaderYAML(f)
 	default:
 		return nil, fmt.Errorf("unknown file extension: %s", ext)

@@ -4,20 +4,16 @@ import (
 	"io"
 	"unicode"
 
+	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 )
-
-var jsonOpts = json.JoinOptions([]json.Options{
-	// protect against deleting unknown fields when overwriting later
-	json.RejectUnknownMembers(true),
-}...)
 
 // LoadFromReaderJSON reads an OpenAPI specification in JSON format from an io.Reader and parses it into a structured format.
 func (l *loader) LoadFromReaderJSON(r io.Reader) (*Document, error) {
 	l.reset()
 
 	doc := &Document{}
-	if err := json.UnmarshalRead(r, doc, jsonOpts); err != nil {
+	if err := json.UnmarshalRead(r, doc, _json.Options); err != nil {
 		return nil, err
 	}
 
@@ -33,7 +29,7 @@ func (l *loader) LoadFromDataJSON(data []byte) (*Document, error) {
 	l.reset()
 
 	doc := &Document{}
-	if err := json.Unmarshal(data, doc, jsonOpts); err != nil {
+	if err := json.Unmarshal(data, doc, _json.Options); err != nil {
 		return nil, err
 	}
 
