@@ -1,18 +1,25 @@
 package openapi
 
-import "regexp"
+import (
+	"net/url"
+	"regexp"
+)
 
 // Document is an OpenAPI document.
 // It is a self-contained or composite resource which defines or describes an API or elements of an API.
 // An OpenAPI document uses and conforms to the OpenAPI Specification.
-// ([Source])
+// ([Documentation])
 //
-// [Source]: https://spec.openapis.org/oas/v3.1.0#openapi-document
+// [Documentation]: https://spec.openapis.org/oas/v3.1.0#openapi-document
 type Document struct {
 	// REQUIRED. This string MUST be the version number of the OpenAPI Specification that the OpenAPI document uses. The openapi field SHOULD be used by tooling to interpret the OpenAPI document. This is not related to the API info.version string.
 	OpenAPI string `json:"openapi,strictcase" yaml:"openapi"`
 	// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
 	Info *Info `json:"info,strictcase" yaml:"info"`
+	// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
+	// Default: "https://spec.openapis.org/oas/3.1/dialect/base"
+	// NOTE: Anything other than the default value is not supported.
+	JSONSchemaDialect *url.URL `json:"jsonSchemaDialect,omitempty,strictcase" yaml:"jsonSchemaDialect,omitempty"`
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.

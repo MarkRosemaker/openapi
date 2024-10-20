@@ -6,9 +6,9 @@ import (
 )
 
 // License information for the exposed API.
-// ([Source])
+// ([Documentation])
 //
-// [Source]: https://spec.openapis.org/oas/v3.1.0#license-object
+// [Documentation]: https://spec.openapis.org/oas/v3.1.0#license-object
 type License struct {
 	// REQUIRED. The license name used for the API.
 	Name string `json:"name,strictcase" yaml:"name"`

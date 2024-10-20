@@ -5,9 +5,9 @@ import (
 )
 
 // The Info object provides metadata about the API. The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.
-// ([Source])
+// ([Documentation])
 //
-// [Source]: https://spec.openapis.org/oas/v3.1.0#info-object
+// [Documentation]: https://spec.openapis.org/oas/v3.1.0#info-object
 type Info struct {
 	// REQUIRED. The title of the API.
 	Title string `json:"title,strictcase" yaml:"title"`
