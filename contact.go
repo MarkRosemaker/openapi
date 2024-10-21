@@ -12,11 +12,11 @@ import (
 // [Documentation]: https://spec.openapis.org/oas/v3.1.0#contact-object
 type Contact struct {
 	// The identifying name of the contact person/organization.
-	Name string `json:"name,omitempty,strictcase" yaml:"name,omitempty"`
+	Name string `json:"name,omitempty" yaml:"name,omitempty"`
 	// The URL pointing to the contact information. MUST be in the format of a URL.
-	URL *url.URL `json:"url,omitempty,strictcase" yaml:"url,omitempty"`
+	URL *url.URL `json:"url,omitempty" yaml:"url,omitempty"`
 	// The email address of the contact person/organization. This MUST be in the form of an email address.
-	Email types.Email `json:"email,omitempty,strictcase" yaml:"email,omitempty"`
+	Email types.Email `json:"email,omitempty" yaml:"email,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
 }

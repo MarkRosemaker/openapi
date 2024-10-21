@@ -13,15 +13,15 @@ import (
 // [Documentation]: https://spec.openapis.org/oas/v3.1.0#openapi-document
 type Document struct {
 	// REQUIRED. This string MUST be the version number of the OpenAPI Specification that the OpenAPI document uses. The openapi field SHOULD be used by tooling to interpret the OpenAPI document. This is not related to the API info.version string.
-	OpenAPI string `json:"openapi,strictcase" yaml:"openapi"`
+	OpenAPI string `json:"openapi" yaml:"openapi"`
 	// REQUIRED. Provides metadata about the API. The metadata MAY be used by tooling as required.
-	Info *Info `json:"info,strictcase" yaml:"info"`
+	Info *Info `json:"info,omitempty" yaml:"info,omitempty"`
 	// The default value for the $schema keyword within Schema Objects contained within this OAS document. This MUST be in the form of a URI.
 	// Default: "https://spec.openapis.org/oas/3.1/dialect/base"
 	// NOTE: Anything other than the default value is not supported.
-	JSONSchemaDialect *url.URL `json:"jsonSchemaDialect,omitempty,strictcase" yaml:"jsonSchemaDialect,omitempty"`
+	JSONSchemaDialect *url.URL `json:"jsonSchemaDialect,omitempty" yaml:"jsonSchemaDialect,omitempty"`
 	// An array of Server Objects, which provide connectivity information to a target server. If the servers property is not provided, or is an empty array, the default value would be a Server Object with a url value of /.
-	Servers Servers `json:"servers,omitempty,strictcase" yaml:"servers,omitempty"`
+	Servers Servers `json:"servers,omitempty" yaml:"servers,omitempty"`
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.

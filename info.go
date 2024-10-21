@@ -10,19 +10,19 @@ import (
 // [Documentation]: https://spec.openapis.org/oas/v3.1.0#info-object
 type Info struct {
 	// REQUIRED. The title of the API.
-	Title string `json:"title,strictcase" yaml:"title"`
+	Title string `json:"title" yaml:"title"`
 	// A short summary of the API.
-	Summary string `json:"summary,omitempty,strictcase" yaml:"summary,omitempty"`
+	Summary string `json:"summary,omitempty" yaml:"summary,omitempty"`
 	// A description of the API. CommonMark syntax MAY be used for rich text representation.
-	Description string `json:"description,omitempty,strictcase" yaml:"description,omitempty"`
+	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// A URL to the Terms of Service for the API.
-	TermsOfService *url.URL `json:"termsOfService,omitempty,strictcase" yaml:"termsOfService,omitempty"`
+	TermsOfService *url.URL `json:"termsOfService,omitempty" yaml:"termsOfService,omitempty"`
 	// The contact information for the exposed API.
-	Contact *Contact `json:"contact,omitempty,strictcase" yaml:"contact,omitempty"`
+	Contact *Contact `json:"contact,omitempty" yaml:"contact,omitempty"`
 	// The license information for the exposed API.
-	License *License `json:"license,omitempty,strictcase" yaml:"license,omitempty"`
+	License *License `json:"license,omitempty" yaml:"license,omitempty"`
 	// REQUIRED. The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
-	Version string `json:"version,strictcase" yaml:"version"`
+	Version string `json:"version" yaml:"version"`
 	// The object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
 }

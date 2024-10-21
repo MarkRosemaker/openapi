@@ -8,6 +8,7 @@ import (
 	"github.com/go-json-experiment/json/jsontext"
 )
 
+// ServerVariables is an ordered map of server variable.
 type ServerVariables map[string]*ServerVariable
 
 // ByIndex returns the keys of the map in the order of the index.
@@ -15,6 +16,7 @@ func (vars ServerVariables) ByIndex() iter.Seq2[string, *ServerVariable] {
 	return _json.OrderedMapByIndex(vars, getIndexServerVariable)
 }
 
+// Validate validates each server variable.
 func (vars ServerVariables) Validate() error {
 	for k, v := range vars.ByIndex() {
 		if err := v.Validate(); err != nil {
