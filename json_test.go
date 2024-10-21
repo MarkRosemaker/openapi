@@ -23,14 +23,19 @@ func testJSON(t *testing.T, exampleJSON []byte, v interface {
 		t.Fatal(err)
 	}
 
-	got, err := json.Marshal(v, _json.Options)
+	b, err := json.Marshal(v, _json.Options)
 	if err != nil {
 		t.Fatal(err)
 	}
 
+	got := jsontext.Value(b)
 	want := jsontext.Value(exampleJSON)
 
-	if err := want.Compact(); err != nil {
+	if err := want.Indent("", "\t"); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := got.Indent("", "\t"); err != nil {
 		t.Fatal(err)
 	}
 

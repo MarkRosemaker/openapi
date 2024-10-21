@@ -20,6 +20,8 @@ type Document struct {
 	// Default: "https://spec.openapis.org/oas/3.1/dialect/base"
 	// NOTE: Anything other than the default value is not supported.
 	JSONSchemaDialect *url.URL `json:"jsonSchemaDialect,omitempty,strictcase" yaml:"jsonSchemaDialect,omitempty"`
+	// An array of Server Objects, which provide connectivity information to a target server. If the servers property is not provided, or is an empty array, the default value would be a Server Object with a url value of /.
+	Servers Servers `json:"servers,omitempty,strictcase" yaml:"servers,omitempty"`
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.
@@ -46,6 +48,11 @@ func (d *Document) Validate() error {
 
 	if err := d.Info.Validate(); err != nil {
 		return &ErrField{Field: "info", Err: err}
+	}
+
+	if len(d.Servers) == 0 {
+		// The default value would be a Server Object with a url value of /.
+		d.Servers = Servers{{URL: "/"}}
 	}
 
 	// TODO
