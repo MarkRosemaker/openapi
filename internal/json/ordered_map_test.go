@@ -118,8 +118,10 @@ func TestOrderedMap_Unmarshal_Errors(t *testing.T) {
 		{"string instead of object", `""`, nil, `expected {, got string`},
 		{"missing string for object name", `{1}`, nil, `jsontext: missing string for object name`},
 		{"missing string for object name", `{"foo":1}`, []reflect.Type{valueType}, ``},
-		{"missing string for object name", `{"foo":{"foo":"foo","bar":1`,
-			nil, `unmarshal foo: unexpected EOF`},
+		{
+			"missing string for object name", `{"foo":{"foo":"foo","bar":1`,
+			nil, `unmarshal foo: unexpected EOF`,
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			err := json.Unmarshal([]byte(tc.data), &orderedMap{})
