@@ -99,21 +99,35 @@ func (e *ErrField) continueChain(b *strings.Builder) {
 	b.WriteString(e.Field)
 }
 
-func writeOutChain(b *strings.Builder, err error) string {
-	for {
-		// check if the error is a chainContinuer
-		if cont, ok := err.(chainContinuer); ok {
-			cont.continueChain(b)
-			err = errors.Unwrap(err)
-			continue
-		}
+type joinedErr interface{ Unwrap() []error }
 
-		if err != nil {
-			fmt.Fprintf(b, ": %v", err)
+func writeOutChain(b *strings.Builder, err error) string {
+	// check if the error is a chainContinuer
+	if cont, ok := err.(chainContinuer); ok {
+		cont.continueChain(b)
+		return writeOutChain(b, errors.Unwrap(err))
+	}
+
+	if joined, ok := err.(joinedErr); ok {
+		// multiple errors, join them
+		prefix := b.String()
+		for i, e := range joined.Unwrap() {
+			if i != 0 {
+				b.WriteByte('\n')
+				b.WriteString(prefix)
+			}
+
+			writeOutChain(b, e)
 		}
 
 		return b.String() // end of the chain
 	}
+
+	if err != nil {
+		fmt.Fprintf(b, ": %v", err)
+	}
+
+	return b.String() // end of the chain
 }
 
 // Unwrap returns the wrapped error.

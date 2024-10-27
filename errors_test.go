@@ -1,6 +1,7 @@
 package openapi_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
@@ -32,6 +33,41 @@ func TestError(t *testing.T) {
 			},
 		}
 		if want := `foo.bar["baz"].qux[3].quux ("corge") is invalid`; err.Error() != want {
+			t.Fatalf("want: %s, got: %s", want, err.Error())
+		}
+	})
+
+	t.Run("multiple errors", func(t *testing.T) {
+		err := &openapi.ErrField{
+			Field: "foo",
+			Err: &openapi.ErrKey{
+				Key: "bar",
+				Err: errors.Join(
+					&openapi.ErrIndex{
+						Index: 3,
+						Err: &openapi.ErrField{
+							Field: "name",
+							Err: &openapi.ErrInvalid[string]{
+								Value:   "corge",
+								Message: "duplicate name",
+							},
+						},
+					},
+					&openapi.ErrIndex{
+						Index: 5,
+						Err: &openapi.ErrField{
+							Field: "name",
+							Err: &openapi.ErrInvalid[string]{
+								Value:   "corge",
+								Message: "duplicate name",
+							},
+						},
+					},
+				),
+			},
+		}
+		if want := `foo["bar"][3].name ("corge") is invalid: duplicate name
+foo["bar"][5].name ("corge") is invalid: duplicate name`; err.Error() != want {
 			t.Fatalf("want: %s, got: %s", want, err.Error())
 		}
 	})
