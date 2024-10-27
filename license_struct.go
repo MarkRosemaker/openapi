@@ -6,9 +6,9 @@ import (
 )
 
 // License information for the exposed API.
-// ([Documentation])
+// ([Specification])
 //
-// [Documentation]: https://spec.openapis.org/oas/v3.1.0#license-object
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#license-object
 type License struct {
 	// REQUIRED. The license name used for the API.
 	Name string `json:"name" yaml:"name"`
@@ -23,7 +23,7 @@ type License struct {
 
 func (l *License) Validate() error {
 	if l.Name == "" {
-		return &ErrRequired{Target: "name"}
+		return &ErrField{Field: "name", Err: &ErrRequired{}}
 	}
 
 	if l.URL != nil && l.Identifier != "" {
