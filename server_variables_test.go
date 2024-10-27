@@ -71,7 +71,7 @@ func TestServerVariables_Validate(t *testing.T) {
 		sv := ServerVariables{"default": &ServerVariable{Enum: []string{}, idx: 1}}
 		if err := sv.Validate(); err == nil {
 			t.Fatal("expected error")
-		} else if want := `"default": enum array must not be empty`; err.Error() != want {
+		} else if want := `["default"]: enum array must not be empty`; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})

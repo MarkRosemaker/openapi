@@ -7,9 +7,9 @@ import (
 )
 
 // An object representing a Server Variable for server URL template substitution.
-// ([Documentation])
+// ([Specification])
 //
-// [Documentation]: https://spec.openapis.org/oas/v3.1.0#server-variable-object
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#server-variable-object
 type ServerVariable struct {
 	// An enumeration of string values to be used if the substitution options are from a limited set. The array MUST NOT be empty.
 	Enum []string `json:"enum,omitempty" yaml:"enum,omitempty"`
@@ -31,7 +31,7 @@ func (s *ServerVariable) Validate() error {
 	}
 
 	if s.Default == "" {
-		return &ErrRequired{Target: "default"}
+		return &ErrField{Field: "default", Err: &ErrRequired{}}
 	}
 
 	// If the enum is defined, the default value MUST exist in the enum's values.

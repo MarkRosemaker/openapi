@@ -1,9 +1,9 @@
 package openapi
 
 // Server is an object representing a Server.
-// ([Documentation])
+// ([Specification])
 //
-// [Documentation]: https://spec.openapis.org/oas/v3.1.0#server-object
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#server-object
 type Server struct {
 	// REQUIRED. A URL to the target host. This URL supports Server Variables and MAY be relative, to indicate that the host location is relative to the location where the OpenAPI document is being served. Variable substitutions will be made when a variable is named in {brackets}.
 	URL string `json:"url" yaml:"url"`
@@ -19,7 +19,7 @@ type Server struct {
 
 func (s *Server) Validate() error {
 	if s.URL == "" {
-		return &ErrRequired{Target: "url"}
+		return &ErrField{Field: "url", Err: &ErrRequired{}}
 	}
 
 	if err := s.Variables.Validate(); err != nil {

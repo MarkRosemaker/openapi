@@ -78,7 +78,7 @@ func TestValidate(t *testing.T) {
 		s := openapi.Servers{{}}
 		if err := s.Validate(); err == nil {
 			t.Fatal("expected error")
-		} else if want := "0: url is required"; err.Error() != want {
+		} else if want := "[0].url is required"; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})
