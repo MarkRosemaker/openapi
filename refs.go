@@ -1,10 +1,7 @@
 package openapi
 
 type (
-	// NOTE: This does not work because we run into issue:
-	// https://github.com/golang/go/issues/50729
-	// SchemaRef      = refOrValue[Schema, *Schema]
-
+	SchemaRef      = refOrValue[Schema, *Schema]
 	HeaderRef      = refOrValue[Header, *Header]
 	ResponseRef    = refOrValue[Response, *Response]
 	ParameterRef   = refOrValue[Parameter, *Parameter]
