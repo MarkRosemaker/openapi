@@ -5,9 +5,9 @@ import (
 )
 
 // The Info object provides metadata about the API. The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.
-// ([Documentation])
+// ([Specification])
 //
-// [Documentation]: https://spec.openapis.org/oas/v3.1.0#info-object
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#info-object
 type Info struct {
 	// REQUIRED. The title of the API.
 	Title string `json:"title" yaml:"title"`
@@ -29,12 +29,12 @@ type Info struct {
 
 func (i *Info) Validate() error {
 	if i.Title == "" {
-		return &ErrRequired{Target: "title"}
+		return &ErrField{Field: "title", Err: &ErrRequired{}}
 	}
 
 	// NOTE: The version *here* can be any string, but the version in the OpenAPI document must be a valid semantic version.
 	if i.Version == "" {
-		return &ErrRequired{Target: "version"}
+		return &ErrField{Field: "version", Err: &ErrRequired{}}
 	}
 
 	// assume that the scheme is https and add it if it is missing

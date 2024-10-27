@@ -128,7 +128,7 @@ func TestInfo_Validate(t *testing.T) {
 
 		if err := i.Validate(); err == nil {
 			t.Fatal("expected error")
-		} else if want := `extension key foo does not have prefix x-`; err.Error() != want {
+		} else if want := `foo: ` + openapi.ErrUnknownField.Error(); err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})
