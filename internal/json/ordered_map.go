@@ -43,9 +43,9 @@ func OrderedMapByIndex[M ~map[K]V, K comparable, V any](m M, getIndex func(V) in
 
 // UnmarshalOrderedMap is a helper function to implement UnmarshalJSON on an ordered map.
 // The setIndex function is called for each value in the map, so that its index is set accordingly.
-func UnmarshalOrderedMap[M ~map[K]*V, K comparable, V any](
+func UnmarshalOrderedMap[M ~map[K]*R, K comparable, R any](
 	m *M, dec *jsontext.Decoder, opts json.Options,
-	setIndex func(*V, int),
+	setIndex func(*R, int),
 ) error {
 	if err := skipTokenKind(dec, '{'); err != nil {
 		return err
@@ -57,12 +57,17 @@ func UnmarshalOrderedMap[M ~map[K]*V, K comparable, V any](
 	i := 1 // start at 1 to avoid confusion with zero values
 
 	for {
+		// check if we reached the end of the object
+		if dec.PeekKind() == '}' {
+			break
+		}
+
 		var key K
 		if err := json.UnmarshalDecode(dec, &key, opts); err != nil {
 			return err
 		}
 
-		var v V
+		var v R
 		if err := json.UnmarshalDecode(dec, &v, opts); err != nil {
 			return fmt.Errorf("unmarshal %v: %w", key, err)
 		}
@@ -73,10 +78,6 @@ func UnmarshalOrderedMap[M ~map[K]*V, K comparable, V any](
 
 		// set the variable in the map
 		(*m)[K(key)] = &v
-
-		if dec.PeekKind() == '}' {
-			break
-		}
 	}
 
 	_, err := dec.ReadToken() // consume '}', should not fail
