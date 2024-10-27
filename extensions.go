@@ -1,7 +1,7 @@
 package openapi
 
 import (
-	"fmt"
+	"errors"
 	"strings"
 
 	"github.com/go-json-experiment/json"
@@ -13,7 +13,7 @@ import (
 // While the OpenAPI Specification tries to accommodate most use cases, additional data can be added to extend the specification at certain points.
 //
 // The field name MUST begin with x-, for example, x-internal-id. Field names beginning x-oai- and x-oas- are reserved for uses defined by the OpenAPI Initiative. The value can be null, a primitive, an array or an object.
-// ([Documentation])
+// ([Specification])
 //
 // It is here an alias of jsontext.Value to allow inlining within structs, enabling
 // seamless marshalling and unmarshalling. Using jsontext.Value preserves the order
@@ -25,8 +25,11 @@ import (
 // Note: For convenience, certain common extensions are implemented as fields
 // directly within the respective structs.
 //
-// [Documentation]: https://spec.openapis.org/oas/v3.1.0#specification-extensions
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#specification-extensions
 type Extensions = jsontext.Value
+
+// ErrUnknownField is returned when a field is not recognized and also doesn't have a "x-" prefix signifying it is an extension.
+var ErrUnknownField = errors.New(`unknown field or extension without "x-" prefix`)
 
 func validateExtensions(ext Extensions) error {
 	if len(ext) == 0 {
@@ -40,7 +43,7 @@ func validateExtensions(ext Extensions) error {
 
 	for k := range m {
 		if !strings.HasPrefix(k, "x-") {
-			return fmt.Errorf(`extension key %s does not have prefix x-`, k)
+			return &ErrField{Field: k, Err: ErrUnknownField}
 		}
 	}
 

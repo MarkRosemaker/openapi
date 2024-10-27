@@ -48,7 +48,7 @@ func TestExtensions_invalid(t *testing.T) {
 		ext := Extensions([]byte(`{"bar":true,"x-baz":42}`))
 		if err := validateExtensions(ext); err == nil {
 			t.Fatal("expected error")
-		} else if want := `extension key bar does not have prefix x-`; err.Error() != want {
+		} else if want := `bar: ` + ErrUnknownField.Error(); err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})
