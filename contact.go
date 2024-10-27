@@ -7,9 +7,9 @@ import (
 )
 
 // Contact information for the exposed API.
-// ([Documentation])
+// ([Specification])
 //
-// [Documentation]: https://spec.openapis.org/oas/v3.1.0#contact-object
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#contact-object
 type Contact struct {
 	// The identifying name of the contact person/organization.
 	Name string `json:"name,omitempty" yaml:"name,omitempty"`
