@@ -34,7 +34,7 @@ func TestExamples_Validate_Error(t *testing.T) {
 		}, `["foo"].bar: ` + openapi.ErrUnknownField.Error()},
 	} {
 		if err := tc.examples.Validate(); err == nil || err.Error() != tc.err {
-			t.Errorf("want: %s, got: %s", tc.err, err)
+			t.Fatalf("want: %s, got: %s", tc.err, err)
 		}
 	}
 }

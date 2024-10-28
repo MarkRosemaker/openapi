@@ -72,8 +72,8 @@ func TestCallback_Validate_Error(t *testing.T) {
 	}
 
 	if err := c.Validate(); err == nil {
-		t.Error("expected error")
+		t.Fatal("expected error")
 	} else if want := "myCallback.parameters[0].name is required"; want != err.Error() {
-		t.Errorf("expected %q, got %q", want, err.Error())
+		t.Fatalf("expected %q, got %q", want, err.Error())
 	}
 }

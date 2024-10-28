@@ -49,7 +49,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
-				t.Errorf("want: %s, got: %s", tc.err, err)
+				t.Fatalf("want: %s, got: %s", tc.err, err)
 			}
 		})
 	}

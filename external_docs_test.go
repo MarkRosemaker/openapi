@@ -26,8 +26,8 @@ func TestExternalDocumentation_Validate_Error(t *testing.T) {
 	t.Parallel()
 
 	if err := (&openapi.ExternalDocumentation{}).Validate(); err == nil {
-		t.Error("expected error")
+		t.Fatal("expected error")
 	} else if want := `url is required`; want != err.Error() {
-		t.Errorf("unexpected error: %s", err)
+		t.Fatalf("unexpected error: %s", err)
 	}
 }

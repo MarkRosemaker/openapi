@@ -20,6 +20,6 @@ func TestDataType(t *testing.T) {
 
 	err = &openapi.ErrField{Field: "type", Err: err}
 	if want := `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object"`; want != err.Error() {
-		t.Errorf("expected %q, got %q", want, err.Error())
+		t.Fatalf("expected %q, got %q", want, err.Error())
 	}
 }

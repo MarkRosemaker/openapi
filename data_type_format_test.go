@@ -20,6 +20,6 @@ func TestFormat(t *testing.T) {
 
 	err = &openapi.ErrField{Field: "format", Err: err}
 	if want := `format ("foo") is invalid, must be one of: "int32", "int64", "float", "double", "byte", "binary", "date", "date-time", "password", "duration", "uuid", "email", "uri", "zip-code"`; want != err.Error() {
-		t.Errorf("expected %q, got %q", want, err.Error())
+		t.Fatalf("expected %q, got %q", want, err.Error())
 	}
 }

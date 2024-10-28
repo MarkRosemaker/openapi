@@ -180,7 +180,7 @@ func TestRequestBody_Validate_Error(t *testing.T) {
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.p.Validate(); err == nil || err.Error() != tc.err {
-				t.Errorf("expected %q, got %q", tc.err, err)
+				t.Fatalf("expected %q, got %q", tc.err, err)
 			}
 		})
 	}
