@@ -76,6 +76,11 @@ func (d *Document) Validate() error {
 		return &ErrField{Field: "servers", Err: err}
 	}
 
+	// The OpenAPI document MUST contain at least one paths field, a components field or a webhooks field.
+	if len(d.Paths) == 0 && len(d.Webhooks) == 0 && d.Components.isEmpty() {
+		return ErrEmptyDocument
+	}
+
 	if err := d.Paths.Validate(); err != nil {
 		return &ErrField{Field: "paths", Err: err}
 	}
@@ -84,12 +89,9 @@ func (d *Document) Validate() error {
 		return &ErrField{Field: "webhooks", Err: err}
 	}
 
-	// The OpenAPI document MUST contain at least one paths field, a components field or a webhooks field.
-	if len(d.Paths) == 0 && len(d.Webhooks) == 0 && d.Components.isEmpty() {
-		return ErrEmptyDocument
+	if err := d.Components.Validate(); err != nil {
+		return &ErrField{Field: "components", Err: err}
 	}
-
-	// Components
 
 	return nil
 }

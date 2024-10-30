@@ -126,9 +126,21 @@ func TestDocumentValidate_Error(t *testing.T) {
 			}},
 		}, `webhooks["myWebhook"].parameters[0].in is required`},
 		{&openapi.Document{
+			OpenAPI:  "3.1.0",
+			Info:     &openapi.Info{Title: "Sample API", Version: "1.0.0"},
+			Paths:    openapi.Paths{},
+			Webhooks: openapi.Webhooks{},
+			Components: openapi.Components{
+				Schemas: openapi.Schemas{},
+			},
+		}, openapi.ErrEmptyDocument.Error()},
+		{&openapi.Document{
 			OpenAPI: "3.1.0",
 			Info:    &openapi.Info{Title: "Sample API", Version: "1.0.0"},
-		}, openapi.ErrEmptyDocument.Error()},
+			Components: openapi.Components{
+				Schemas: openapi.Schemas{"Pet": {Value: &openapi.Schema{}}},
+			},
+		}, `components.schemas["Pet"].type is required`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			t.Parallel()

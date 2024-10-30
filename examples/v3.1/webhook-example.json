@@ -28,6 +28,7 @@
 	"components": {
 		"schemas": {
 			"Pet": {
+				"type": "object",
 				"properties": {
 					"id": {
 						"type": "integer",
