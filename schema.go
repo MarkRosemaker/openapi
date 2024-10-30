@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -31,6 +32,11 @@ type Schema struct {
 	Properties Schemas `json:"properties,omitzero" yaml:"properties,omitzero"`
 	// Which properties are required.
 	Required []string `json:"required,omitempty" yaml:"required,omitempty"`
+
+	// String
+
+	// The pattern is used to validate the string.
+	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
 
 	// Array
 
