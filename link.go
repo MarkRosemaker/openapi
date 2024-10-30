@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"errors"
+	"strings"
 )
 
 // The `Link object` represents a possible design-time link for a response.
@@ -23,9 +24,9 @@ type Link struct {
 	OperationID string `json:"operationId,omitempty" yaml:"operationId,omitempty"`
 	// A map representing parameters to pass to an operation as specified with `operationId` or identified via `operationRef`. The key is the parameter name to be used, whereas the value can be a constant or an expression to be evaluated and passed to the linked operation.
 	// The parameter name can be qualified using the parameter location `[{in}.]{name}` for operations that use the same parameter name in different locations (e.g. path.id).
-	Parameters map[string]any `json:"parameters,omitempty" yaml:"parameters,omitempty"` // Map[`string`, Any \| [{expression}](#runtime-expressions)]
+	Parameters LinkParameters `json:"parameters,omitempty" yaml:"parameters,omitempty"`
 	// A literal value or {expression} to use as a request body when calling the target operation.
-	RequestBody any `json:"requestBody,omitempty" yaml:"requestBody,omitempty"` // Any \| [{expression}](#runtime-expressions)
+	RequestBody RuntimeExpression `json:"requestBody,omitempty" yaml:"requestBody,omitempty"`
 	// A description of the link. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// This object MAY be extended with Specification Extensions.
@@ -41,6 +42,14 @@ func (l *Link) Validate() error {
 	if l.OperationRef == "" && l.OperationID == "" {
 		return errors.New("operationRef or operationId must be set")
 	}
+
+	if err := l.Parameters.Validate(); err != nil {
+		return &ErrField{Field: "parameters", Err: err}
+	}
+
+	// NOTE: We don't check RequestBody yet.
+
+	l.Description = strings.TrimSpace(l.Description)
 
 	if err := validateExtensions(l.Extensions); err != nil {
 		return err

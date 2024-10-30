@@ -55,7 +55,7 @@ func TestDocument_Examples(t *testing.T) {
 		ext := filepath.Ext(path)
 
 		switch strings.TrimSuffix(filepath.Base(path), ext) {
-		case "non-oauth-scopes", "uspto", "link-example": // skip for now (TODO: enable)
+		case "non-oauth-scopes", "uspto": // skip for now (TODO: enable)
 			return nil
 		}
 

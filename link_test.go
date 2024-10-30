@@ -124,6 +124,18 @@ func TestLink_Validate_Error(t *testing.T) {
 			OperationRef: "myRef",
 			Extensions:   jsontext.Value(`{"foo":"bar"}`),
 		}, `foo: ` + openapi.ErrUnknownField.Error()},
+		{openapi.Link{
+			OperationRef: "foo",
+			Parameters: openapi.LinkParameters{
+				"": &openapi.LinkParameter{},
+			},
+		}, `parameters[""] is required`},
+		{openapi.Link{
+			OperationRef: "foo",
+			Parameters: openapi.LinkParameters{
+				"username": &openapi.LinkParameter{},
+			},
+		}, `parameters["username"] is required`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.link.Validate(); err == nil {

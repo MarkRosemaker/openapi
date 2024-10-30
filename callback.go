@@ -18,12 +18,12 @@ import (
 // Note that we are not validating the [runtime expression] in this implementation.
 //
 // [runtime expression]: https://spec.openapis.org/oas/v3.1.0#key-expression
-type Callback map[string]*PathItemRef
+type Callback map[RuntimeExpression]*PathItemRef
 
 func (c Callback) Validate() error {
 	for expr, v := range c.ByIndex() {
 		if err := v.Validate(); err != nil {
-			return &ErrKey{Key: expr, Err: err}
+			return &ErrKey{Key: string(expr), Err: err}
 		}
 	}
 
@@ -31,7 +31,7 @@ func (c Callback) Validate() error {
 }
 
 // ByIndex returns the keys of the map in the order of the index.
-func (c Callback) ByIndex() iter.Seq2[string, *PathItemRef] {
+func (c Callback) ByIndex() iter.Seq2[RuntimeExpression, *PathItemRef] {
 	return _json.OrderedMapByIndex(c, getIndexRef[PathItem, *PathItem])
 }
 
