@@ -55,7 +55,7 @@ func TestDocument_Examples(t *testing.T) {
 		ext := filepath.Ext(path)
 
 		switch strings.TrimSuffix(filepath.Base(path), ext) {
-		case "non-oauth-scopes", "uspto": // skip for now (TODO: enable)
+		case "non-oauth-scopes": // skip for now (TODO: enable)
 			return nil
 		}
 
@@ -69,7 +69,14 @@ func TestDocument_Examples(t *testing.T) {
 			case ".json":
 				testJSON(t, original, &openapi.Document{})
 			case ".yaml":
-				// TODO: test YAML
+				doc, err := openapi.LoadFromData(original)
+				if err != nil {
+					t.Fatal(err)
+				}
+
+				if err := doc.Validate(); err != nil {
+					t.Fatal(err)
+				}
 			}
 		})
 

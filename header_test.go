@@ -72,7 +72,7 @@ func TestHeader_Validate_Error(t *testing.T) {
 		}, `explode (true) is invalid: property has no effect when schema type is not array or object, got "string"`},
 		{openapi.Header{
 			Schema:   &openapi.Schema{Type: openapi.TypeString},
-			Example:  "foo",
+			Example:  jsontext.Value("foo"),
 			Examples: openapi.Examples{},
 		}, `example and examples are mutually exclusive`},
 		{openapi.Header{

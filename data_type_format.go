@@ -22,23 +22,29 @@ const (
 	FormatDate Format = "date"
 	// FormatDateTime represents a date-time.
 	FormatDateTime Format = "date-time"
-	// FormatPassword represents a password. It's a hint to UIs to obscure input.
-	FormatPassword Format = "password"
 	// FormatDuration represents a duration.
 	FormatDuration Format = "duration"
-	// FormatUUID represents a UUID.
-	FormatUUID Format = "uuid"
 	// FormatEmail represents an email.
 	FormatEmail Format = "email"
+	// FormatPassword represents a password. It's a hint to UIs to obscure input.
+	FormatPassword Format = "password"
+	// FormatUUID represents a UUID.
+	FormatUUID Format = "uuid"
 	// FormatURI represents a URI.
 	FormatURI Format = "uri"
+	// FormatURIRef represents a URI reference.
+	FormatURIRef Format = "uriref"
 	// FormatZipCode represents a zip code.
 	FormatZipCode Format = "zip-code"
 )
 
 var allFormats = []Format{
-	FormatInt32, FormatInt64, FormatFloat, FormatDouble, FormatByte, FormatBinary, FormatDate, FormatDateTime, FormatPassword,
-	FormatDuration, FormatUUID, FormatEmail, FormatURI, FormatZipCode,
+	FormatInt32, FormatInt64, FormatFloat, FormatDouble,
+	FormatByte, FormatBinary,
+	FormatDate, FormatDateTime, FormatDuration,
+	FormatEmail, FormatPassword,
+	FormatUUID,
+	FormatURI, FormatURIRef, FormatZipCode,
 }
 
 // Validate validates the format.

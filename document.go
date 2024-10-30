@@ -32,6 +32,12 @@ type Document struct {
 	Webhooks Webhooks `json:"webhooks,omitempty" yaml:"webhooks,omitempty"`
 	// An element to hold various schemas for the document.
 	Components Components `json:"components,omitempty" yaml:"components,omitempty"`
+
+	// security TODO
+
+	Tags Tags `json:"tags,omitempty" yaml:"tags,omitempty"`
+
+	// externalDocs TODO
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.

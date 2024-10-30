@@ -1,6 +1,10 @@
 package openapi
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/go-json-experiment/json/jsontext"
+)
 
 // Each Media Type Object provides schema and examples for the media type identified by its key.
 //
@@ -13,7 +17,7 @@ type MediaType struct {
 	// Example of the media type.
 	// The example object SHOULD be in the correct format as specified by the media type.
 	// The `example` field is mutually exclusive of the `examples` field.  Furthermore, if referencing a `schema` which contains an example, the `example` value SHALL _override_ the example provided by the schema.
-	Example any `json:"example,omitempty" yaml:"example,omitempty"`
+	Example jsontext.Value `json:"example,omitempty" yaml:"example,omitempty"`
 	// Examples of the media type.
 	// Each example object SHOULD match the media type and specified schema if present.
 	// The `examples` field is mutually exclusive of the `example` field.  Furthermore, if referencing a `schema` which contains an example, the `examples` value SHALL _override_ the example provided by the schema.

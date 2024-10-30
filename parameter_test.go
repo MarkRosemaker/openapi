@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
+	"github.com/go-json-experiment/json/jsontext"
 )
 
 func TestParameter_JSON(t *testing.T) {
@@ -179,7 +180,7 @@ func TestParameter_Validate_Error(t *testing.T) {
 			In:       openapi.ParameterLocationPath,
 			Required: true,
 			Schema:   &openapi.Schema{Type: openapi.TypeString},
-			Example:  "foo",
+			Example:  jsontext.Value("foo"),
 			Examples: openapi.Examples{},
 		}, `example and examples are mutually exclusive`},
 		{openapi.Parameter{

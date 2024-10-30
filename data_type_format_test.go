@@ -6,6 +6,8 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
+const validFormats = `"int32", "int64", "float", "double", "byte", "binary", "date", "date-time", "duration", "email", "password", "uuid", "uri", "uriref", "zip-code"`
+
 func TestFormat(t *testing.T) {
 	// test a valid data type format
 	if err := openapi.FormatDateTime.Validate(); err != nil {
@@ -19,7 +21,7 @@ func TestFormat(t *testing.T) {
 	}
 
 	err = &openapi.ErrField{Field: "format", Err: err}
-	if want := `format ("foo") is invalid, must be one of: "int32", "int64", "float", "double", "byte", "binary", "date", "date-time", "password", "duration", "uuid", "email", "uri", "zip-code"`; want != err.Error() {
-		t.Fatalf("expected %q, got %q", want, err.Error())
+	if want := `format ("foo") is invalid, must be one of: ` + validFormats; want != err.Error() {
+		t.Fatalf("want: %s, got: %s", want, err)
 	}
 }

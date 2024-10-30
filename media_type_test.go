@@ -15,7 +15,7 @@ func TestMediaType_Validate_Error(t *testing.T) {
 		err string
 	}{
 		{openapi.MediaType{
-			Example:  "foo",
+			Example:  jsontext.Value("foo"),
 			Examples: openapi.Examples{},
 		}, `example and examples are mutually exclusive`},
 		{openapi.MediaType{

@@ -3,7 +3,10 @@ package openapi
 import (
 	"fmt"
 	"regexp"
+	"slices"
 	"strings"
+
+	"github.com/go-json-experiment/json/jsontext"
 )
 
 // The Schema Object allows the definition of input and output data types.
@@ -44,6 +47,8 @@ type Schema struct {
 	// This string SHOULD be a valid regular expression, according to the Ecma-262 Edition 5.1 regular expression dialect.
 	// NOTE: We simply use text unmarshalling for this field. This guarantees that the regular expression is valid or we can't unmarshal.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
+	// A list of possible values.
+	Enum []string `json:"enum,omitempty" yaml:"enum,omitempty"`
 
 	// Array
 
@@ -67,7 +72,10 @@ type Schema struct {
 	ContentMediaType string `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
 	ContentEncoding  string `json:"contentEncoding,omitempty" yaml:"contentEncoding,omitempty"`
 
-	Example any `json:"example,omitempty" yaml:"example,omitempty"`
+	// Specifies the default value of the property if no value is provided.
+	Default any `json:"default,omitempty" yaml:"default,omitempty"`
+
+	Example jsontext.Value `json:"example,omitempty" yaml:"example,omitempty"`
 }
 
 func (s *Schema) Validate() error {
@@ -104,7 +112,7 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
 			}}
 		}
-	case FormatDateTime, FormatPassword, FormatUUID, FormatURI, FormatZipCode:
+	case FormatDateTime, FormatPassword, FormatUUID, FormatURI, FormatURIRef, FormatZipCode:
 		if s.Type != TypeString {
 			return &ErrField{Field: "format", Err: &ErrInvalid[Format]{
 				Value:   s.Format,
@@ -162,7 +170,13 @@ func (s *Schema) Validate() error {
 		}}
 	}
 
-	// String (nothing to check)
+	// String
+
+	if s.Type != TypeString && s.Enum != nil {
+		return &ErrField{Field: "enum", Err: &ErrInvalid[string]{
+			Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
+		}}
+	}
 
 	// Array
 
@@ -234,6 +248,50 @@ func (s *Schema) Validate() error {
 	} else if s.AdditionalProperties != nil {
 		return &ErrField{Field: "additionalProperties", Err: &ErrInvalid[string]{
 			Message: fmt.Sprintf("only valid for object type, got %s", s.Type),
+		}}
+	}
+
+	// validate default
+	switch dflt := s.Default.(type) {
+	case nil: // empty
+	case string:
+		if s.Type != TypeString {
+			return &ErrField{Field: "default", Err: &ErrInvalid[string]{
+				Value:   dflt,
+				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+			}}
+		}
+
+		if s.Enum != nil {
+			if !slices.Contains(s.Enum, dflt) {
+				return &ErrField{Field: "default", Err: &ErrInvalid[string]{
+					Value:   dflt,
+					Message: fmt.Sprintf("is not one of the enums (%q)", s.Enum),
+				}}
+			}
+		}
+	case float64:
+		switch s.Type {
+		case TypeNumber: // fits
+		case TypeInteger:
+			if asInt := int(dflt); dflt != float64(asInt) {
+				return &ErrField{Field: "default", Err: &ErrInvalid[float64]{
+					Value:   dflt,
+					Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+				}}
+			} else {
+				s.Default = asInt // set to int version
+			}
+		default:
+			return &ErrField{Field: "default", Err: &ErrInvalid[float64]{
+				Value:   dflt,
+				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+			}}
+		}
+	default:
+		return &ErrField{Field: "default", Err: &ErrInvalid[any]{
+			Value:   s.Default,
+			Message: fmt.Sprintf("unknown type %T", s.Default),
 		}}
 	}
 

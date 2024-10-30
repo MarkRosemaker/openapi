@@ -25,7 +25,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type:   openapi.TypeString,
 			Format: "foo",
-		}, `format ("foo") is invalid, must be one of: "int32", "int64", "float", "double", "byte", "binary", "date", "date-time", "password", "duration", "uuid", "email", "uri", "zip-code"`},
+		}, `format ("foo") is invalid, must be one of: ` + validFormats},
 		{openapi.Schema{
 			Type:   openapi.TypeString,
 			Format: openapi.FormatInt64,
@@ -128,6 +128,10 @@ func TestSchema_Validate_Error(t *testing.T) {
 				Value: &openapi.Schema{},
 			},
 		}, `additionalProperties is invalid: only valid for object type, got boolean`},
+		{openapi.Schema{
+			Type: openapi.TypeBoolean,
+			Enum: []string{},
+		}, `enum is invalid: only valid for string type, got boolean`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
