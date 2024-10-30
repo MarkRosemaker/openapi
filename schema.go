@@ -104,7 +104,7 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
 			}}
 		}
-	case FormatPassword, FormatUUID, FormatZipCode:
+	case FormatDateTime, FormatPassword, FormatUUID, FormatURI, FormatZipCode:
 		if s.Type != TypeString {
 			return &ErrField{Field: "format", Err: &ErrInvalid[Format]{
 				Value:   s.Format,

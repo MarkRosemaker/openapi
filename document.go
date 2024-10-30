@@ -30,7 +30,6 @@ type Document struct {
 	Paths Paths `json:"paths,omitempty" yaml:"paths,omitempty"`
 	// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement. Closely related to the `callbacks` feature, this section describes requests initiated other than by an API call, for example by an out of band registration.
 	Webhooks Webhooks `json:"webhooks,omitempty" yaml:"webhooks,omitempty"`
-
 	// An element to hold various schemas for the document.
 	Components Components `json:"components,omitempty" yaml:"components,omitempty"`
 }

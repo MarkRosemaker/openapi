@@ -23,7 +23,7 @@ type Callback map[string]*PathItemRef
 func (c Callback) Validate() error {
 	for expr, v := range c.ByIndex() {
 		if err := v.Validate(); err != nil {
-			return &ErrField{Field: expr, Err: err}
+			return &ErrKey{Key: expr, Err: err}
 		}
 	}
 

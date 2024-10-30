@@ -170,12 +170,14 @@ func TestOperation_Validate_Error(t *testing.T) {
 			},
 		}, `responses["200"].description is required`},
 		{openapi.Operation{
-			Callbacks: openapi.Callback{
-				"foo": {Value: &openapi.PathItem{
-					Extensions: jsontext.Value(`{"bar":"buz"}`),
-				}},
+			Callbacks: openapi.Callbacks{
+				"foo": {
+					"{$request.query.callbackUrl}/data": &openapi.PathItemRef{
+						Value: &openapi.PathItem{
+							Extensions: jsontext.Value(`{"bar":"buz"}`),
+						}}},
 			},
-		}, `callbacks.foo.bar: ` + openapi.ErrUnknownField.Error()},
+		}, `callbacks["foo"]["{$request.query.callbackUrl}/data"].bar: ` + openapi.ErrUnknownField.Error()},
 		{openapi.Operation{
 			Security: openapi.Security{{"": nil}},
 		}, `security[0][""]: empty security scheme name`},

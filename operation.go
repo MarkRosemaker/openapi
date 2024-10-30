@@ -24,7 +24,7 @@ type Operation struct {
 	// The list of possible responses as they are returned from executing this operation.
 	Responses OperationResponses `json:"responses,omitempty" yaml:"responses,omitempty"`
 	// A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a Callback Object that describes a request that may be initiated by the API provider and the expected responses.
-	Callbacks Callback `json:"callbacks,omitempty" yaml:"callbacks,omitempty"`
+	Callbacks Callbacks `json:"callbacks,omitempty" yaml:"callbacks,omitempty"`
 	// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation. Default value is `false`.
 	Deprecated bool `json:"deprecated,omitempty,omitzero" yaml:"deprecated,omitempty"`
 	// A declaration of which security mechanisms can be used for this operation. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. To make security optional, an empty security requirement (`{}`) can be included in the array. This definition overrides any declared top-level `security`. To remove a top-level security declaration, an empty array can be used.
