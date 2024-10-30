@@ -17,6 +17,8 @@ type (
 	ExampleRef = refOrValue[Example, *Example]
 	// PathItemRef is a reference to a PathItem or an actual PathItem.
 	PathItemRef = refOrValue[PathItem, *PathItem]
+	// SecuritySchemeRef is a reference to a SecurityScheme or an actual SecurityScheme.
+	SecuritySchemeRef = refOrValue[SecurityScheme, *SecurityScheme]
 
 	// SchemaRefs is a slice of SchemaRef.
 	SchemaRefs []*SchemaRef

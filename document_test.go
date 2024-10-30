@@ -3,7 +3,6 @@ package openapi_test
 import (
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
@@ -43,20 +42,8 @@ func TestDocument_Examples(t *testing.T) {
 	t.Parallel()
 
 	if err := filepath.Walk("examples", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
+		if err != nil || info.IsDir() || filepath.Ext(path) == ".txt" {
 			return err
-		}
-
-		switch filepath.Ext(path) {
-		case ".txt", ".yaml":
-			return nil
-		}
-
-		ext := filepath.Ext(path)
-
-		switch strings.TrimSuffix(filepath.Base(path), ext) {
-		case "non-oauth-scopes": // skip for now (TODO: enable)
-			return nil
 		}
 
 		t.Run(path, func(t *testing.T) {
