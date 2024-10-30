@@ -10,6 +10,16 @@ import (
 
 type Schemas map[string]*SchemaRef
 
+func (ss Schemas) Validate() error {
+	for name, value := range ss.ByIndex() {
+		if err := value.Validate(); err != nil {
+			return &ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
 // ByIndex returns the keys of the map in the order of the index.
 func (ss Schemas) ByIndex() iter.Seq2[string, *SchemaRef] {
 	return _json.OrderedMapByIndex(ss, getIndexRef[Schema, *Schema])

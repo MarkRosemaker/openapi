@@ -15,14 +15,14 @@ func TestParameter_JSON(t *testing.T) {
   "in": "header",
   "description": "token to be passed as a header",
   "required": true,
+  "style": "simple",
   "schema": {
     "type": "array",
     "items": {
       "type": "integer",
       "format": "int64"
     }
-  },
-  "style": "simple"
+  }
 }`), &openapi.Parameter{})
 
 	// A path parameter of a string value:
@@ -41,27 +41,27 @@ func TestParameter_JSON(t *testing.T) {
   "name": "id",
   "in": "query",
   "description": "ID of the object to fetch",
+  "style": "form",
+  "explode": true,
   "schema": {
     "type": "array",
     "items": {
       "type": "string"
     }
-  },
-  "style": "form",
-  "explode": true
+  }
 }`), &openapi.Parameter{})
 
 	// A free-form query parameter, allowing undefined parameters of a specific type:
 	testJSON(t, []byte(`{
   "name": "freeForm",
   "in": "query",
+  "style": "form",
   "schema": {
     "type": "object",
     "additionalProperties": {
       "type": "integer"
     }
-  },
-  "style": "form"
+  }
 }`), &openapi.Parameter{})
 
 	// A complex parameter using `content` to define serialization:

@@ -28,8 +28,7 @@ func TestEncoding_JSON(t *testing.T) {
               "description": "metadata in XML format",
               "type": "object",
               "properties": {}
-            },
-            "profileImage": {}
+            }
           }
         },
         "encoding": {

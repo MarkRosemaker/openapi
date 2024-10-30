@@ -16,13 +16,13 @@ func TestPathItem_JSON(t *testing.T) {
       "in": "path",
       "description": "ID of pet to use",
       "required": true,
+      "style": "simple",
       "schema": {
         "type": "array",
         "items": {
           "type": "string"
         }
-      },
-      "style": "simple"
+      }
     }
   ],
   "get": {
@@ -64,13 +64,13 @@ func TestPathItem_JSON(t *testing.T) {
       "in": "path",
       "description": "ID of pet to use",
       "required": true,
+      "style": "simple",
       "schema": {
         "type": "array",
         "items": {
           "type": "string"
         }
-      },
-      "style": "simple"
+      }
     }
   ],
   "get": {

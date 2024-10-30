@@ -36,20 +36,27 @@ type Parameter struct {
 	Deprecated bool `json:"deprecated,omitempty,omitzero" yaml:"deprecated,omitempty"`
 	// Sets the ability to pass empty-valued parameters. This is valid only for `query` parameters and allows sending a parameter with an empty value. Default value is `false`. If `style` is used, and if behavior is `n/a` (cannot be serialized), the value of `allowEmptyValue` SHALL be ignored. Use of this property is NOT RECOMMENDED, as it is likely to be removed in a later revision.
 	AllowEmptyValue bool `json:"allowEmptyValue,omitempty,omitzero" yaml:"allowEmptyValue,omitempty"`
-	// Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. This property only applies to parameters with an `in` value of `query`. The default value is `false`.
-	AllowReserved bool `json:"allowReserved,omitempty,omitzero" yaml:"allowReserved,omitempty"`
-	// The schema defining the type used for the parameter.
-	Schema *Schema `json:"schema,omitempty" yaml:"schema,omitempty"`
+
+	// Serialization via Schema
+
 	// Describes how the parameter value will be serialized depending on the type of the parameter value. Default values (based on value of `in`): for `query` - `form`; for `path` - `simple`; for `header` - `simple`; for `cookie` - `form`.
 	Style ParameterStyle `json:"style,omitempty" yaml:"style,omitempty"`
 	// When this is true, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters this property has no effect. When `style` is `form`, the default value is `true`. For all other styles, the default value is `false`.
 	Explode bool `json:"explode,omitempty,omitzero" yaml:"explode,omitempty"`
+	// Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. This property only applies to parameters with an `in` value of `query`. The default value is `false`.
+	AllowReserved bool `json:"allowReserved,omitempty,omitzero" yaml:"allowReserved,omitempty"`
+	// The schema defining the type used for the parameter.
+	Schema *Schema `json:"schema,omitempty" yaml:"schema,omitempty"`
 	// Example of the parameter's potential value. The example SHOULD match the specified schema and encoding properties if present. The `example` field is mutually exclusive of the `examples` field. Furthermore, if referencing a `schema` that contains an example, the `example` value SHALL _override_ the example provided by the schema. To represent examples of media types that cannot naturally be represented in JSON or YAML, a string value can contain the example with escaping where necessary.
 	Example any `json:"example,omitempty" yaml:"example,omitempty"`
 	// Examples of the parameter's potential value. Each example SHOULD contain a value in the correct format as specified in the parameter encoding. The `examples` field is mutually exclusive of the `example` field. Furthermore, if referencing a `schema` that contains an example, the `examples` value SHALL _override_ the example provided by the schema.
 	Examples Examples `json:"examples,omitempty" yaml:"examples,omitempty"`
+
+	// Serialization via Content
+
 	// A map containing the representations for the parameter. The key is the media type and the value describes it. The map MUST only contain one entry.
 	Content Content `json:"content,omitempty" yaml:"content,omitempty"`
+
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
 }

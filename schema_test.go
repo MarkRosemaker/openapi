@@ -45,9 +45,13 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: openapi.TypeArray,
 			Items: &openapi.SchemaRef{
-				Value: &openapi.Schema{},
+				Value: &openapi.Schema{
+					Type: openapi.TypeNumber,
+					Min:  pointer(4.0),
+					Max:  pointer(3.0),
+				},
 			},
-		}, `items.type is required`},
+		}, `items.minimum (4) is invalid: minimum is greater than maximum (4 > 3)`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
 			Min:  pointer(3.0),
@@ -88,6 +92,42 @@ func TestSchema_Validate_Error(t *testing.T) {
 			MaxItems: pointer[uint](4),
 			Items:    &openapi.SchemaRef{},
 		}, `minItems (5) is invalid: minItems is greater than maxItems (5 > 4)`},
+		{openapi.Schema{
+			AllOf: openapi.SchemaRefs{
+				{Value: &openapi.Schema{}},
+			},
+		}, `allOf[0].type is required`},
+		{openapi.Schema{
+			AllOf: openapi.SchemaRefs{
+				{Value: &openapi.Schema{}},
+			},
+		}, `allOf[0].type is required`},
+		{openapi.Schema{
+			Type: openapi.TypeObject,
+			Properties: openapi.Schemas{
+				"foo": {Value: &openapi.Schema{}},
+			},
+		}, `properties["foo"].type is required`},
+		{openapi.Schema{
+			Type:     openapi.TypeObject,
+			Required: []string{"foo"},
+		}, `required[0] ("foo") is invalid: property does not exist`},
+		{openapi.Schema{
+			Type: openapi.TypeObject,
+			AdditionalProperties: &openapi.SchemaRef{
+				Value: &openapi.Schema{},
+			},
+		}, `additionalProperties.type is required`},
+		{openapi.Schema{
+			Type:       openapi.TypeBoolean,
+			Properties: openapi.Schemas{},
+		}, `properties is invalid: only valid for object type, got boolean`},
+		{openapi.Schema{
+			Type: openapi.TypeBoolean,
+			AdditionalProperties: &openapi.SchemaRef{
+				Value: &openapi.Schema{},
+			},
+		}, `additionalProperties is invalid: only valid for object type, got boolean`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
