@@ -56,6 +56,8 @@ func (e *ErrInvalid[T]) continueChain(b *strings.Builder) {
 	switch val := any(e.Value).(type) {
 	case bool:
 		fmt.Fprintf(b, " (%t)", val)
+	case uint:
+		fmt.Fprintf(b, " (%d)", val)
 	default:
 		var zero T
 		if e.Value != zero {

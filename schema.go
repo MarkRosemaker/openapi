@@ -38,11 +38,19 @@ type Schema struct {
 	// The pattern is used to validate the string.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
 
+	// Number
+	Min *float64 `json:"minimum,omitempty" yaml:"minimum,omitempty"`
+	Max *float64 `json:"maximum,omitempty" yaml:"maximum,omitempty"`
+
 	// Array
 
+	// The minimum number of items in the array.
+	MinItems uint `json:"minItems,omitzero" yaml:"minItems,omitzero"`
+	// The maximum number of items in the array.
+	MaxItems *uint `json:"maxItems,omitempty" yaml:"maxItems,omitempty"`
 	// The items of the array. When the type is array, this property is REQUIRED.
 	// The empty schema for `items` indicates a media type of `application/octet-stream`.
-	Items *SchemaRef `json:"items,omitzero" yaml:"items,omitzero"` // omitzero instead of omitempty ensures that the value is marshaled if it is not nil but empty
+	Items *SchemaRef `json:"items,omitzero" yaml:"items,omitzero"`
 
 	// Object
 
@@ -101,6 +109,76 @@ func (s *Schema) Validate() error {
 			return &ErrField{Field: "format", Err: &ErrInvalid[Format]{
 				Value:   s.Format,
 				Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
+			}}
+		}
+	}
+
+	// validate min and max
+	if s.Min != nil || s.Max != nil {
+		switch s.Type {
+		case TypeInteger:
+			if s.Min != nil {
+				if *s.Min != float64(int(*s.Min)) {
+					return &ErrField{Field: "minimum", Err: &ErrInvalid[float64]{
+						Value:   *s.Min,
+						Message: "not an integer",
+					}}
+				}
+			}
+
+			if s.Max != nil {
+				if *s.Max != float64(int(*s.Max)) {
+					return &ErrField{Field: "maximum", Err: &ErrInvalid[float64]{
+						Value:   *s.Max,
+						Message: "not an integer",
+					}}
+				}
+			}
+
+			fallthrough
+		case TypeNumber:
+			if s.Min != nil && s.Max != nil && *s.Min > *s.Max {
+				return &ErrField{Field: "minimum", Err: &ErrInvalid[float64]{
+					Value:   *s.Min,
+					Message: fmt.Sprintf("minimum is greater than maximum (%v > %v)", *s.Min, *s.Max),
+				}}
+			}
+		default:
+			if s.Min != nil {
+				return &ErrField{Field: "minimum", Err: &ErrInvalid[float64]{
+					Value:   *s.Min,
+					Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+				}}
+			}
+
+			return &ErrField{Field: "maximum", Err: &ErrInvalid[float64]{
+				Value:   *s.Max,
+				Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+			}}
+		}
+	}
+
+	// validate min and max items
+	if s.MinItems != 0 || s.MaxItems != nil {
+		// must be array
+		if s.Type != TypeArray {
+			if s.MinItems != 0 {
+				return &ErrField{Field: "minItems", Err: &ErrInvalid[uint]{
+					Value:   s.MinItems,
+					Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+				}}
+			}
+
+			return &ErrField{Field: "maxItems", Err: &ErrInvalid[uint]{
+				Value:   *s.MaxItems,
+				Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			}}
+		}
+
+		if s.MaxItems != nil && s.MinItems > *s.MaxItems {
+			return &ErrField{Field: "minItems", Err: &ErrInvalid[uint]{
+				Value:   s.MinItems,
+				Message: fmt.Sprintf("minItems is greater than maxItems (%d > %d)", s.MinItems, *s.MaxItems),
 			}}
 		}
 	}
