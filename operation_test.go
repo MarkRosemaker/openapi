@@ -175,7 +175,9 @@ func TestOperation_Validate_Error(t *testing.T) {
 					"{$request.query.callbackUrl}/data": &openapi.PathItemRef{
 						Value: &openapi.PathItem{
 							Extensions: jsontext.Value(`{"bar":"buz"}`),
-						}}},
+						},
+					},
+				},
 			},
 		}, `callbacks["foo"]["{$request.query.callbackUrl}/data"].bar: ` + openapi.ErrUnknownField.Error()},
 		{openapi.Operation{
