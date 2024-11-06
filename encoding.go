@@ -41,9 +41,5 @@ func (e *Encoding) Validate() error {
 		}
 	}
 
-	if err := validateExtensions(e.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(e.Extensions)
 }

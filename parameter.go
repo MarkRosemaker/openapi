@@ -153,9 +153,5 @@ func (p *Parameter) Validate() error {
 		return &ErrField{Field: "examples", Err: err}
 	}
 
-	if err := validateExtensions(p.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(p.Extensions)
 }

@@ -32,9 +32,5 @@ func (c *Contact) Validate() error {
 		}
 	}
 
-	if err := validateExtensions(c.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(c.Extensions)
 }

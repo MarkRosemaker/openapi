@@ -93,9 +93,5 @@ func (h *Header) Validate() error {
 	// When `example` or `examples` are provided in conjunction with the `schema` object, the example MUST follow the prescribed serialization strategy for the parameter.
 	// TODO
 
-	if err := validateExtensions(h.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(h.Extensions)
 }

@@ -52,11 +52,7 @@ func (i *Info) Validate() error {
 		}
 	}
 
-	if err := validateExtensions(i.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(i.Extensions)
 }
 
 // fixScheme ensures that the URL has a scheme and that it is valid.

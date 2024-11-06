@@ -30,9 +30,5 @@ func (e *Example) Validate() error {
 		return fmt.Errorf("value and externalValue are mutually exclusive")
 	}
 
-	if err := validateExtensions(e.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(e.Extensions)
 }

@@ -98,9 +98,5 @@ func (p *PathItem) Validate() error {
 		}
 	}
 
-	if err := validateExtensions(p.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(p.Extensions)
 }

@@ -78,9 +78,5 @@ func (s *SecurityScheme) Validate() error {
 		return fmt.Errorf("unimplemented type %q", s.Type)
 	}
 
-	if err := validateExtensions(s.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(s.Extensions)
 }

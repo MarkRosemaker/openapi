@@ -31,9 +31,5 @@ func (r *RequestBody) Validate() error {
 		return &ErrField{Field: "content", Err: err}
 	}
 
-	if err := validateExtensions(r.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(r.Extensions)
 }

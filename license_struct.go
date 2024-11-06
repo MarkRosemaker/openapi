@@ -30,9 +30,5 @@ func (l *License) Validate() error {
 		return errors.New("url and identifier are mutually exclusive")
 	}
 
-	if err := validateExtensions(l.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(l.Extensions)
 }

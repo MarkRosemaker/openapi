@@ -51,9 +51,5 @@ func (l *Link) Validate() error {
 
 	l.Description = strings.TrimSpace(l.Description)
 
-	if err := validateExtensions(l.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(l.Extensions)
 }

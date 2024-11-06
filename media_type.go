@@ -52,9 +52,5 @@ func (mt *MediaType) Validate() error {
 		return &ErrField{Field: "encoding", Err: err}
 	}
 
-	if err := validateExtensions(mt.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(mt.Extensions)
 }
