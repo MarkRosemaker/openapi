@@ -288,6 +288,15 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
 			}}
 		}
+	case int:
+		switch s.Type {
+		case TypeNumber, TypeInteger: // fits
+		default:
+			return &ErrField{Field: "default", Err: &ErrInvalid[int]{
+				Value:   dflt,
+				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+			}}
+		}
 	default:
 		return &ErrField{Field: "default", Err: &ErrInvalid[any]{
 			Value:   s.Default,

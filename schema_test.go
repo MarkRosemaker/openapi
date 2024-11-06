@@ -1,12 +1,28 @@
 package openapi_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
 )
 
 func pointer[T any](v T) *T { return &v }
+
+func TestSchema_Validate(t *testing.T) {
+	t.Parallel()
+
+	for i, tc := range []openapi.Schema{
+		{Type: openapi.TypeNumber, Default: 3.14},
+		{Type: openapi.TypeInteger, Default: 3.0},
+	} {
+		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
+			if err := tc.Validate(); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+}
 
 func TestSchema_Validate_Error(t *testing.T) {
 	t.Parallel()
@@ -132,6 +148,31 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type: openapi.TypeBoolean,
 			Enum: []string{},
 		}, `enum is invalid: only valid for string type, got boolean`},
+		{openapi.Schema{
+			Type:    openapi.TypeBoolean,
+			Default: "foo",
+		}, `default ("foo") is invalid: does not match schema type, got boolean`},
+		{openapi.Schema{
+			Type:    openapi.TypeString,
+			Default: "foo",
+			Enum:    []string{"bar", "buz"},
+		}, `default ("foo") is invalid: is not one of the enums (["bar" "buz"])`},
+		{openapi.Schema{
+			Type:    openapi.TypeInteger,
+			Default: 3.14,
+		}, `default (3.14) is invalid: does not match schema type, got integer`},
+		{openapi.Schema{
+			Type:    openapi.TypeString,
+			Default: 3.14,
+		}, `default (3.14) is invalid: does not match schema type, got string`},
+		{openapi.Schema{
+			Type:    openapi.TypeString,
+			Default: 3,
+		}, `default (3) is invalid: does not match schema type, got string`},
+		{openapi.Schema{
+			Type:    openapi.TypeString,
+			Default: struct{}{},
+		}, `default (struct {}{}) is invalid: unknown type struct {}`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
