@@ -7,6 +7,110 @@ import (
 	"github.com/go-json-experiment/json/jsontext"
 )
 
+func TestComponents_JSON(t *testing.T) {
+	t.Parallel()
+
+	testJSON(t, []byte(`{
+  "schemas": {
+    "GeneralError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Tag": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "responses": {
+    "NotFound": {
+      "description": "Entity not found."
+    },
+    "IllegalInput": {
+      "description": "Illegal input for operation."
+    },
+    "GeneralError": {
+      "description": "General Error",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/GeneralError"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "skipParam": {
+      "name": "skip",
+      "in": "query",
+      "description": "number of items to skip",
+      "required": true,
+      "schema": {
+        "type": "integer",
+        "format": "int32"
+      }
+    },
+    "limitParam": {
+      "name": "limit",
+      "in": "query",
+      "description": "max records to return",
+      "required": true,
+      "schema" : {
+        "type": "integer",
+        "format": "int32"
+      }
+    }
+  },
+  "securitySchemes": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    },
+    "petstore_auth": {
+      "type": "oauth2",
+      "flows": {
+        "implicit": {
+          "authorizationUrl": "https://example.org/api/oauth/dialog",
+          "scopes": {
+            "write:pets": "modify pets in your account",
+            "read:pets": "read your pets"
+          }
+        }
+      }
+    }
+  }
+}`), &openapi.Components{})
+}
+
 func TestComponents_Validate_Error(t *testing.T) {
 	t.Parallel()
 
