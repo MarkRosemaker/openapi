@@ -24,6 +24,9 @@ import (
 // Note that according to the specification, this object MAY be extended with Specification Extensions, but we do not support that in this implementation.
 type OperationResponses = Responses[StatusCode]
 
+// ResponsesByName is a map of response names to response objects.
+type ResponsesByName = Responses[string]
+
 // Responses is a map of either response name or status code to a response object.
 type Responses[K ~string] map[K]*ResponseRef
 
