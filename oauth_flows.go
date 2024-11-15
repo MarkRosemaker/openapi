@@ -21,20 +21,28 @@ type OAuthFlows struct {
 }
 
 func (f *OAuthFlows) Validate() error {
-	if err := f.Implicit.Validate(); err != nil {
-		return &ErrField{Field: "implicit", Err: err}
+	if f.Implicit != nil {
+		if err := f.Implicit.Validate(); err != nil {
+			return &ErrField{Field: "implicit", Err: err}
+		}
 	}
 
-	if err := f.Password.Validate(); err != nil {
-		return &ErrField{Field: "password", Err: err}
+	if f.Password != nil {
+		if err := f.Password.Validate(); err != nil {
+			return &ErrField{Field: "password", Err: err}
+		}
 	}
 
-	if err := f.ClientCredentials.Validate(); err != nil {
-		return &ErrField{Field: "clientCredentials", Err: err}
+	if f.ClientCredentials != nil {
+		if err := f.ClientCredentials.Validate(); err != nil {
+			return &ErrField{Field: "clientCredentials", Err: err}
+		}
 	}
 
-	if err := f.AuthorizationCode.Validate(); err != nil {
-		return &ErrField{Field: "authorizationCode", Err: err}
+	if f.AuthorizationCode != nil {
+		if err := f.AuthorizationCode.Validate(); err != nil {
+			return &ErrField{Field: "authorizationCode", Err: err}
+		}
 	}
 
 	return validateExtensions(f.Extensions)
