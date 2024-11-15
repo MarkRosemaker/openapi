@@ -161,6 +161,13 @@ func TestDocumentValidate_Error(t *testing.T) {
 			Tags:    openapi.Tags{{}},
 		}, `tags[0].name is required`},
 		{&openapi.Document{
+			OpenAPI: "3.1.0",
+			Info:    &openapi.Info{Title: "Sample API", Version: "1.0.0"},
+			Paths:   openapi.Paths{"/": {}},
+			Tags:    openapi.Tags{{Name: "foo"}, {Name: "foo"}},
+		}, `tags[0].name ("foo") is invalid: must be unique
+tags[1].name ("foo") is invalid: must be unique`},
+		{&openapi.Document{
 			OpenAPI:      "3.1.0",
 			Info:         &openapi.Info{Title: "Sample API", Version: "1.0.0"},
 			Paths:        openapi.Paths{"/": {}},

@@ -9,7 +9,7 @@ import (
 // ErrEmptyDocument is thrown if the OpenAPI document does not contain at least one paths field, a components field or a webhooks field.
 var ErrEmptyDocument = errors.New("document must contain at least one paths field, a components field or a webhooks field")
 
-// Document is an OpenAPI document.
+// Document is an OpenAPI document, the root object.
 // It is a self-contained or composite resource which defines or describes an API or elements of an API.
 // An OpenAPI document uses and conforms to the OpenAPI Specification.
 // ([Specification])
@@ -35,7 +35,8 @@ type Document struct {
 	// A declaration of which security mechanisms can be used across the API. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. Individual operations can override this definition. To make security optional, an empty security requirement (`{}`) can be included in the array.
 	Security SecurityRequirements `json:"security,omitempty" yaml:"security,omitempty"`
 	// A list of tags used by the document with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the Operation Object must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic. Each tag name in the list MUST be unique.
-	Tags         Tags          `json:"tags,omitempty" yaml:"tags,omitempty"`
+	Tags Tags `json:"tags,omitempty" yaml:"tags,omitempty"`
+	// Additional external documentation.
 	ExternalDocs *ExternalDocs `json:"externalDocs,omitempty" yaml:"externalDocs,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
