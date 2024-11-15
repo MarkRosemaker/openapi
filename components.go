@@ -26,6 +26,8 @@ type Components struct {
 	Callbacks CallbackRefs `json:"callbacks,omitempty" yaml:"callbacks,omitempty"`
 	// An object to hold reusable Path Item Object.
 	PathItems PathItems `json:"pathItems,omitempty" yaml:"pathItems,omitempty"`
+	// This object MAY be extended with Specification Extensions.
+	Extensions Extensions `json:",inline" yaml:",inline"`
 }
 
 func (c *Components) Validate() error {
@@ -69,6 +71,10 @@ func (c *Components) Validate() error {
 		return &ErrField{Field: "pathItems", Err: err}
 	}
 
+	if err := validateExtensions(c.Extensions); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -76,5 +82,5 @@ func (c Components) isEmpty() bool {
 	return len(c.Schemas) == 0 && len(c.Responses) == 0 && len(c.Parameters) == 0 &&
 		len(c.Examples) == 0 && len(c.RequestBodies) == 0 && len(c.Headers) == 0 &&
 		len(c.SecuritySchemes) == 0 && len(c.Links) == 0 && len(c.Callbacks) == 0 &&
-		len(c.PathItems) == 0
+		len(c.PathItems) == 0 && len(c.Extensions) == 0
 }

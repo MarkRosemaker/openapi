@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
+	"github.com/go-json-experiment/json/jsontext"
 )
 
 func TestComponents_Validate_Error(t *testing.T) {
@@ -63,6 +64,9 @@ func TestComponents_Validate_Error(t *testing.T) {
 				},
 			}},
 		}, `pathItems["MyPathItem"].parameters[0].name is required`},
+		{openapi.Components{
+			Extensions: jsontext.Value(`{"foo": "bar"}`),
+		}, `foo: unknown field or extension without "x-" prefix`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.c.Validate(); err == nil || err.Error() != tc.err {
