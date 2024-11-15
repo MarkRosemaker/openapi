@@ -12,6 +12,10 @@ type SecuritySchemes map[string]*SecuritySchemeRef
 
 func (ss SecuritySchemes) Validate() error {
 	for name, s := range ss.ByIndex() {
+		if err := validateKey(name); err != nil {
+			return err
+		}
+
 		if err := s.Validate(); err != nil {
 			return &ErrKey{Key: name, Err: err}
 		}

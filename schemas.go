@@ -12,6 +12,10 @@ type Schemas map[string]*Schema
 
 func (ss Schemas) Validate() error {
 	for name, value := range ss.ByIndex() {
+		if err := validateKey(name); err != nil {
+			return err
+		}
+
 		if err := value.Validate(); err != nil {
 			return &ErrKey{Key: name, Err: err}
 		}

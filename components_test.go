@@ -18,10 +18,16 @@ func TestComponents_Validate_Error(t *testing.T) {
 			Schemas: openapi.Schemas{"Pet": &openapi.Schema{}},
 		}, `schemas["Pet"].type is required`},
 		{openapi.Components{
+			Schemas: openapi.Schemas{" ": &openapi.Schema{}},
+		}, `schemas[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
+		{openapi.Components{
 			Responses: openapi.ResponsesByName{"PetResponse": &openapi.ResponseRef{
 				Value: &openapi.Response{},
 			}},
 		}, `responses["PetResponse"].description is required`},
+		{openapi.Components{
+			Responses: openapi.ResponsesByName{" ": &openapi.ResponseRef{}},
+		}, `responses[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
 		{openapi.Components{
 			Parameters: openapi.Parameters{"MyParameter": &openapi.ParameterRef{
 				Value: &openapi.Parameter{},

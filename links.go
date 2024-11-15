@@ -12,6 +12,10 @@ type Links map[string]*LinkRef
 
 func (l Links) Validate() error {
 	for expr, v := range l.ByIndex() {
+		if err := validateKey(expr); err != nil {
+			return err
+		}
+
 		if err := v.Validate(); err != nil {
 			return &ErrField{Field: expr, Err: err}
 		}

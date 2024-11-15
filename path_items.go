@@ -12,6 +12,10 @@ type PathItems map[string]*PathItemRef
 
 func (ps PathItems) Validate() error {
 	for name, p := range ps.ByIndex() {
+		if err := validateKey(name); err != nil {
+			return err
+		}
+
 		if err := p.Validate(); err != nil {
 			return &ErrKey{Key: name, Err: err}
 		}

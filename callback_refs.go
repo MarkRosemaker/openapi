@@ -12,6 +12,10 @@ type CallbackRefs map[string]*CallbackRef
 
 func (cs CallbackRefs) Validate() error {
 	for name, value := range cs.ByIndex() {
+		if err := validateKey(name); err != nil {
+			return err
+		}
+
 		if err := value.Validate(); err != nil {
 			return &ErrKey{Key: name, Err: err}
 		}

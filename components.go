@@ -1,8 +1,27 @@
 package openapi
 
+import (
+	"fmt"
+	"regexp"
+)
+
+var reKey = regexp.MustCompile(`^[a-zA-Z0-9\.\-_]+$`)
+
 // The Components object holds a set of reusable objects for different aspects of the OAS.
 // All objects defined within the components object will have no effect on the API unless they are explicitly referenced from properties outside the components object.
 // ([Specification])
+//
+// All the fixed fields are objects that MUST use keys that match the regular expression:
+//
+//	^[a-zA-Z0-9\.\-_]+$
+//
+// Field name examples:
+//
+//	User
+//	User_1
+//	User_Name
+//	user-name
+//	my.org.User
 //
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#components-object
 type Components struct {
@@ -30,9 +49,27 @@ type Components struct {
 	Extensions Extensions `json:",inline" yaml:",inline"`
 }
 
+func validateKey(key string) error {
+	if reKey.MatchString(key) {
+		return nil
+	}
+
+	return &ErrKey{Key: key, Err: &ErrInvalid[string]{
+		Value:   key,
+		Message: fmt.Sprintf(`must match the regular expression %q`, reKey),
+	}}
+}
+
 func (c *Components) Validate() error {
 	if err := c.Schemas.Validate(); err != nil {
 		return &ErrField{Field: "schemas", Err: err}
+	}
+
+	// validate the key: check if it is a valid key
+	for name := range c.Responses.ByIndex() {
+		if err := validateKey(name); err != nil {
+			return &ErrField{Field: "responses", Err: err}
+		}
 	}
 
 	if err := c.Responses.Validate(); err != nil {

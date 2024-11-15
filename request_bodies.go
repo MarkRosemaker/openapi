@@ -12,6 +12,10 @@ type RequestBodies map[string]*RequestBodyRef
 
 func (rs RequestBodies) Validate() error {
 	for k, r := range rs.ByIndex() {
+		if err := validateKey(k); err != nil {
+			return err
+		}
+
 		if err := r.Validate(); err != nil {
 			return &ErrKey{Key: k, Err: err}
 		}
