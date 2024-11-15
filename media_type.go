@@ -27,6 +27,7 @@ type MediaType struct {
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
 
+	// an index to the original location of this object
 	idx int
 }
 
