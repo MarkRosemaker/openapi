@@ -54,6 +54,15 @@ func TestComponents_Validate_Error(t *testing.T) {
 				Value: invalidCallback,
 			}},
 		}, `callbacks["MyCallback"]["{$request.query.callbackUrl}/data"].parameters[0].name is required`},
+		{openapi.Components{
+			PathItems: openapi.PathItems{"MyPathItem": &openapi.PathItemRef{
+				Value: &openapi.PathItem{
+					Parameters: openapi.ParameterList{{
+						Value: &openapi.Parameter{},
+					}},
+				},
+			}},
+		}, `pathItems["MyPathItem"].parameters[0].name is required`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.c.Validate(); err == nil || err.Error() != tc.err {
