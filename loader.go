@@ -97,5 +97,5 @@ func (l *loader) LoadFromReader(r io.Reader) (*Document, error) {
 	// 	return nil, err
 	// }
 
-	return doc, nil
+	return doc, doc.Validate()
 }
