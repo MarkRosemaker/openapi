@@ -55,6 +55,10 @@ type refOrValue[T any, O referencable[T]] struct {
 
 func (r *refOrValue[T, O]) Validate() error {
 	if r.Ref != nil {
+		if r.Value == nil {
+			return fmt.Errorf("%s (%T) was not resolved", r.Ref.Identifier, r.Value)
+		}
+
 		return r.Ref.Validate()
 	}
 
