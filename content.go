@@ -24,6 +24,16 @@ func (c Content) Validate() error {
 	return nil
 }
 
+func (l *loader) resolveContent(c Content) error {
+	for mr, mt := range c.ByIndex() {
+		if err := l.resolveMediaType(mt); err != nil {
+			return &ErrKey{Key: string(mr), Err: err}
+		}
+	}
+
+	return nil
+}
+
 // ByIndex returns the keys of the map in the order of the index.
 func (c Content) ByIndex() iter.Seq2[MediaRange, *MediaType] {
 	return _json.OrderedMapByIndex(c, getIndexMediaType)
