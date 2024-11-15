@@ -37,7 +37,7 @@ func (l *loader) LoadFromDataJSON(data []byte) (*Document, error) {
 	// 	return nil, err
 	// }
 
-	return doc, nil
+	return doc, doc.Validate()
 }
 
 // isJSONRead checks if the data in the reader is JSON
