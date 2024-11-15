@@ -16,6 +16,8 @@ type Components struct {
 	Examples Examples `json:"examples,omitempty" yaml:"examples,omitempty"`
 	// An object to hold reusable Request Body Objects.
 	RequestBodies RequestBodies `json:"requestBodies,omitempty" yaml:"requestBodies,omitempty"`
+	// An object to hold reusable Header Objects.
+	Headers Headers `json:"headers,omitempty" yaml:"headers,omitempty"`
 
 	Links           Links           `json:"links,omitempty" yaml:"links,omitempty"`
 	SecuritySchemes SecuritySchemes `json:"securitySchemes,omitempty" yaml:"securitySchemes,omitempty"`
@@ -42,6 +44,10 @@ func (c *Components) Validate() error {
 		return &ErrField{Field: "requestBodies", Err: err}
 	}
 
+	if err := c.Headers.Validate(); err != nil {
+		return &ErrField{Field: "headers", Err: err}
+	}
+
 	// TODO -----
 
 	if err := c.Links.Validate(); err != nil {
@@ -57,5 +63,5 @@ func (c *Components) Validate() error {
 
 func (c Components) isEmpty() bool {
 	return len(c.Schemas) == 0 && len(c.Responses) == 0 && len(c.Parameters) == 0 &&
-		len(c.Examples) == 0 && len(c.RequestBodies) == 0
+		len(c.Examples) == 0 && len(c.RequestBodies) == 0 && len(c.Headers) == 0
 }
