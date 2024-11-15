@@ -147,7 +147,7 @@ func TestOperation_Validate_Error(t *testing.T) {
 		err string
 	}{
 		{openapi.Operation{
-			ExternalDocs: &openapi.ExternalDocumentation{},
+			ExternalDocs: &openapi.ExternalDocs{},
 		}, `externalDocs.url is required`},
 		{openapi.Operation{
 			Parameters: openapi.ParameterList{
@@ -181,7 +181,7 @@ func TestOperation_Validate_Error(t *testing.T) {
 			},
 		}, `callbacks["foo"]["{$request.query.callbackUrl}/data"].bar: ` + openapi.ErrUnknownField.Error()},
 		{openapi.Operation{
-			Security: openapi.Security{{"": nil}},
+			Security: openapi.SecurityRequirements{{"": nil}},
 		}, `security[0][""]: empty security scheme name`},
 		{openapi.Operation{
 			Servers: openapi.Servers{{}},
