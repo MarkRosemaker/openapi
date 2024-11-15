@@ -10,6 +10,8 @@ type Components struct {
 	Schemas Schemas `json:"schemas,omitempty" yaml:"schemas,omitempty"`
 	// An object to hold reusable Response Objects.
 	Responses ResponsesByName `json:"responses,omitempty" yaml:"responses,omitempty"`
+	// An object to hold reusable Parameter Objects.
+	Parameters Parameters `json:"parameters,omitempty" yaml:"parameters,omitempty"`
 
 	Links           Links           `json:"links,omitempty" yaml:"links,omitempty"`
 	SecuritySchemes SecuritySchemes `json:"securitySchemes,omitempty" yaml:"securitySchemes,omitempty"`
@@ -22,6 +24,10 @@ func (c *Components) Validate() error {
 
 	if err := c.Responses.Validate(); err != nil {
 		return &ErrField{Field: "responses", Err: err}
+	}
+
+	if err := c.Parameters.Validate(); err != nil {
+		return &ErrField{Field: "parameters", Err: err}
 	}
 
 	// TODO -----
@@ -38,5 +44,5 @@ func (c *Components) Validate() error {
 }
 
 func (c Components) isEmpty() bool {
-	return len(c.Schemas) == 0 && len(c.Responses) == 0
+	return len(c.Schemas) == 0 && len(c.Responses) == 0 && len(c.Parameters) == 0
 }
