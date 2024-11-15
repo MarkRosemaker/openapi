@@ -14,7 +14,7 @@ type Operation struct {
 	// A verbose explanation of the operation behavior. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// Additional external documentation for this operation.
-	ExternalDocs *ExternalDocumentation `json:"externalDocs,omitempty" yaml:"externalDocs,omitempty"`
+	ExternalDocs *ExternalDocs `json:"externalDocs,omitempty" yaml:"externalDocs,omitempty"`
 	// Unique string used to identify the operation. The id MUST be unique among all operations described in the API. The operationId value is **case-sensitive**. Tools and libraries MAY use the operationId to uniquely identify an operation, therefore, it is RECOMMENDED to follow common programming naming conventions.
 	OperationID string `json:"operationId,omitempty" yaml:"operationId,omitempty"`
 	// A list of parameters that are applicable for this operation. If a parameter is already defined at the Path Item, the new definition will override it but can never remove it. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location. The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
@@ -28,7 +28,7 @@ type Operation struct {
 	// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation. Default value is `false`.
 	Deprecated bool `json:"deprecated,omitempty,omitzero" yaml:"deprecated,omitempty"`
 	// A declaration of which security mechanisms can be used for this operation. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. To make security optional, an empty security requirement (`{}`) can be included in the array. This definition overrides any declared top-level `security`. To remove a top-level security declaration, an empty array can be used.
-	Security Security `json:"security,omitempty" yaml:"security,omitempty"`
+	Security SecurityRequirements `json:"security,omitempty" yaml:"security,omitempty"`
 	// An alternative `server` array to service this operation. If an alternative `server` object is specified at the Path Item Object or Root level, it will be overridden by this value.
 	Servers Servers `json:"servers,omitempty" yaml:"servers,omitempty"`
 	// This object MAY be extended with Specification Extensions.
@@ -81,9 +81,5 @@ func (o *Operation) Validate() error {
 		return &ErrField{Field: "servers", Err: err}
 	}
 
-	if err := validateExtensions(o.Extensions); err != nil {
-		return err
-	}
-
-	return nil
+	return validateExtensions(o.Extensions)
 }
