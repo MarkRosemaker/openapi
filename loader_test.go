@@ -5,12 +5,10 @@ import (
 	_ "embed"
 	"errors"
 	"io"
-	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
-	"github.com/go-json-experiment/json"
 )
 
 var (
@@ -18,8 +16,6 @@ var (
 	exampleJSON []byte
 	//go:embed examples/openapi.yaml
 	exampleYAML []byte
-
-	openapiDocumentType = reflect.TypeFor[openapi.Document]()
 )
 
 func TestLoadFromFile(t *testing.T) {
@@ -128,8 +124,14 @@ func TestLoadFromReader_Error(t *testing.T) {
 	t.Run("extra field", func(t *testing.T) {
 		t.Parallel()
 
-		_, err := openapi.LoadFromReader(strings.NewReader(`   {"extra":"foo"}`))
-		assertJSONError(t, err, openapiDocumentType, `unknown name "extra"`)
+		if _, err := openapi.LoadFromReader(strings.NewReader(`   {
+		"openapi":"3.1.0","info":{"title": "My Title","version":"1.2"},
+		"paths": {"/":{}},
+		"extra":"foo"}`)); err == nil {
+			t.Fatal("expected error")
+		} else if want := `extra: unknown field or extension without "x-" prefix`; err.Error() != want {
+			t.Fatalf("got: %v, want: %v", err, want)
+		}
 	})
 
 	t.Run("invalid yaml", func(t *testing.T) {
@@ -201,8 +203,14 @@ func TestLoadFromData_Error(t *testing.T) {
 	t.Run("extra field", func(t *testing.T) {
 		t.Parallel()
 
-		_, err := openapi.LoadFromData([]byte(`   {"extra":"foo"}`))
-		assertJSONError(t, err, openapiDocumentType, `unknown name "extra"`)
+		if _, err := openapi.LoadFromData([]byte(`   {
+		"openapi":"3.1.0","info":{"title": "My Title","version":"1.2"},
+		"paths": {"/":{}},
+		"extra":"foo"}`)); err == nil {
+			t.Fatal("expected error")
+		} else if want := `extra: unknown field or extension without "x-" prefix`; err.Error() != want {
+			t.Fatalf("got: %v, want: %v", err, want)
+		}
 	})
 
 	t.Run("invalid yaml", func(t *testing.T) {
@@ -216,22 +224,4 @@ func TestLoadFromData_Error(t *testing.T) {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})
-}
-
-func assertJSONError(t *testing.T, err error, wantGoType reflect.Type, wantErr string) {
-	t.Helper()
-
-	if err == nil {
-		t.Fatal("expected JSON error")
-		return
-	}
-
-	jsonErr := &json.SemanticError{}
-	if !errors.As(err, &jsonErr) {
-		t.Fatalf("expected json.SemanticError, got %T", err)
-	} else if jsonErr.GoType != wantGoType {
-		t.Fatalf("mismatched go type, got: %s, want: %s", jsonErr.GoType, wantGoType)
-	} else if jsonErr.Err.Error() != wantErr {
-		t.Fatalf("got: %v, want: %v", jsonErr.Err, wantErr)
-	}
 }
