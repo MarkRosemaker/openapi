@@ -44,7 +44,7 @@ func resolveRef[T any, O referencable[T]](
 	return resolveValue(r.Value)
 }
 
-func (l *loader) collectPaths(ps Paths) {
+func (l *loader) collectPaths(ps Paths, ref ref) {
 }
 
 func (l *loader) resolveOperation(o *Operation) error {
@@ -107,5 +107,5 @@ func (l *loader) resolveCallbacks(cs Callbacks) error {
 	return nil
 }
 
-func (l *loader) collectWebhooks(ws Webhooks) {
+func (l *loader) collectWebhooks(ws Webhooks, ref ref) {
 }

@@ -116,3 +116,25 @@ func (d *Document) Validate() error {
 
 	return validateExtensions(d.Extensions)
 }
+
+func (l *loader) collectDocument(doc *Document, ref ref) {
+	l.collectPaths(doc.Paths, append(ref, "paths"))
+	l.collectWebhooks(doc.Webhooks, append(ref, "webhooks"))
+	l.collectComponents(doc.Components, append(ref, "components"))
+}
+
+func (l *loader) resolveDocument(doc *Document) error {
+	if err := l.resolvePaths(doc.Paths); err != nil {
+		return &ErrField{Field: "paths", Err: err}
+	}
+
+	if err := l.resolveWebhooks(doc.Webhooks); err != nil {
+		return &ErrField{Field: "webhooks", Err: err}
+	}
+
+	if err := l.resolveComponents(doc.Components); err != nil {
+		return &ErrField{Field: "components", Err: err}
+	}
+
+	return nil
+}
