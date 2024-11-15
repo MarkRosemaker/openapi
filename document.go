@@ -31,13 +31,12 @@ type Document struct {
 	// The incoming webhooks that MAY be received as part of this API and that the API consumer MAY choose to implement. Closely related to the `callbacks` feature, this section describes requests initiated other than by an API call, for example by an out of band registration.
 	Webhooks Webhooks `json:"webhooks,omitempty" yaml:"webhooks,omitempty"`
 	// An element to hold various schemas for the document.
-	Components Components `json:"components,omitempty" yaml:"components,omitempty"`
-
-	// security TODO
-
-	Tags Tags `json:"tags,omitempty" yaml:"tags,omitempty"`
-
-	// externalDocs TODO
+	Components   Components           `json:"components,omitempty" yaml:"components,omitempty"`
+	Security     SecurityRequirements `json:"security,omitempty" yaml:"security,omitempty"`
+	Tags         Tags                 `json:"tags,omitempty" yaml:"tags,omitempty"`
+	ExternalDocs *ExternalDocs        `json:"externalDocs,omitempty" yaml:"externalDocs,omitempty"`
+	// This object MAY be extended with Specification Extensions.
+	Extensions Extensions `json:",inline" yaml:",inline"`
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.
@@ -98,5 +97,19 @@ func (d *Document) Validate() error {
 		return &ErrField{Field: "components", Err: err}
 	}
 
-	return nil
+	if err := d.Security.Validate(); err != nil {
+		return &ErrField{Field: "security", Err: err}
+	}
+
+	if err := d.Tags.Validate(); err != nil {
+		return &ErrField{Field: "tags", Err: err}
+	}
+
+	if d.ExternalDocs != nil {
+		if err := d.ExternalDocs.Validate(); err != nil {
+			return &ErrField{Field: "externalDocs", Err: err}
+		}
+	}
+
+	return validateExtensions(d.Extensions)
 }

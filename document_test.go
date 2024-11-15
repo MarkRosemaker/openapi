@@ -133,6 +133,24 @@ func TestDocumentValidate_Error(t *testing.T) {
 				Schemas: openapi.Schemas{"Pet": {Value: &openapi.Schema{}}},
 			},
 		}, `components.schemas["Pet"].type is required`},
+		{&openapi.Document{
+			OpenAPI:  "3.1.0",
+			Info:     &openapi.Info{Title: "Sample API", Version: "1.0.0"},
+			Paths:    openapi.Paths{"/": {}},
+			Security: openapi.SecurityRequirements{{"": {}}},
+		}, `security[0][""]: empty security scheme name`},
+		{&openapi.Document{
+			OpenAPI: "3.1.0",
+			Info:    &openapi.Info{Title: "Sample API", Version: "1.0.0"},
+			Paths:   openapi.Paths{"/": {}},
+			Tags:    openapi.Tags{{}},
+		}, `tags[0].name is required`},
+		{&openapi.Document{
+			OpenAPI:      "3.1.0",
+			Info:         &openapi.Info{Title: "Sample API", Version: "1.0.0"},
+			Paths:        openapi.Paths{"/": {}},
+			ExternalDocs: &openapi.ExternalDocs{},
+		}, `externalDocs.url is required`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			t.Parallel()
