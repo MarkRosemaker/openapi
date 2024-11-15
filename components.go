@@ -20,7 +20,7 @@ type Components struct {
 	Headers Headers `json:"headers,omitempty" yaml:"headers,omitempty"`
 	// An object to hold reusable Security Scheme Objects.
 	SecuritySchemes SecuritySchemes `json:"securitySchemes,omitempty" yaml:"securitySchemes,omitempty"`
-
+	// An object to hold reusable Link Objects.
 	Links Links `json:"links,omitempty" yaml:"links,omitempty"`
 }
 
@@ -53,8 +53,6 @@ func (c *Components) Validate() error {
 		return &ErrField{Field: "securitySchemes", Err: err}
 	}
 
-	// TODO -----
-
 	if err := c.Links.Validate(); err != nil {
 		return &ErrField{Field: "links", Err: err}
 	}
@@ -65,5 +63,5 @@ func (c *Components) Validate() error {
 func (c Components) isEmpty() bool {
 	return len(c.Schemas) == 0 && len(c.Responses) == 0 && len(c.Parameters) == 0 &&
 		len(c.Examples) == 0 && len(c.RequestBodies) == 0 && len(c.Headers) == 0 &&
-		len(c.SecuritySchemes) == 0
+		len(c.SecuritySchemes) == 0 && len(c.Links) == 0
 }
