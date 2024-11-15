@@ -6,6 +6,16 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
+var invalidCallback = &openapi.Callback{
+	"{$request.query.callbackUrl}/data": {
+		Value: &openapi.PathItem{
+			Parameters: openapi.ParameterList{{
+				Value: &openapi.Parameter{},
+			}},
+		},
+	},
+}
+
 func TestCallback_JSON(t *testing.T) {
 	t.Parallel()
 
@@ -59,19 +69,7 @@ func TestCallback_JSON(t *testing.T) {
 }
 
 func TestCallback_Validate_Error(t *testing.T) {
-	t.Parallel()
-
-	c := openapi.Callback{
-		"{$request.query.callbackUrl}/data": {
-			Value: &openapi.PathItem{
-				Parameters: openapi.ParameterList{{
-					Value: &openapi.Parameter{},
-				}},
-			},
-		},
-	}
-
-	if err := c.Validate(); err == nil {
+	if err := invalidCallback.Validate(); err == nil {
 		t.Fatal("expected error")
 	} else if want := `["{$request.query.callbackUrl}/data"].parameters[0].name is required`; want != err.Error() {
 		t.Fatalf("expected %q, got %q", want, err.Error())

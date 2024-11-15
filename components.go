@@ -22,6 +22,8 @@ type Components struct {
 	SecuritySchemes SecuritySchemes `json:"securitySchemes,omitempty" yaml:"securitySchemes,omitempty"`
 	// An object to hold reusable Link Objects.
 	Links Links `json:"links,omitempty" yaml:"links,omitempty"`
+	// An object to hold reusable Callback Objects.
+	Callbacks CallbackRefs `json:"callbacks,omitempty" yaml:"callbacks,omitempty"`
 }
 
 func (c *Components) Validate() error {
@@ -57,11 +59,15 @@ func (c *Components) Validate() error {
 		return &ErrField{Field: "links", Err: err}
 	}
 
+	if err := c.Callbacks.Validate(); err != nil {
+		return &ErrField{Field: "callbacks", Err: err}
+	}
+
 	return nil
 }
 
 func (c Components) isEmpty() bool {
 	return len(c.Schemas) == 0 && len(c.Responses) == 0 && len(c.Parameters) == 0 &&
 		len(c.Examples) == 0 && len(c.RequestBodies) == 0 && len(c.Headers) == 0 &&
-		len(c.SecuritySchemes) == 0 && len(c.Links) == 0
+		len(c.SecuritySchemes) == 0 && len(c.Links) == 0 && len(c.Callbacks) == 0
 }

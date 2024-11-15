@@ -19,6 +19,8 @@ type (
 	PathItemRef = refOrValue[PathItem, *PathItem]
 	// SecuritySchemeRef is a reference to a SecurityScheme or an actual SecurityScheme.
 	SecuritySchemeRef = refOrValue[SecurityScheme, *SecurityScheme]
+	// CallbackRef is a reference to a Callback or an actual Callback.
+	CallbackRef = refOrValue[Callback, *Callback]
 
 	// SchemaRefList is a slice of SchemaRef.
 	SchemaRefList []*SchemaRef
