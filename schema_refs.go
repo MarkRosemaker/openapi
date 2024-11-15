@@ -8,9 +8,9 @@ import (
 	"github.com/go-json-experiment/json/jsontext"
 )
 
-type Schemas map[string]*Schema
+type SchemaRefs map[string]*SchemaRef
 
-func (ss Schemas) Validate() error {
+func (ss SchemaRefs) Validate() error {
 	for name, value := range ss.ByIndex() {
 		if err := value.Validate(); err != nil {
 			return &ErrKey{Key: name, Err: err}
@@ -21,16 +21,16 @@ func (ss Schemas) Validate() error {
 }
 
 // ByIndex returns the keys of the map in the order of the index.
-func (ss Schemas) ByIndex() iter.Seq2[string, *Schema] {
-	return _json.OrderedMapByIndex(ss, getIndexSchema)
+func (ss SchemaRefs) ByIndex() iter.Seq2[string, *SchemaRef] {
+	return _json.OrderedMapByIndex(ss, getIndexRef[Schema, *Schema])
 }
 
 // UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (ss *Schemas) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(ss, dec, opts, setIndexSchema)
+func (ss *SchemaRefs) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return _json.UnmarshalOrderedMap(ss, dec, opts, setIndexRef[Schema, *Schema])
 }
 
 // MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (ss *Schemas) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+func (ss *SchemaRefs) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
 	return _json.MarshalOrderedMap(ss, enc, opts)
 }

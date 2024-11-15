@@ -20,8 +20,8 @@ type (
 	// SecuritySchemeRef is a reference to a SecurityScheme or an actual SecurityScheme.
 	SecuritySchemeRef = refOrValue[SecurityScheme, *SecurityScheme]
 
-	// SchemaRefs is a slice of SchemaRef.
-	SchemaRefs []*SchemaRef
+	// SchemaRefList is a slice of SchemaRef.
+	SchemaRefList []*SchemaRef
 )
 
 func getIndexRef[T any, O referencable[T]](ref *refOrValue[T, O]) int    { return ref.idx }

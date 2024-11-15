@@ -32,7 +32,7 @@ type Schema struct {
 	Format Format `json:"format,omitempty" yaml:"format,omitempty"`
 
 	// AllOf takes an array of object definitions that are validated independently but together compose a single object.
-	AllOf SchemaRefs `json:"allOf,omitempty" yaml:"allOf,omitempty"`
+	AllOf SchemaRefList `json:"allOf,omitempty" yaml:"allOf,omitempty"`
 
 	// Integer / Number
 
@@ -63,7 +63,7 @@ type Schema struct {
 	// Object
 
 	// For object types, defines the properties of the object
-	Properties Schemas `json:"properties,omitzero" yaml:"properties,omitzero"`
+	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitzero"`
 	// Which properties are required.
 	Required             []string   `json:"required,omitempty" yaml:"required,omitempty"`
 	AdditionalProperties *SchemaRef `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
@@ -76,7 +76,13 @@ type Schema struct {
 	Default any `json:"default,omitempty" yaml:"default,omitempty"`
 
 	Example jsontext.Value `json:"example,omitempty" yaml:"example,omitempty"`
+
+	// an index to the original location of this object
+	idx int
 }
+
+func getIndexSchema(s *Schema) int      { return s.idx }
+func setIndexSchema(s *Schema, idx int) { s.idx = idx }
 
 func (s *Schema) Validate() error {
 	s.Description = strings.TrimSpace(s.Description)

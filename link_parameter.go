@@ -9,6 +9,7 @@ import (
 type LinkParameter struct {
 	Expression RuntimeExpression
 
+	// an index to the original location of this object
 	idx int
 }
 

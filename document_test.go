@@ -130,7 +130,7 @@ func TestDocumentValidate_Error(t *testing.T) {
 			OpenAPI: "3.1.0",
 			Info:    &openapi.Info{Title: "Sample API", Version: "1.0.0"},
 			Components: openapi.Components{
-				Schemas: openapi.Schemas{"Pet": {Value: &openapi.Schema{}}},
+				Schemas: openapi.Schemas{"Pet": &openapi.Schema{}},
 			},
 		}, `components.schemas["Pet"].type is required`},
 		{&openapi.Document{

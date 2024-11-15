@@ -109,19 +109,19 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Items:    &openapi.SchemaRef{},
 		}, `minItems (5) is invalid: minItems is greater than maxItems (5 > 4)`},
 		{openapi.Schema{
-			AllOf: openapi.SchemaRefs{
+			AllOf: openapi.SchemaRefList{
 				{Value: &openapi.Schema{}},
 			},
 		}, `allOf[0].type is required`},
 		{openapi.Schema{
-			AllOf: openapi.SchemaRefs{
+			AllOf: openapi.SchemaRefList{
 				{Value: &openapi.Schema{}},
 			},
 		}, `allOf[0].type is required`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
-			Properties: openapi.Schemas{
-				"foo": {Value: &openapi.Schema{}},
+			Properties: openapi.SchemaRefs{
+				"foo": &openapi.SchemaRef{Value: &openapi.Schema{}},
 			},
 		}, `properties["foo"].type is required`},
 		{openapi.Schema{
@@ -136,7 +136,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `additionalProperties.type is required`},
 		{openapi.Schema{
 			Type:       openapi.TypeBoolean,
-			Properties: openapi.Schemas{},
+			Properties: openapi.SchemaRefs{},
 		}, `properties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
