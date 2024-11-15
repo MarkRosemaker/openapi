@@ -16,10 +16,6 @@ paths:
     /users/{id}: {}
 components:
     schemas:
-        RefToSomeString:
-            summary: my summary
-            description: my description
-            $ref: '#/components/schemas/SomeString'
         SomeString:
             type: string
             pattern: ^[a-zA-Z0-9]+$
