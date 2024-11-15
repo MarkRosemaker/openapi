@@ -2,11 +2,11 @@ package openapi
 
 import "net/url"
 
-// ExternalDocumentation allows referencing an external resource for extended documentation.
+// ExternalDocs allows referencing an external resource for extended documentation.
 // ([Specification])
 //
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#external-documentation-object
-type ExternalDocumentation struct {
+type ExternalDocs struct {
 	// A description of the target documentation. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// REQUIRED. The URL for the target documentation. This MUST be in the form of a URL.
@@ -16,7 +16,7 @@ type ExternalDocumentation struct {
 }
 
 // Validate checks the external documentation for consistency.
-func (ed *ExternalDocumentation) Validate() error {
+func (ed *ExternalDocs) Validate() error {
 	if ed.URL == nil {
 		return &ErrField{Field: "url", Err: &ErrRequired{}}
 	}
