@@ -9,6 +9,21 @@ import (
 	"github.com/go-api-libs/types"
 )
 
+func TestDocument_JSON(t *testing.T) {
+	t.Parallel()
+
+	// security optional via an empty security requirement
+	testJSON(t, []byte(`{
+	  "openapi": "3.1.0",
+	  "info": {
+	    "title": "Sample Pet Store App",
+		"version": "1.0.0"
+	  },
+	  "paths": {"/": {}},
+	  "security": [{}]
+}`), &openapi.Document{})
+}
+
 func TestDocument_Validate(t *testing.T) {
 	t.Parallel()
 
