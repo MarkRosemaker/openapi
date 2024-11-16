@@ -72,6 +72,50 @@ func TestResolve(t *testing.T) {
 			"MyActualExample": {
 			}
 		}}`,
+		`"components":{"requestBodies": {
+		"MyReqBody": {
+			"$ref": "#/components/requestBodies/MyActualReqBody"
+		},
+		"MyActualReqBody": {"content": {"application/json": {}}}
+		}}`,
+		`"components":{"headers": {
+			"MyHeader": {
+				"$ref": "#/components/headers/MyActualHeader"
+			},
+			"MyActualHeader": {"schema": {"type": "string"}}
+			}}`,
+		`"components":{"securitySchemes": {
+			"MyScheme": {
+				"$ref": "#/components/securitySchemes/MyActualScheme"
+			},
+			"MyActualScheme": {
+				"type": "apiKey",
+				"name": "myApiKey",
+				"in": "header"
+			}
+		}}`,
+		`"components":{"links": {
+			"MyLink": {
+				"$ref": "#/components/links/MyActualLink"
+			},
+			"MyActualLink": {
+				"operationRef": "myOperationRef"
+			}
+		}}`,
+		`"components":{"callbacks": {
+			"MyCallback": {
+				"$ref": "#/components/callbacks/MyActualCallback"
+			},
+			"MyActualCallback": {
+			}
+		}}`,
+		`"components":{"pathItems": {
+			"MyPathItem": {
+				"$ref": "#/components/pathItems/MyActualPathItem"
+			},
+			"MyActualPathItem": {
+			}
+		}}`,
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			doc, err := openapi.LoadFromDataJSON([]byte(fmt.Sprintf(
@@ -121,6 +165,36 @@ func TestResolve_Error(t *testing.T) {
 		"$ref": "#/components/examples/MyActualExample"
 	}
 	}}}`, `components.examples["MyExample"]: couldn't resolve "#/components/examples/MyActualExample"`},
+		{`{"components":{"requestBodies": {
+		"MyReqBody": {
+			"$ref": "#/components/requestBodies/MyActualReqBody"
+		}
+		}}}`, `components.requestBodies["MyReqBody"]: couldn't resolve "#/components/requestBodies/MyActualReqBody"`},
+		{`{"components":{"headers": {
+			"MyHeader": {
+				"$ref": "#/components/headers/MyActualHeader"
+			}
+			}}}`, `components.headers["MyHeader"]: couldn't resolve "#/components/headers/MyActualHeader"`},
+		{`{"components":{"securitySchemes": {
+				"MyScheme": {
+					"$ref": "#/components/securitySchemes/MyActualScheme"
+				}
+				}}}`, `components.securitySchemes["MyScheme"]: couldn't resolve "#/components/securitySchemes/MyActualScheme"`},
+		{`{"components":{"links": {
+			"MyLink": {
+				"$ref": "#/components/links/MyActualLink"
+			}
+		}}}`, `components.links.MyLink: couldn't resolve "#/components/links/MyActualLink"`},
+		{`{"components":{"callbacks": {
+			"MyCallback": {
+				"$ref": "#/components/callbacks/MyActualCallback"
+			}
+		}}}`, `components.callbacks["MyCallback"]: couldn't resolve "#/components/callbacks/MyActualCallback"`},
+		{`{"components":{"pathItems": {
+			"MyPathItem": {
+				"$ref": "#/components/pathItems/MyActualPathItem"
+			}
+		}}}`, `components.pathItems["MyPathItem"]: couldn't resolve "#/components/pathItems/MyActualPathItem"`},
 	} {
 		_, err := openapi.LoadFromDataJSON([]byte(tc.in))
 		if err == nil || err.Error() != tc.err {

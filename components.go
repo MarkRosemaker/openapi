@@ -115,6 +115,63 @@ func (c *Components) Validate() error {
 	return nil
 }
 
+func (l *loader) collectComponents(cs Components, ref ref) {
+	l.collectSchemas(cs.Schemas, append(ref, "schemas"))
+	l.collectResponses(cs.Responses, append(ref, "responses"))
+	l.collectParameters(cs.Parameters, append(ref, "parameters"))
+	l.collectExamples(cs.Examples, append(ref, "examples"))
+	l.collectRequestBodies(cs.RequestBodies, append(ref, "requestBodies"))
+	l.collectHeaders(cs.Headers, append(ref, "headers"))
+	l.collectSecuritySchemes(cs.SecuritySchemes, append(ref, "securitySchemes"))
+	l.collectLinks(cs.Links, append(ref, "links"))
+	l.collectCallbackRefs(cs.Callbacks, append(ref, "callbacks"))
+	l.collectPathItems(cs.PathItems, append(ref, "pathItems"))
+}
+
+func (l *loader) resolveComponents(c Components) error {
+	if err := l.resolveSchemas(c.Schemas); err != nil {
+		return &ErrField{Field: "schemas", Err: err}
+	}
+
+	if err := l.resolveResponses(c.Responses); err != nil {
+		return &ErrField{Field: "responses", Err: err}
+	}
+
+	if err := l.resolveParameters(c.Parameters); err != nil {
+		return &ErrField{Field: "parameters", Err: err}
+	}
+
+	if err := l.resolveExamples(c.Examples); err != nil {
+		return &ErrField{Field: "examples", Err: err}
+	}
+
+	if err := l.resolveRequestBodies(c.RequestBodies); err != nil {
+		return &ErrField{Field: "requestBodies", Err: err}
+	}
+
+	if err := l.resolveHeaders(c.Headers); err != nil {
+		return &ErrField{Field: "headers", Err: err}
+	}
+
+	if err := l.resolveSecuritySchemes(c.SecuritySchemes); err != nil {
+		return &ErrField{Field: "securitySchemes", Err: err}
+	}
+
+	if err := l.resolveLinks(c.Links); err != nil {
+		return &ErrField{Field: "links", Err: err}
+	}
+
+	if err := l.resolveCallbackRefs(c.Callbacks); err != nil {
+		return &ErrField{Field: "callbacks", Err: err}
+	}
+
+	if err := l.resolvePathItems(c.PathItems); err != nil {
+		return &ErrField{Field: "pathItems", Err: err}
+	}
+
+	return nil
+}
+
 func (c Components) isEmpty() bool {
 	return len(c.Schemas) == 0 && len(c.Responses) == 0 && len(c.Parameters) == 0 &&
 		len(c.Examples) == 0 && len(c.RequestBodies) == 0 && len(c.Headers) == 0 &&
