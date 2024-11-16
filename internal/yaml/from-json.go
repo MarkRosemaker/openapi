@@ -11,12 +11,10 @@ import (
 
 // FromJSON converts a JSON value to a YAML node.
 func FromJSON(b jsontext.Value) (*yaml.Node, error) {
-	n := &yaml.Node{Kind: yaml.DocumentNode}
-	content := &yaml.Node{}
-	n.Content = append(n.Content, content)
-
 	dec := jsontext.NewDecoder(bytes.NewReader(b))
-	if err := decodeFromJSON(dec, content); err != nil {
+
+	n := &yaml.Node{}
+	if err := decodeFromJSON(dec, n); err != nil {
 		return nil, err
 	}
 

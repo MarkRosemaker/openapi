@@ -9,7 +9,6 @@ import (
 	_yaml "github.com/MarkRosemaker/openapi/internal/yaml"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
-	"gopkg.in/yaml.v3"
 )
 
 // ErrEmptyDocument is thrown if the OpenAPI document does not contain at least one paths field, a components field or a webhooks field.
@@ -59,12 +58,7 @@ func (d *Document) MarshalYAML() (any, error) {
 		return nil, err
 	}
 
-	n, err := _yaml.FromJSON(jsontext.Value(b))
-	if err != nil {
-		return nil, err
-	}
-
-	return yaml.Marshal(n)
+	return _yaml.FromJSON(jsontext.Value(b))
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.
