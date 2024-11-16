@@ -13,16 +13,16 @@ import (
 
 var (
 	//go:embed example.yaml
-	example []byte
+	exampleYAML []byte
 	//go:embed example.json
-	wantJSON jsontext.Value
+	exampleJSON jsontext.Value
 )
 
 func TestToJSON(t *testing.T) {
 	t.Parallel()
 
 	n := &yaml.Node{}
-	if err := yaml.Unmarshal(example, n); err != nil {
+	if err := yaml.Unmarshal(exampleYAML, n); err != nil {
 		t.Fatal(err)
 	}
 
@@ -31,7 +31,7 @@ func TestToJSON(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	equalJSON(t, got, wantJSON)
+	equalJSON(t, got, exampleJSON)
 }
 
 func TestToJSON_Error(t *testing.T) {
