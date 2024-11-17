@@ -30,6 +30,11 @@ func (l *loader) LoadFromReaderYAML(r io.Reader) (*Document, error) {
 }
 
 // LoadFromDataYAML reads an OpenAPI specification from a byte array in YAML format and parses it into a structured format.
+func LoadFromDataYAML(data []byte) (*Document, error) {
+	return newLoader().LoadFromDataYAML(data)
+}
+
+// LoadFromDataYAML reads an OpenAPI specification from a byte array in YAML format and parses it into a structured format.
 func (l *loader) LoadFromDataYAML(data []byte) (*Document, error) {
 	return l.LoadFromReaderYAML(bytes.NewReader(data))
 }
