@@ -24,6 +24,7 @@ func (l *loader) LoadFromReaderJSON(r io.Reader) (*Document, error) {
 	return doc, nil
 }
 
+// LoadFromDataJSON reads an OpenAPI specification from a byte array in JSON format and parses it into a structured format.
 func LoadFromDataJSON(data []byte) (*Document, error) {
 	return newLoader().LoadFromDataJSON(data)
 }
