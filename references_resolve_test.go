@@ -1,7 +1,10 @@
 package openapi_test
 
 import (
+	"bytes"
 	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
@@ -116,22 +119,94 @@ func TestResolve(t *testing.T) {
 			"MyActualPathItem": {
 			}
 		}}`,
+		`"components":{
+			"callbacks": {
+				"MyCallback": {
+					"$request.body#/url": {
+						"$ref": "#/components/pathItems/MyPathItem"
+					}
+				}
+			},
+			"pathItems": {
+				"MyPathItem": {}
+			}
+		}`,
+		`"components":{
+			"parameters": {
+				"MyParameter": {
+					"name": "myParamName",
+					"in": "query",
+					"content": {
+						"application/json": {"schema": {"$ref": "#/components/schemas/MySchema"}}
+					}
+				}
+			},
+			"schemas": {
+				"MySchema": {"type": "string"}
+			}
+		}`,
+		`"components":{
+			"parameters": {
+				"MyParameter": {
+					"name": "myParamName",
+					"in": "query",
+					"schema": {"type": "string"},
+					"examples": {
+						"example": {"$ref": "#/components/examples/MyExample"}
+					}
+				}
+			},
+			"examples": {
+				"MyExample": {}
+			}
+		}`,
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
-			doc, err := openapi.LoadFromDataJSON([]byte(fmt.Sprintf(
+			data := []byte(fmt.Sprintf(
 				`{
-	"openapi": "3.1.0",
-	"info": {
-		"title": "test",
-		"version": "1.0"
-	},%s}`, data)))
-			if err != nil {
-				t.Fatalf("load from data: %v", err)
-			}
+"openapi": "3.1.0",
+"info": {
+"title": "test",
+"version": "1.0"
+},%s}`, data))
 
-			if err := doc.Validate(); err != nil {
-				t.Fatalf("validate: %v", err)
-			}
+			t.Run("from data", func(t *testing.T) {
+				doc, err := openapi.LoadFromData(data)
+				if err != nil {
+					t.Fatalf("load from data: %v", err)
+				}
+
+				if err := doc.Validate(); err != nil {
+					t.Fatalf("validate: %v", err)
+				}
+			})
+
+			t.Run("from reader", func(t *testing.T) {
+				doc, err := openapi.LoadFromReader(bytes.NewReader(data))
+				if err != nil {
+					t.Fatalf("load from data: %v", err)
+				}
+
+				if err := doc.Validate(); err != nil {
+					t.Fatalf("validate: %v", err)
+				}
+			})
+
+			t.Run("from file", func(t *testing.T) {
+				path := filepath.Join(t.TempDir(), "test.json")
+				if err := os.WriteFile(path, data, 0o644); err != nil {
+					t.Fatalf("write file: %v", err)
+				}
+
+				doc, err := openapi.LoadFromFile(path)
+				if err != nil {
+					t.Fatalf("load from data: %v", err)
+				}
+
+				if err := doc.Validate(); err != nil {
+					t.Fatalf("validate: %v", err)
+				}
+			})
 		})
 	}
 }
@@ -195,10 +270,51 @@ func TestResolve_Error(t *testing.T) {
 				"$ref": "#/components/pathItems/MyActualPathItem"
 			}
 		}}}`, `components.pathItems["MyPathItem"]: couldn't resolve "#/components/pathItems/MyActualPathItem"`},
+		{`{"components":{"callbacks": {
+			"MyCallback": {
+				"$request.body#/url": {
+					"$ref": "#/components/pathItems/MyPathItem"
+				}
+			}
+		}}}`, `components.callbacks["MyCallback"]["$request.body#/url"]: couldn't resolve "#/components/pathItems/MyPathItem"`},
+		{`{"components":{"parameters": {
+			"MyParameter": {
+				"content": {
+					"application/json": {"schema": {"$ref": "#/components/schemas/MySchema"}}
+				}
+			}
+		}}}`, `components.parameters["MyParameter"].content["application/json"].schema: couldn't resolve "#/components/schemas/MySchema"`},
+		{`{"components":{"parameters": {
+			"MyParameter": {
+				"examples": {
+					"example": {"$ref": "#/components/examples/MyExample"}
+				}
+			}
+		}}}`, `components.parameters["MyParameter"].examples["example"]: couldn't resolve "#/components/examples/MyExample"`},
 	} {
-		_, err := openapi.LoadFromDataJSON([]byte(tc.in))
-		if err == nil || err.Error() != tc.err {
-			t.Fatalf("expected error: %q, got: %v", tc.err, err)
-		}
+		data := []byte(tc.in)
+
+		t.Run("from data", func(t *testing.T) {
+			if _, err := openapi.LoadFromData(data); err == nil || err.Error() != tc.err {
+				t.Fatalf("expected error: %q, got: %v", tc.err, err)
+			}
+		})
+
+		t.Run("from reader", func(t *testing.T) {
+			if _, err := openapi.LoadFromReader(bytes.NewReader(data)); err == nil || err.Error() != tc.err {
+				t.Fatalf("expected error: %q, got: %v", tc.err, err)
+			}
+		})
+
+		t.Run("from file", func(t *testing.T) {
+			path := filepath.Join(t.TempDir(), "test.json")
+			if err := os.WriteFile(path, data, 0o644); err != nil {
+				t.Fatalf("write file: %v", err)
+			}
+
+			if _, err := openapi.LoadFromFile(path); err == nil || err.Error() != tc.err {
+				t.Fatalf("expected error: %q, got: %v", tc.err, err)
+			}
+		})
 	}
 }

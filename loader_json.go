@@ -17,11 +17,11 @@ func (l *loader) LoadFromReaderJSON(r io.Reader) (*Document, error) {
 		return nil, err
 	}
 
-	// if err := l.resolveRefsIn(doc); err != nil {
-	// 	return nil, err
-	// }
+	if err := l.collectResolveRefs(doc); err != nil {
+		return nil, err
+	}
 
-	return doc, nil
+	return doc, doc.Validate()
 }
 
 // LoadFromDataJSON reads an OpenAPI specification from a byte array in JSON format and parses it into a structured format.

@@ -10,9 +10,32 @@ import (
 	"github.com/go-json-experiment/json/jsontext"
 )
 
-type loader struct{}
+// loader helps deserialize an OpenAPI v3 document
+type loader struct {
+	schemas         map[string]*Schema
+	headers         map[string]*Header
+	responses       map[string]*Response
+	parameters      map[string]*Parameter
+	requestBodies   map[string]*RequestBody
+	links           map[string]*Link
+	pathItems       map[string]*PathItem
+	examples        map[string]*Example
+	securitySchemes map[string]*SecurityScheme
+	callbacks       map[string]*Callback
+}
 
-func (l *loader) reset() {}
+func (l *loader) reset() {
+	l.schemas = map[string]*Schema{}
+	l.headers = map[string]*Header{}
+	l.responses = map[string]*Response{}
+	l.parameters = map[string]*Parameter{}
+	l.requestBodies = map[string]*RequestBody{}
+	l.links = map[string]*Link{}
+	l.pathItems = map[string]*PathItem{}
+	l.examples = map[string]*Example{}
+	l.securitySchemes = map[string]*SecurityScheme{}
+	l.callbacks = map[string]*Callback{}
+}
 
 // newLoader returns an empty Loader
 func newLoader() *loader {
@@ -88,14 +111,5 @@ func (l *loader) LoadFromReader(r io.Reader) (*Document, error) {
 
 	// load the document using appropriate loader
 	// use multi-reader to combine what was read and the rest of the data
-	doc, err := load(io.MultiReader(buff, r))
-	if err != nil {
-		return nil, err
-	}
-
-	// if err := l.resolveRefsIn(doc); err != nil {
-	// 	return nil, err
-	// }
-
-	return doc, doc.Validate()
+	return load(io.MultiReader(buff, r)) // already includes resolving of references
 }
