@@ -13,8 +13,10 @@ func TestSecuritySchemes_Validate_Error(t *testing.T) {
 		ss  openapi.SecuritySchemes
 		err string
 	}{
-		{openapi.SecuritySchemes{" ": &openapi.SecuritySchemeRef{}},
-			`[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
+		{
+			openapi.SecuritySchemes{" ": &openapi.SecuritySchemeRef{}},
+			`[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`,
+		},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.ss.Validate(); err == nil || err.Error() != tc.err {
