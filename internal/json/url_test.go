@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/go-json-experiment/json"
+	"github.com/go-json-experiment/json/jsontext"
 )
 
 var urlType = reflect.TypeFor[*url.URL]()
@@ -53,8 +54,11 @@ func TestURL(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if string(b) != tc.out {
-				t.Fatalf("got: %v, want: %v", string(b), tc.out)
+			js := jsontext.Value(b)
+			_ = js.Compact()
+
+			if js.String() != tc.out {
+				t.Fatalf("got: %v, want: %v", js.String(), tc.out)
 			}
 		})
 	}
