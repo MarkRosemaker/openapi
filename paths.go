@@ -63,6 +63,16 @@ func (ps Paths) Validate() error {
 	return nil
 }
 
+func (l *loader) resolvePaths(ps Paths) error {
+	for path, pathItem := range ps.ByIndex() {
+		if err := l.resolvePathItem(pathItem); err != nil {
+			return &ErrKey{Key: string(path), Err: err}
+		}
+	}
+
+	return nil
+}
+
 // ByIndex returns the keys of the map in the order of the index.
 func (ps Paths) ByIndex() iter.Seq2[Path, *PathItem] {
 	return _json.OrderedMapByIndex(ps, func(p *PathItem) int { return p.idx })
