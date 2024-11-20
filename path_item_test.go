@@ -147,3 +147,47 @@ func TestPathItem_Validate_Error(t *testing.T) {
 		})
 	}
 }
+
+func TestPathItem_SetOperation(t *testing.T) {
+	p := &openapi.PathItem{}
+
+	p.SetOperation("get", &openapi.Operation{})
+	if p.Get == nil {
+		t.Fatalf("GET is nil")
+	}
+
+	p.SetOperation("put", &openapi.Operation{})
+	if p.Put == nil {
+		t.Fatalf("PUT is nil")
+	}
+
+	p.SetOperation("post", &openapi.Operation{})
+	if p.Post == nil {
+		t.Fatalf("POST is nil")
+	}
+
+	p.SetOperation("delete", &openapi.Operation{})
+	if p.Delete == nil {
+		t.Fatalf("DELETE is nil")
+	}
+
+	p.SetOperation("options", &openapi.Operation{})
+	if p.Options == nil {
+		t.Fatalf("OPTIONS is nil")
+	}
+
+	p.SetOperation("head", &openapi.Operation{})
+	if p.Head == nil {
+		t.Fatalf("HEAD is nil")
+	}
+
+	p.SetOperation("patch", &openapi.Operation{})
+	if p.Patch == nil {
+		t.Fatalf("PATCH is nil")
+	}
+
+	p.SetOperation("trace", &openapi.Operation{})
+	if p.Trace == nil {
+		t.Fatalf("TRACE is nil")
+	}
+}

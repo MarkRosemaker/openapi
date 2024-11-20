@@ -160,6 +160,18 @@ func TestResolve(t *testing.T) {
 				"MyExample": {}
 			}
 		}`,
+		`"paths":{"/": {
+			"parameters": [{"$ref": "#/components/parameters/myparam"}]
+		}},
+		"components": {
+			"parameters": {
+				"myparam": {
+					"name": "myParamName",
+					"in": "query",
+					"schema": {"type": "string"}
+				}
+			}
+		}`,
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			data := []byte(fmt.Sprintf(
@@ -291,6 +303,9 @@ func TestResolve_Error(t *testing.T) {
 				}
 			}
 		}}}`, `components.parameters["MyParameter"].examples["example"]: couldn't resolve "#/components/examples/MyExample"`},
+		{`{"paths":{"/": {
+			"parameters": [{"$ref": "#/components/parameters/myparam"}]
+	}}}`, `paths["/"].parameters[0]: couldn't resolve "#/components/parameters/myparam"`},
 	} {
 		data := []byte(tc.in)
 

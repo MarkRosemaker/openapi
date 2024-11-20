@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"net/http"
+	"strings"
 )
 
 // PathItem describes the operations available on a single path.
@@ -36,7 +37,7 @@ type PathItem struct {
 	// A definition of a TRACE operation on this path.
 	Trace *Operation `json:"trace,omitempty" yaml:"trace,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",inline" yaml:"-"`
 
 	// an index to the original location of this object
 	idx int
@@ -86,6 +87,28 @@ func (p *PathItem) Operations(yield func(string, *Operation) bool) {
 	}
 }
 
+// SetOperation sets the operation for the given method.
+func (p *PathItem) SetOperation(method string, op *Operation) {
+	switch strings.ToUpper(method) {
+	case http.MethodGet:
+		p.Get = op
+	case http.MethodPut:
+		p.Put = op
+	case http.MethodPost:
+		p.Post = op
+	case http.MethodDelete:
+		p.Delete = op
+	case http.MethodOptions:
+		p.Options = op
+	case http.MethodHead:
+		p.Head = op
+	case http.MethodPatch:
+		p.Patch = op
+	case http.MethodTrace:
+		p.Trace = op
+	}
+}
+
 // Validate validates the path item.
 func (p *PathItem) Validate() error {
 	if err := p.Parameters.Validate(); err != nil {
@@ -99,4 +122,32 @@ func (p *PathItem) Validate() error {
 	}
 
 	return validateExtensions(p.Extensions)
+}
+
+func (l *loader) collectPathItemRef(p *PathItemRef, ref ref) {
+	if p.Value != nil {
+		l.collectPathItem(p.Value, ref)
+	}
+}
+
+func (l *loader) collectPathItem(p *PathItem, ref ref) {
+	l.pathItems[ref.String()] = p
+}
+
+func (l *loader) resolvePathItemRef(ref *PathItemRef) error {
+	return resolveRef(ref, l.pathItems, l.resolvePathItem)
+}
+
+func (l *loader) resolvePathItem(p *PathItem) error {
+	if err := l.resolveParameterList(p.Parameters); err != nil {
+		return &ErrField{Field: "parameters", Err: err}
+	}
+
+	for method, op := range p.Operations {
+		if err := l.resolveOperation(op); err != nil {
+			return &ErrField{Field: method, Err: err}
+		}
+	}
+
+	return nil
 }

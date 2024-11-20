@@ -24,6 +24,22 @@ func (ps PathItems) Validate() error {
 	return nil
 }
 
+func (l *loader) collectPathItems(ps PathItems, ref ref) {
+	for name, p := range ps.ByIndex() {
+		l.collectPathItemRef(p, append(ref, name))
+	}
+}
+
+func (l *loader) resolvePathItems(ps PathItems) error {
+	for name, p := range ps.ByIndex() {
+		if err := l.resolvePathItemRef(p); err != nil {
+			return &ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
 // ByIndex returns the keys of the map in the order of the index.
 func (ps PathItems) ByIndex() iter.Seq2[string, *PathItemRef] {
 	return _json.OrderedMapByIndex(ps, getIndexRef[PathItem, *PathItem])
