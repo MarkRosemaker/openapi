@@ -11,12 +11,28 @@ import (
 type CallbackRefs map[string]*CallbackRef
 
 func (cs CallbackRefs) Validate() error {
-	for name, value := range cs.ByIndex() {
+	for name, c := range cs.ByIndex() {
 		if err := validateKey(name); err != nil {
 			return err
 		}
 
-		if err := value.Validate(); err != nil {
+		if err := c.Validate(); err != nil {
+			return &ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
+func (l *loader) collectCallbackRefs(cs CallbackRefs, ref ref) {
+	for name, c := range cs {
+		l.collectCallbackRef(c, append(ref, name))
+	}
+}
+
+func (l *loader) resolveCallbackRefs(cs CallbackRefs) error {
+	for name, c := range cs.ByIndex() {
+		if err := l.resolveCallbackRef(c); err != nil {
 			return &ErrKey{Key: name, Err: err}
 		}
 	}

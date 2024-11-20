@@ -173,6 +173,13 @@ tags[1].name ("foo") is invalid: must be unique`},
 			Paths:        openapi.Paths{"/": {}},
 			ExternalDocs: &openapi.ExternalDocs{},
 		}, `externalDocs.url is required`},
+		{&openapi.Document{
+			OpenAPI: "3.1.0",
+			Info:    &openapi.Info{Title: "Sample API", Version: "1.0.0"},
+			Components: openapi.Components{
+				Callbacks: openapi.CallbackRefs{" ": &openapi.CallbackRef{}},
+			},
+		}, `components.callbacks[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			t.Parallel()

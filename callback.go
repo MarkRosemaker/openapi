@@ -21,8 +21,32 @@ import (
 type Callback map[RuntimeExpression]*PathItemRef
 
 func (c Callback) Validate() error {
-	for expr, v := range c.ByIndex() {
-		if err := v.Validate(); err != nil {
+	for expr, p := range c.ByIndex() {
+		if err := p.Validate(); err != nil {
+			return &ErrKey{Key: string(expr), Err: err}
+		}
+	}
+
+	return nil
+}
+
+func (l *loader) collectCallbackRef(c *CallbackRef, ref ref) {
+	if c.Value != nil {
+		l.collectCallback(c.Value, ref)
+	}
+}
+
+func (l *loader) collectCallback(c *Callback, ref ref) {
+	l.callbacks[ref.String()] = c
+}
+
+func (l *loader) resolveCallbackRef(c *CallbackRef) error {
+	return resolveRef(c, l.callbacks, l.resolveCallback)
+}
+
+func (l *loader) resolveCallback(c *Callback) error {
+	for expr, p := range c.ByIndex() {
+		if err := l.resolvePathItemRef(p); err != nil {
 			return &ErrKey{Key: string(expr), Err: err}
 		}
 	}
