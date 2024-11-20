@@ -14,3 +14,13 @@ func (ws Webhooks) Validate() error {
 
 	return nil
 }
+
+func (l *loader) resolveWebhooks(ws Webhooks) error {
+	for name, w := range ws {
+		if err := l.resolvePathItemRef(w); err != nil {
+			return &ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
