@@ -12,13 +12,29 @@ import (
 type Examples map[string]*ExampleRef
 
 // Validate validates the map of examples.
-func (ex Examples) Validate() error {
-	for k, v := range ex.ByIndex() {
+func (exs Examples) Validate() error {
+	for k, ex := range exs.ByIndex() {
 		if err := validateKey(k); err != nil {
 			return err
 		}
 
-		if err := v.Validate(); err != nil {
+		if err := ex.Validate(); err != nil {
+			return &ErrKey{Key: k, Err: err}
+		}
+	}
+
+	return nil
+}
+
+func (l *loader) collectExamples(exs Examples, ref ref) {
+	for k, ex := range exs.ByIndex() {
+		l.collectExampleRef(ex, append(ref, k))
+	}
+}
+
+func (l *loader) resolveExamples(exs Examples) error {
+	for k, ex := range exs.ByIndex() {
+		if err := l.resolveExampleRef(ex); err != nil {
 			return &ErrKey{Key: k, Err: err}
 		}
 	}

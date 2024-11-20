@@ -32,6 +32,10 @@ func TestExamples_Validate_Error(t *testing.T) {
 				},
 			},
 		}, `["foo"].bar: ` + openapi.ErrUnknownField.Error()},
+		{
+			openapi.Examples{" ": &openapi.ExampleRef{Value: &openapi.Example{}}},
+			`[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`,
+		},
 	} {
 		if err := tc.examples.Validate(); err == nil || err.Error() != tc.err {
 			t.Fatalf("want: %s, got: %s", tc.err, err)
