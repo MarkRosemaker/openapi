@@ -10,13 +10,29 @@ import (
 
 type Parameters map[string]*ParameterRef
 
-func (ss Parameters) Validate() error {
-	for name, value := range ss.ByIndex() {
+func (ps Parameters) Validate() error {
+	for name, p := range ps.ByIndex() {
 		if err := validateKey(name); err != nil {
 			return err
 		}
 
-		if err := value.Validate(); err != nil {
+		if err := p.Validate(); err != nil {
+			return &ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
+func (l *loader) collectParameters(ps Parameters, ref ref) {
+	for name, p := range ps {
+		l.collectParameterRef(p, append(ref, name))
+	}
+}
+
+func (l *loader) resolveParameters(ps Parameters) error {
+	for name, p := range ps.ByIndex() {
+		if err := l.resolveParameterRef(p); err != nil {
 			return &ErrKey{Key: name, Err: err}
 		}
 	}

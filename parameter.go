@@ -60,7 +60,7 @@ type Parameter struct {
 	Content Content `json:"content,omitempty" yaml:"content,omitempty"`
 
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",inline" yaml:"-"`
 }
 
 // Validate checks the parameter for correctness.
@@ -154,4 +154,36 @@ func (p *Parameter) Validate() error {
 	}
 
 	return validateExtensions(p.Extensions)
+}
+
+func (l *loader) collectParameterRef(p *ParameterRef, ref ref) {
+	if p.Value != nil {
+		l.collectParameter(p.Value, ref)
+	}
+}
+
+func (l *loader) collectParameter(p *Parameter, ref ref) {
+	l.parameters[ref.String()] = p
+}
+
+func (l *loader) resolveParameterRef(p *ParameterRef) error {
+	return resolveRef(p, l.parameters, l.resolveParameter)
+}
+
+func (l *loader) resolveParameter(p *Parameter) error {
+	if p.Schema != nil {
+		if err := l.resolveSchema(p.Schema); err != nil {
+			return &ErrField{Field: "schema", Err: err}
+		}
+	}
+
+	if err := l.resolveContent(p.Content); err != nil {
+		return &ErrField{Field: "content", Err: err}
+	}
+
+	if err := l.resolveExamples(p.Examples); err != nil {
+		return &ErrField{Field: "examples", Err: err}
+	}
+
+	return nil
 }

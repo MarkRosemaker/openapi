@@ -45,3 +45,13 @@ func (p ParameterList) Validate() error {
 
 	return nil
 }
+
+func (l *loader) resolveParameterList(p ParameterList) error {
+	for i, param := range p {
+		if err := l.resolveParameterRef(param); err != nil {
+			return &ErrIndex{Index: i, Err: err}
+		}
+	}
+
+	return nil
+}
