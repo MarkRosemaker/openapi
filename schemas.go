@@ -11,12 +11,28 @@ import (
 type Schemas map[string]*Schema
 
 func (ss Schemas) Validate() error {
-	for name, value := range ss.ByIndex() {
+	for name, s := range ss.ByIndex() {
 		if err := validateKey(name); err != nil {
 			return err
 		}
 
-		if err := value.Validate(); err != nil {
+		if err := s.Validate(); err != nil {
+			return &ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
+func (l *loader) collectSchemas(ss Schemas, ref ref) {
+	for name, s := range ss.ByIndex() {
+		l.collectSchema(s, append(ref, name))
+	}
+}
+
+func (l *loader) resolveSchemas(ss Schemas) error {
+	for name, s := range ss.ByIndex() {
+		if err := l.resolveSchema(s); err != nil {
 			return &ErrKey{Key: name, Err: err}
 		}
 	}
