@@ -57,3 +57,24 @@ func TestStatusCode_IsSuccess(t *testing.T) {
 		})
 	}
 }
+
+func TestStatusCode(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct {
+		sc  openapi.StatusCode
+		exp string
+	}{
+		{"200", "OK"},
+		{"2XX", ""},
+		{"404", "Not Found"},
+		{"418", "I'm a teapot"},
+		{"default", ""},
+	} {
+		t.Run(string(tc.sc), func(t *testing.T) {
+			if got := tc.sc.StatusText(); got != tc.exp {
+				t.Fatalf("want: %s, got: %s", tc.exp, got)
+			}
+		})
+	}
+}

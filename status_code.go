@@ -16,6 +16,18 @@ const (
 	StatusCodeDefault StatusCode = "default"
 )
 
+// StatusText returns the text representation of the status code.
+// If the status code is `"default"` or an invalid status code, it returns an empty string.
+func (sc StatusCode) StatusText() string {
+	switch sc {
+	case "default":
+		return ""
+	default:
+		code, _ := strconv.Atoi(string(sc))
+		return http.StatusText(code)
+	}
+}
+
 func (sc StatusCode) Validate() error {
 	if sc == StatusCodeDefault {
 		return nil
