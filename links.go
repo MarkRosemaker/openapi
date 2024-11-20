@@ -10,13 +10,29 @@ import (
 
 type Links map[string]*LinkRef
 
-func (l Links) Validate() error {
-	for expr, v := range l.ByIndex() {
+func (ls Links) Validate() error {
+	for expr, l := range ls.ByIndex() {
 		if err := validateKey(expr); err != nil {
 			return err
 		}
 
-		if err := v.Validate(); err != nil {
+		if err := l.Validate(); err != nil {
+			return &ErrField{Field: expr, Err: err}
+		}
+	}
+
+	return nil
+}
+
+func (l *loader) collectLinks(ls Links, ref ref) {
+	for expr, lr := range ls.ByIndex() {
+		l.collectLinkRef(lr, append(ref, expr))
+	}
+}
+
+func (l *loader) resolveLinks(ls Links) error {
+	for expr, lr := range ls.ByIndex() {
+		if err := l.resolveLinkRef(lr); err != nil {
 			return &ErrField{Field: expr, Err: err}
 		}
 	}

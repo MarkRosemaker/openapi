@@ -30,7 +30,7 @@ type Link struct {
 	// A description of the link. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",inline" yaml:"-"`
 }
 
 func (l *Link) Validate() error {
@@ -52,4 +52,16 @@ func (l *Link) Validate() error {
 	l.Description = strings.TrimSpace(l.Description)
 
 	return validateExtensions(l.Extensions)
+}
+
+func (l *loader) collectLinkRef(lr *LinkRef, ref ref) {
+	if lr.Value != nil {
+		l.collectLink(lr.Value, ref)
+	}
+}
+
+func (l *loader) collectLink(link *Link, ref ref) { l.links[ref.String()] = link }
+
+func (l *loader) resolveLinkRef(lr *LinkRef) error {
+	return resolveRef(lr, l.links, nil)
 }
