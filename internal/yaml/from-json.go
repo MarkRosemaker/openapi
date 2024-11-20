@@ -18,6 +18,10 @@ func FromJSON(b jsontext.Value) (*yaml.Node, error) {
 		return nil, err
 	}
 
+	if dec.PeekKind() != 0 {
+		return nil, fmt.Errorf("expected EOF, got %v", dec.PeekKind())
+	}
+
 	return n, nil
 }
 
