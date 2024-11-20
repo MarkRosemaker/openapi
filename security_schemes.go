@@ -24,6 +24,22 @@ func (ss SecuritySchemes) Validate() error {
 	return nil
 }
 
+func (l *loader) collectSecuritySchemes(ss SecuritySchemes, ref ref) {
+	for name, s := range ss.ByIndex() {
+		l.collectSecuritySchemeRef(s, append(ref, name))
+	}
+}
+
+func (l *loader) resolveSecuritySchemes(ss SecuritySchemes) error {
+	for name, s := range ss.ByIndex() {
+		if err := l.resolveSecuritySchemeRef(s); err != nil {
+			return &ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
 // ByIndex returns the keys of the map in the order of the index.
 func (ss SecuritySchemes) ByIndex() iter.Seq2[string, *SecuritySchemeRef] {
 	return _json.OrderedMapByIndex(ss, getIndexRef[SecurityScheme, *SecurityScheme])
