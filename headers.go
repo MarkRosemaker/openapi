@@ -24,6 +24,22 @@ func (hs Headers) Validate() error {
 	return nil
 }
 
+func (l *loader) collectHeaders(hs Headers, ref ref) {
+	for k, h := range hs.ByIndex() {
+		l.collectHeaderRef(h, append(ref, k))
+	}
+}
+
+func (l *loader) resolveHeaders(hs Headers) error {
+	for k, h := range hs.ByIndex() {
+		if err := l.resolveHeaderRef(h); err != nil {
+			return &ErrKey{Key: k, Err: err}
+		}
+	}
+
+	return nil
+}
+
 // ByIndex returns the keys of the map in the order of the index.
 func (h Headers) ByIndex() iter.Seq2[string, *HeaderRef] {
 	return _json.OrderedMapByIndex(h, getIndexRef[Header, *Header])

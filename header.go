@@ -29,7 +29,7 @@ type Header struct {
 	// A map containing the representations for the parameter. The key is the media type and the value describes it. The map MUST only contain one entry.
 	Content Content `json:"content,omitempty" yaml:"content,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",inline" yaml:"-"`
 }
 
 func (h *Header) Validate() error {
@@ -94,4 +94,22 @@ func (h *Header) Validate() error {
 	// TODO
 
 	return validateExtensions(h.Extensions)
+}
+
+func (l *loader) collectHeaderRef(h *HeaderRef, ref ref) {
+	if h.Value != nil {
+		l.collectHeader(h.Value, ref)
+	}
+}
+
+func (l *loader) collectHeader(h *Header, ref ref) {
+	l.headers[ref.String()] = h
+}
+
+func (l *loader) resolveHeaderRef(h *HeaderRef) error {
+	return resolveRef(h, l.headers, l.resolveHeader)
+}
+
+func (l *loader) resolveHeader(h *Header) error {
+	return nil // TODO
 }
