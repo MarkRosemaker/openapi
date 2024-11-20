@@ -2,6 +2,7 @@ package json
 
 import (
 	"github.com/go-json-experiment/json"
+	"github.com/go-json-experiment/json/jsontext"
 )
 
 var Options = json.JoinOptions([]json.Options{
@@ -10,4 +11,5 @@ var Options = json.JoinOptions([]json.Options{
 	json.RejectUnknownMembers(true),
 	json.WithMarshalers(URLMarshal),
 	json.WithUnmarshalers(URLUnmarshal),
+	jsontext.WithIndent("  "), // indent with two spaces
 }...)
