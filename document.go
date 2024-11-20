@@ -4,11 +4,6 @@ import (
 	"errors"
 	"net/url"
 	"regexp"
-
-	_json "github.com/MarkRosemaker/openapi/internal/json"
-	_yaml "github.com/MarkRosemaker/openapi/internal/yaml"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // ErrEmptyDocument is thrown if the OpenAPI document does not contain at least one paths field, a components field or a webhooks field.
@@ -45,20 +40,6 @@ type Document struct {
 	ExternalDocs *ExternalDocs `json:"externalDocs,omitempty" yaml:"externalDocs,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
-}
-
-// MarshalYAML marshals the OpenAPI document to YAML.
-func (d *Document) MarshalYAML() (any, error) {
-	if err := d.Validate(); err != nil {
-		return nil, err
-	}
-
-	b, err := json.Marshal(d, _json.Options)
-	if err != nil {
-		return nil, err
-	}
-
-	return _yaml.FromJSON(jsontext.Value(b))
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.
