@@ -3,6 +3,7 @@ package openapi
 import (
 	"net/url"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/go-api-libs/types"
 )
 
@@ -28,7 +29,7 @@ func (c *Contact) Validate() error {
 
 	if c.Email != "" {
 		if err := c.Email.Validate(); err != nil {
-			return &ErrField{Field: "email", Err: err}
+			return &errpath.ErrField{Field: "email", Err: err}
 		}
 	}
 
