@@ -1,6 +1,10 @@
 package openapi
 
-import "slices"
+import (
+	"slices"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // ParameterLocation defines the location of the parameter.
 // There are four possible parameter locations specified by the `in` field of a Parameter.
@@ -26,14 +30,14 @@ var allParameterLocations = []ParameterLocation{
 
 func (p ParameterLocation) Validate() error {
 	if p == "" {
-		return &ErrRequired{}
+		return &errpath.ErrRequired{}
 	}
 
 	if slices.Contains(allParameterLocations, p) {
 		return nil
 	}
 
-	return &ErrInvalid[ParameterLocation]{
+	return &errpath.ErrInvalid[ParameterLocation]{
 		Value: p,
 		Enum:  allParameterLocations,
 	}

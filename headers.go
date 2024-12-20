@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -17,7 +18,7 @@ func (hs Headers) Validate() error {
 		}
 
 		if err := h.Validate(); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 
@@ -33,7 +34,7 @@ func (l *loader) collectHeaders(hs Headers, ref ref) {
 func (l *loader) resolveHeaders(hs Headers) error {
 	for k, h := range hs.ByIndex() {
 		if err := l.resolveHeaderRef(h); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 

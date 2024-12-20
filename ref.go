@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -29,7 +30,7 @@ type Reference struct {
 
 func (r *Reference) Validate() error {
 	if r.Identifier == "" {
-		return &ErrField{Field: "$ref", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "$ref", Err: &errpath.ErrRequired{}}
 	}
 
 	r.Description = strings.TrimSpace(r.Description)

@@ -1,6 +1,10 @@
 package openapi
 
-import "slices"
+import (
+	"slices"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // In order to support common ways of serializing simple parameters, a set of `style` values are defined.
 // Assume a parameter named `color` has one of the following values:
@@ -49,7 +53,7 @@ func (s ParameterStyle) Validate() error {
 		return nil
 	}
 
-	return &ErrInvalid[ParameterStyle]{
+	return &errpath.ErrInvalid[ParameterStyle]{
 		Value: s,
 		Enum:  allParameterStyles,
 	}

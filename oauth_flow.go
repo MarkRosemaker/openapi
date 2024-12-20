@@ -1,6 +1,10 @@
 package openapi
 
-import "net/url"
+import (
+	"net/url"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // OAuthFlowImplicit allows configuration details for the OAuth Implicit flow.
 type OAuthFlowImplicit struct {
@@ -16,11 +20,11 @@ type OAuthFlowImplicit struct {
 
 func (f *OAuthFlowImplicit) Validate() error {
 	if f.AuthorizationURL == nil {
-		return &ErrField{Field: "authorizationUrl", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "authorizationUrl", Err: &errpath.ErrRequired{}}
 	}
 
 	if f.Scopes == nil {
-		return &ErrField{Field: "scopes", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "scopes", Err: &errpath.ErrRequired{}}
 	}
 
 	return validateExtensions(f.Extensions)
@@ -41,11 +45,11 @@ type OAuthFlowPassword struct {
 
 func (f *OAuthFlowPassword) Validate() error {
 	if f.TokenURL == nil {
-		return &ErrField{Field: "tokenUrl", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "tokenUrl", Err: &errpath.ErrRequired{}}
 	}
 
 	if f.Scopes == nil {
-		return &ErrField{Field: "scopes", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "scopes", Err: &errpath.ErrRequired{}}
 	}
 
 	return validateExtensions(f.Extensions)
@@ -71,15 +75,15 @@ type OAuthFlowAuthorizationCode struct {
 
 func (f *OAuthFlowAuthorizationCode) Validate() error {
 	if f.AuthorizationURL == nil {
-		return &ErrField{Field: "authorizationUrl", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "authorizationUrl", Err: &errpath.ErrRequired{}}
 	}
 
 	if f.TokenURL == nil {
-		return &ErrField{Field: "tokenUrl", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "tokenUrl", Err: &errpath.ErrRequired{}}
 	}
 
 	if f.Scopes == nil {
-		return &ErrField{Field: "scopes", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "scopes", Err: &errpath.ErrRequired{}}
 	}
 
 	return validateExtensions(f.Extensions)

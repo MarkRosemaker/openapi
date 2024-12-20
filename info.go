@@ -2,6 +2,8 @@ package openapi
 
 import (
 	"net/url"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 // The Info object provides metadata about the API. The metadata MAY be used by the clients if needed, and MAY be presented in editing or documentation generation tools for convenience.
@@ -29,12 +31,12 @@ type Info struct {
 
 func (i *Info) Validate() error {
 	if i.Title == "" {
-		return &ErrField{Field: "title", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "title", Err: &errpath.ErrRequired{}}
 	}
 
 	// NOTE: The version *here* can be any string, but the version in the OpenAPI document must be a valid semantic version.
 	if i.Version == "" {
-		return &ErrField{Field: "version", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "version", Err: &errpath.ErrRequired{}}
 	}
 
 	// assume that the scheme is https and add it if it is missing
@@ -42,13 +44,13 @@ func (i *Info) Validate() error {
 
 	if i.Contact != nil {
 		if err := i.Contact.Validate(); err != nil {
-			return &ErrField{Field: "contact", Err: err}
+			return &errpath.ErrField{Field: "contact", Err: err}
 		}
 	}
 
 	if i.License != nil {
 		if err := i.License.Validate(); err != nil {
-			return &ErrField{Field: "license", Err: err}
+			return &errpath.ErrField{Field: "license", Err: err}
 		}
 	}
 

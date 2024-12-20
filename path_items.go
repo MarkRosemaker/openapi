@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -17,7 +18,7 @@ func (ps PathItems) Validate() error {
 		}
 
 		if err := p.Validate(); err != nil {
-			return &ErrKey{Key: name, Err: err}
+			return &errpath.ErrKey{Key: name, Err: err}
 		}
 	}
 
@@ -33,7 +34,7 @@ func (l *loader) collectPathItems(ps PathItems, ref ref) {
 func (l *loader) resolvePathItems(ps PathItems) error {
 	for name, p := range ps.ByIndex() {
 		if err := l.resolvePathItemRef(p); err != nil {
-			return &ErrKey{Key: name, Err: err}
+			return &errpath.ErrKey{Key: name, Err: err}
 		}
 	}
 

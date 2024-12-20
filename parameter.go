@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/go-json-experiment/json/jsontext"
 )
 
@@ -66,15 +67,15 @@ type Parameter struct {
 // Validate checks the parameter for correctness.
 func (p *Parameter) Validate() error {
 	if p.Name == "" {
-		return &ErrField{Field: "name", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "name", Err: &errpath.ErrRequired{}}
 	}
 
 	if err := p.In.Validate(); err != nil {
-		return &ErrField{Field: "in", Err: err}
+		return &errpath.ErrField{Field: "in", Err: err}
 	}
 
 	if p.In == ParameterLocationPath && !p.Required {
-		return &ErrField{Field: "required", Err: &ErrInvalid[bool]{
+		return &errpath.ErrField{Field: "required", Err: &errpath.ErrInvalid[bool]{
 			Value:   false,
 			Message: "must be true for path parameters",
 		}}
@@ -82,14 +83,14 @@ func (p *Parameter) Validate() error {
 
 	if p.In != ParameterLocationQuery {
 		if p.AllowEmptyValue {
-			return &ErrField{Field: "allowEmptyValue", Err: &ErrInvalid[bool]{
+			return &errpath.ErrField{Field: "allowEmptyValue", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: fmt.Sprintf("can only be true for query parameters, got %q", p.In),
 			}}
 		}
 
 		if p.AllowReserved {
-			return &ErrField{Field: "allowReserved", Err: &ErrInvalid[bool]{
+			return &errpath.ErrField{Field: "allowReserved", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: fmt.Sprintf("only applies to query parameters, got %q", p.In),
 			}}
@@ -105,7 +106,7 @@ func (p *Parameter) Validate() error {
 		}
 
 		if err := p.Schema.Validate(); err != nil {
-			return &ErrField{Field: "schema", Err: err}
+			return &errpath.ErrField{Field: "schema", Err: err}
 		}
 	} else {
 		if p.Content == nil {
@@ -113,32 +114,32 @@ func (p *Parameter) Validate() error {
 		}
 
 		if len(p.Content) != 1 {
-			return &ErrField{Field: "content", Err: &ErrInvalid[string]{
+			return &errpath.ErrField{Field: "content", Err: &errpath.ErrInvalid[string]{
 				Message: fmt.Sprintf("must contain exactly one entry, got %d", len(p.Content)),
 			}}
 		}
 
 		if err := p.Content.Validate(); err != nil {
-			return &ErrField{Field: "content", Err: err}
+			return &errpath.ErrField{Field: "content", Err: err}
 		}
 	}
 
 	if p.Style != "" {
 		if err := p.Style.Validate(); err != nil {
-			return &ErrField{Field: "style", Err: err}
+			return &errpath.ErrField{Field: "style", Err: err}
 		}
 	}
 
 	if p.Explode {
 		if p.Schema == nil {
-			return &ErrField{Field: "explode", Err: &ErrInvalid[bool]{
+			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: "property has no effect when schema is not present",
 			}}
 		}
 
 		if p.Schema.Type != TypeArray && p.Schema.Type != TypeObject {
-			return &ErrField{Field: "explode", Err: &ErrInvalid[bool]{
+			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", p.Schema.Type),
 			}}
@@ -150,7 +151,7 @@ func (p *Parameter) Validate() error {
 	}
 
 	if err := p.Examples.Validate(); err != nil {
-		return &ErrField{Field: "examples", Err: err}
+		return &errpath.ErrField{Field: "examples", Err: err}
 	}
 
 	return validateExtensions(p.Extensions)
@@ -173,16 +174,16 @@ func (l *loader) resolveParameterRef(p *ParameterRef) error {
 func (l *loader) resolveParameter(p *Parameter) error {
 	if p.Schema != nil {
 		if err := l.resolveSchema(p.Schema); err != nil {
-			return &ErrField{Field: "schema", Err: err}
+			return &errpath.ErrField{Field: "schema", Err: err}
 		}
 	}
 
 	if err := l.resolveContent(p.Content); err != nil {
-		return &ErrField{Field: "content", Err: err}
+		return &errpath.ErrField{Field: "content", Err: err}
 	}
 
 	if err := l.resolveExamples(p.Examples); err != nil {
-		return &ErrField{Field: "examples", Err: err}
+		return &errpath.ErrField{Field: "examples", Err: err}
 	}
 
 	return nil

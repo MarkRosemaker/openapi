@@ -3,6 +3,7 @@ package openapi
 import (
 	"errors"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/go-json-experiment/json/jsontext"
 )
 
@@ -37,7 +38,7 @@ func setIndexMediaType(mt *MediaType, idx int) { mt.idx = idx }
 func (mt *MediaType) Validate() error {
 	if mt.Schema != nil {
 		if err := mt.Schema.Validate(); err != nil {
-			return &ErrField{Field: "schema", Err: err}
+			return &errpath.ErrField{Field: "schema", Err: err}
 		}
 	}
 
@@ -46,11 +47,11 @@ func (mt *MediaType) Validate() error {
 	}
 
 	if err := mt.Examples.Validate(); err != nil {
-		return &ErrField{Field: "examples", Err: err}
+		return &errpath.ErrField{Field: "examples", Err: err}
 	}
 
 	if err := mt.Encoding.Validate(); err != nil {
-		return &ErrField{Field: "encoding", Err: err}
+		return &errpath.ErrField{Field: "encoding", Err: err}
 	}
 
 	return validateExtensions(mt.Extensions)

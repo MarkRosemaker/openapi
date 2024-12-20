@@ -172,7 +172,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type:    openapi.TypeString,
 			Default: struct{}{},
-		}, `default (struct {}{}) is invalid: unknown type struct {}`},
+		}, `default is invalid: unknown type struct {}`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {

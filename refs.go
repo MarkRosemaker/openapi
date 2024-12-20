@@ -1,5 +1,7 @@
 package openapi
 
+import "github.com/MarkRosemaker/errpath"
+
 type (
 	// SchemaRef is a reference to a Schema or an actual Schema.
 	SchemaRef = refOrValue[Schema, *Schema]
@@ -32,7 +34,7 @@ func setIndexRef[T any, O referencable[T]](ref *refOrValue[T, O], i int) { ref.i
 func (l *loader) resolveSchemaRefList(ss SchemaRefList) error {
 	for i, s := range ss {
 		if err := l.resolveSchemaRef(s); err != nil {
-			return &ErrIndex{Index: i, Err: err}
+			return &errpath.ErrIndex{Index: i, Err: err}
 		}
 	}
 

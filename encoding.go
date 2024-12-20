@@ -1,5 +1,7 @@
 package openapi
 
+import "github.com/MarkRosemaker/errpath"
+
 // Encoding is a single encoding definition applied to a single schema property.
 type Encoding struct {
 	// The Content-Type for encoding a specific property. Default value depends on the property type:
@@ -32,12 +34,12 @@ func setIndexEncoding(mt *Encoding, idx int) { mt.idx = idx }
 
 func (e *Encoding) Validate() error {
 	if err := e.Headers.Validate(); err != nil {
-		return &ErrField{Field: "headers", Err: err}
+		return &errpath.ErrField{Field: "headers", Err: err}
 	}
 
 	if e.Style != "" {
 		if err := e.Style.Validate(); err != nil {
-			return &ErrField{Field: "style", Err: err}
+			return &errpath.ErrField{Field: "style", Err: err}
 		}
 	}
 

@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -19,7 +20,7 @@ func (exs Examples) Validate() error {
 		}
 
 		if err := ex.Validate(); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 
@@ -35,7 +36,7 @@ func (l *loader) collectExamples(exs Examples, ref ref) {
 func (l *loader) resolveExamples(exs Examples) error {
 	for k, ex := range exs.ByIndex() {
 		if err := l.resolveExampleRef(ex); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 

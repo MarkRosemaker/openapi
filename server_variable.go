@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 // An object representing a Server Variable for server URL template substitution.
@@ -31,7 +33,7 @@ func (s *ServerVariable) Validate() error {
 	}
 
 	if s.Default == "" {
-		return &ErrField{Field: "default", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "default", Err: &errpath.ErrRequired{}}
 	}
 
 	// If the enum is defined, the default value MUST exist in the enum's values.

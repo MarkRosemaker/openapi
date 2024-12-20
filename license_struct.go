@@ -3,6 +3,8 @@ package openapi
 import (
 	"errors"
 	"net/url"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 // License information for the exposed API.
@@ -23,7 +25,7 @@ type License struct {
 
 func (l *License) Validate() error {
 	if l.Name == "" {
-		return &ErrField{Field: "name", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "name", Err: &errpath.ErrRequired{}}
 	}
 
 	if l.URL != nil && l.Identifier != "" {

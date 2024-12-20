@@ -1,6 +1,10 @@
 package openapi
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // Operation describes a single API operation on a path.
 // ([Specification])
@@ -41,44 +45,44 @@ func (o *Operation) Validate() error {
 
 	if o.ExternalDocs != nil {
 		if err := o.ExternalDocs.Validate(); err != nil {
-			return &ErrField{Field: "externalDocs", Err: err}
+			return &errpath.ErrField{Field: "externalDocs", Err: err}
 		}
 	}
 
 	if err := o.Parameters.Validate(); err != nil {
-		return &ErrField{Field: "parameters", Err: err}
+		return &errpath.ErrField{Field: "parameters", Err: err}
 	}
 
 	if o.RequestBody != nil {
 		if err := o.RequestBody.Validate(); err != nil {
-			return &ErrField{Field: "requestBody", Err: err}
+			return &errpath.ErrField{Field: "requestBody", Err: err}
 		}
 	}
 
 	// validate the key: check if it is a StatusCode
 	for code := range o.Responses.ByIndex() {
 		if err := code.Validate(); err != nil {
-			return &ErrField{
+			return &errpath.ErrField{
 				Field: "responses",
-				Err:   &ErrKey{Key: string(code), Err: err},
+				Err:   &errpath.ErrKey{Key: string(code), Err: err},
 			}
 		}
 	}
 
 	if err := o.Responses.Validate(); err != nil {
-		return &ErrField{Field: "responses", Err: err}
+		return &errpath.ErrField{Field: "responses", Err: err}
 	}
 
 	if err := o.Callbacks.Validate(); err != nil {
-		return &ErrField{Field: "callbacks", Err: err}
+		return &errpath.ErrField{Field: "callbacks", Err: err}
 	}
 
 	if err := o.Security.Validate(); err != nil {
-		return &ErrField{Field: "security", Err: err}
+		return &errpath.ErrField{Field: "security", Err: err}
 	}
 
 	if err := o.Servers.Validate(); err != nil {
-		return &ErrField{Field: "servers", Err: err}
+		return &errpath.ErrField{Field: "servers", Err: err}
 	}
 
 	return validateExtensions(o.Extensions)

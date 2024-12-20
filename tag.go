@@ -1,6 +1,10 @@
 package openapi
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 //
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#tag-object
@@ -14,14 +18,14 @@ type Tag struct {
 
 func (t *Tag) Validate() error {
 	if t.Name == "" {
-		return &ErrField{Field: "name", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "name", Err: &errpath.ErrRequired{}}
 	}
 
 	t.Description = strings.TrimSpace(t.Description)
 
 	if t.ExternalDocs != nil {
 		if err := t.ExternalDocs.Validate(); err != nil {
-			return &ErrField{Field: "externalDocs", Err: err}
+			return &errpath.ErrField{Field: "externalDocs", Err: err}
 		}
 	}
 

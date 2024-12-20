@@ -1,5 +1,7 @@
 package openapi
 
+import "github.com/MarkRosemaker/errpath"
+
 // Servers is a list of server objects.
 type Servers []Server
 
@@ -7,7 +9,7 @@ type Servers []Server
 func (ss Servers) Validate() error {
 	for i, s := range ss {
 		if err := s.Validate(); err != nil {
-			return &ErrIndex{Index: i, Err: err}
+			return &errpath.ErrIndex{Index: i, Err: err}
 		}
 	}
 

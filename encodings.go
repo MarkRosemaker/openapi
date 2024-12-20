@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -14,7 +15,7 @@ type Encodings map[string]*Encoding
 func (es Encodings) Validate() error {
 	for k, e := range es.ByIndex() {
 		if err := e.Validate(); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 

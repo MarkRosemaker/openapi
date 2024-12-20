@@ -1,6 +1,10 @@
 package openapi
 
-import "net/url"
+import (
+	"net/url"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // ExternalDocs allows referencing an external resource for extended documentation.
 // ([Specification])
@@ -18,7 +22,7 @@ type ExternalDocs struct {
 // Validate checks the external documentation for consistency.
 func (ed *ExternalDocs) Validate() error {
 	if ed.URL == nil {
-		return &ErrField{Field: "url", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "url", Err: &errpath.ErrRequired{}}
 	}
 
 	// assume that the scheme is https and add it if it is missing

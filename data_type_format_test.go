@@ -3,6 +3,7 @@ package openapi_test
 import (
 	"testing"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/openapi"
 )
 
@@ -20,7 +21,7 @@ func TestFormat(t *testing.T) {
 		t.Fatal("expected an error for an invalid data type")
 	}
 
-	err = &openapi.ErrField{Field: "format", Err: err}
+	err = &errpath.ErrField{Field: "format", Err: err}
 	if want := `format ("foo") is invalid, must be one of: ` + validFormats; want != err.Error() {
 		t.Fatalf("want: %s, got: %s", want, err)
 	}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -43,7 +44,7 @@ func validateExtensions(ext Extensions) error {
 
 	for k := range m {
 		if !strings.HasPrefix(k, "x-") {
-			return &ErrField{Field: k, Err: ErrUnknownField}
+			return &errpath.ErrField{Field: k, Err: ErrUnknownField}
 		}
 	}
 

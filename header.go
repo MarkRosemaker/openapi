@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/go-json-experiment/json/jsontext"
 )
 
@@ -42,7 +43,7 @@ func (h *Header) Validate() error {
 		}
 
 		if err := h.Schema.Validate(); err != nil {
-			return &ErrField{Field: "schema", Err: err}
+			return &errpath.ErrField{Field: "schema", Err: err}
 		}
 	} else {
 		if h.Content == nil {
@@ -50,32 +51,32 @@ func (h *Header) Validate() error {
 		}
 
 		if len(h.Content) != 1 {
-			return &ErrField{Field: "content", Err: &ErrInvalid[string]{
+			return &errpath.ErrField{Field: "content", Err: &errpath.ErrInvalid[string]{
 				Message: fmt.Sprintf("must contain exactly one entry, got %d", len(h.Content)),
 			}}
 		}
 
 		if err := h.Content.Validate(); err != nil {
-			return &ErrField{Field: "content", Err: err}
+			return &errpath.ErrField{Field: "content", Err: err}
 		}
 	}
 
 	if h.Style != "" {
 		if err := h.Style.Validate(); err != nil {
-			return &ErrField{Field: "style", Err: err}
+			return &errpath.ErrField{Field: "style", Err: err}
 		}
 	}
 
 	if h.Explode {
 		if h.Schema == nil {
-			return &ErrField{Field: "explode", Err: &ErrInvalid[bool]{
+			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: "property has no effect when schema is not present",
 			}}
 		}
 
 		if h.Schema.Type != TypeArray && h.Schema.Type != TypeObject {
-			return &ErrField{Field: "explode", Err: &ErrInvalid[bool]{
+			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", h.Schema.Type),
 			}}
@@ -87,7 +88,7 @@ func (h *Header) Validate() error {
 	}
 
 	if err := h.Examples.Validate(); err != nil {
-		return &ErrField{Field: "examples", Err: err}
+		return &errpath.ErrField{Field: "examples", Err: err}
 	}
 
 	// When `example` or `examples` are provided in conjunction with the `schema` object, the example MUST follow the prescribed serialization strategy for the parameter.

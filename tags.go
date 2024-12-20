@@ -1,6 +1,10 @@
 package openapi
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // A list of tags used by the document with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the Operation Object must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic.
 type Tags []*Tag
@@ -10,11 +14,11 @@ func (tags Tags) Validate() error {
 	names := map[string]error{}
 
 	for i, t := range tags {
-		errNotUnique := &ErrIndex{
+		errNotUnique := &errpath.ErrIndex{
 			Index: i,
-			Err: &ErrField{
+			Err: &errpath.ErrField{
 				Field: "name",
-				Err:   &ErrInvalid[string]{Value: t.Name, Message: "must be unique"},
+				Err:   &errpath.ErrInvalid[string]{Value: t.Name, Message: "must be unique"},
 			},
 		}
 
@@ -26,7 +30,7 @@ func (tags Tags) Validate() error {
 		}
 
 		if err := t.Validate(); err != nil {
-			return &ErrIndex{Index: i, Err: err}
+			return &errpath.ErrIndex{Index: i, Err: err}
 		}
 
 	}

@@ -1,6 +1,10 @@
 package openapi
 
-import "slices"
+import (
+	"slices"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // Format defines additional formats to provide fine detail for primitive data types.
 type Format string
@@ -53,7 +57,7 @@ func (f Format) Validate() error {
 		return nil
 	}
 
-	return &ErrInvalid[Format]{
+	return &errpath.ErrInvalid[Format]{
 		Value: f,
 		Enum:  allFormats,
 	}

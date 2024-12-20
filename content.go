@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -13,11 +14,11 @@ type Content map[MediaRange]*MediaType
 func (c Content) Validate() error {
 	for mr, mt := range c.ByIndex() {
 		if err := mr.Validate(); err != nil {
-			return &ErrKey{Key: string(mr), Err: err}
+			return &errpath.ErrKey{Key: string(mr), Err: err}
 		}
 
 		if err := mt.Validate(); err != nil {
-			return &ErrKey{Key: string(mr), Err: err}
+			return &errpath.ErrKey{Key: string(mr), Err: err}
 		}
 	}
 
@@ -27,7 +28,7 @@ func (c Content) Validate() error {
 func (l *loader) resolveContent(c Content) error {
 	for mr, mt := range c.ByIndex() {
 		if err := l.resolveMediaType(mt); err != nil {
-			return &ErrKey{Key: string(mr), Err: err}
+			return &errpath.ErrKey{Key: string(mr), Err: err}
 		}
 	}
 

@@ -3,6 +3,8 @@ package openapi
 import (
 	"net/http"
 	"strings"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 // PathItem describes the operations available on a single path.
@@ -112,12 +114,12 @@ func (p *PathItem) SetOperation(method string, op *Operation) {
 // Validate validates the path item.
 func (p *PathItem) Validate() error {
 	if err := p.Parameters.Validate(); err != nil {
-		return &ErrField{Field: "parameters", Err: err}
+		return &errpath.ErrField{Field: "parameters", Err: err}
 	}
 
 	for method, op := range p.Operations {
 		if err := op.Validate(); err != nil {
-			return &ErrField{Field: method, Err: err}
+			return &errpath.ErrField{Field: method, Err: err}
 		}
 	}
 
@@ -140,12 +142,12 @@ func (l *loader) resolvePathItemRef(ref *PathItemRef) error {
 
 func (l *loader) resolvePathItem(p *PathItem) error {
 	if err := l.resolveParameterList(p.Parameters); err != nil {
-		return &ErrField{Field: "parameters", Err: err}
+		return &errpath.ErrField{Field: "parameters", Err: err}
 	}
 
 	for method, op := range p.Operations {
 		if err := l.resolveOperation(op); err != nil {
-			return &ErrField{Field: method, Err: err}
+			return &errpath.ErrField{Field: method, Err: err}
 		}
 	}
 

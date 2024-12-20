@@ -1,5 +1,7 @@
 package openapi
 
+import "github.com/MarkRosemaker/errpath"
+
 // The OAuthFlows object allows configuration of the supported OAuth Flows.
 // ([Specification])
 //
@@ -22,25 +24,25 @@ type OAuthFlows struct {
 func (f *OAuthFlows) Validate() error {
 	if f.Implicit != nil {
 		if err := f.Implicit.Validate(); err != nil {
-			return &ErrField{Field: "implicit", Err: err}
+			return &errpath.ErrField{Field: "implicit", Err: err}
 		}
 	}
 
 	if f.Password != nil {
 		if err := f.Password.Validate(); err != nil {
-			return &ErrField{Field: "password", Err: err}
+			return &errpath.ErrField{Field: "password", Err: err}
 		}
 	}
 
 	if f.ClientCredentials != nil {
 		if err := f.ClientCredentials.Validate(); err != nil {
-			return &ErrField{Field: "clientCredentials", Err: err}
+			return &errpath.ErrField{Field: "clientCredentials", Err: err}
 		}
 	}
 
 	if f.AuthorizationCode != nil {
 		if err := f.AuthorizationCode.Validate(); err != nil {
-			return &ErrField{Field: "authorizationCode", Err: err}
+			return &errpath.ErrField{Field: "authorizationCode", Err: err}
 		}
 	}
 

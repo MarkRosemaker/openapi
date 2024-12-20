@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -20,7 +21,7 @@ func (vars ServerVariables) ByIndex() iter.Seq2[string, *ServerVariable] {
 func (vars ServerVariables) Validate() error {
 	for k, v := range vars.ByIndex() {
 		if err := v.Validate(); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 

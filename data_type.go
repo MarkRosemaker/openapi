@@ -1,6 +1,10 @@
 package openapi
 
-import "slices"
+import (
+	"slices"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // Data types in the OAS are based on the types supported by the JSON Schema Specification Draft 2020-12.
 // Note that `integer` as a type is also supported and is defined as a JSON number without a fraction or exponent part.
@@ -29,7 +33,7 @@ func (d DataType) Validate() error {
 		return nil
 	}
 
-	return &ErrInvalid[DataType]{
+	return &errpath.ErrInvalid[DataType]{
 		Value: d,
 		Enum:  allDataTypes,
 	}

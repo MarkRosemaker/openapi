@@ -1,5 +1,7 @@
 package openapi
 
+import "github.com/MarkRosemaker/errpath"
+
 // Server is an object representing a Server.
 // ([Specification])
 //
@@ -19,11 +21,11 @@ type Server struct {
 
 func (s *Server) Validate() error {
 	if s.URL == "" {
-		return &ErrField{Field: "url", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "url", Err: &errpath.ErrRequired{}}
 	}
 
 	if err := s.Variables.Validate(); err != nil {
-		return &ErrField{Field: "variables", Err: err}
+		return &errpath.ErrField{Field: "variables", Err: err}
 	}
 
 	// // validate the default URL to see if the URL is well-formed

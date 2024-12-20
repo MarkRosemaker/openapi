@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -17,7 +18,7 @@ func (ls Links) Validate() error {
 		}
 
 		if err := l.Validate(); err != nil {
-			return &ErrField{Field: expr, Err: err}
+			return &errpath.ErrField{Field: expr, Err: err}
 		}
 	}
 
@@ -33,7 +34,7 @@ func (l *loader) collectLinks(ls Links, ref ref) {
 func (l *loader) resolveLinks(ls Links) error {
 	for expr, lr := range ls.ByIndex() {
 		if err := l.resolveLinkRef(lr); err != nil {
-			return &ErrField{Field: expr, Err: err}
+			return &errpath.ErrField{Field: expr, Err: err}
 		}
 	}
 

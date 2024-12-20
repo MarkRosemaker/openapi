@@ -1,6 +1,10 @@
 package openapi
 
-import "slices"
+import (
+	"slices"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 type SecuritySchemeIn string
 
@@ -22,7 +26,7 @@ func (s SecuritySchemeIn) Validate() error {
 		return nil
 	}
 
-	return &ErrInvalid[SecuritySchemeIn]{
+	return &errpath.ErrInvalid[SecuritySchemeIn]{
 		Value: s,
 		Enum:  allSecuritySchemeIn,
 	}

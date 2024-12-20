@@ -4,6 +4,8 @@ import (
 	"errors"
 	"net/url"
 	"regexp"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 // ErrEmptyDocument is thrown if the OpenAPI document does not contain at least one paths field, a components field or a webhooks field.
@@ -49,13 +51,13 @@ var reOpenAPIVersion = regexp.MustCompile(`^3\.(0|1)\.\d+(-.+)?$`)
 // Validate checks the OpenAPI document for correctness.
 func (d *Document) Validate() error {
 	if d.OpenAPI == "" {
-		return &ErrField{Field: "openapi", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "openapi", Err: &errpath.ErrRequired{}}
 	}
 
 	if !reOpenAPIVersion.MatchString(d.OpenAPI) {
-		return &ErrField{
+		return &errpath.ErrField{
 			Field: "openapi",
-			Err: &ErrInvalid[string]{
+			Err: &errpath.ErrInvalid[string]{
 				Value:   d.OpenAPI,
 				Message: "must be a valid version (3.0.x or 3.1.x)",
 			},
@@ -63,24 +65,24 @@ func (d *Document) Validate() error {
 	}
 
 	if d.Info == nil {
-		return &ErrField{Field: "info", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "info", Err: &errpath.ErrRequired{}}
 	}
 
 	if err := d.Info.Validate(); err != nil {
-		return &ErrField{Field: "info", Err: err}
+		return &errpath.ErrField{Field: "info", Err: err}
 	}
 
 	const defaultJSONSchemaDialect = "https://spec.openapis.org/oas/3.1/dialect/base"
 	if d.JSONSchemaDialect != nil &&
 		d.JSONSchemaDialect.String() != defaultJSONSchemaDialect {
-		return &ErrField{Field: "jsonSchemaDialect", Err: &ErrInvalid[string]{
+		return &errpath.ErrField{Field: "jsonSchemaDialect", Err: &errpath.ErrInvalid[string]{
 			Value: d.JSONSchemaDialect.String(),
 			Enum:  []string{defaultJSONSchemaDialect},
 		}}
 	}
 
 	if err := d.Servers.Validate(); err != nil {
-		return &ErrField{Field: "servers", Err: err}
+		return &errpath.ErrField{Field: "servers", Err: err}
 	}
 
 	// The OpenAPI document MUST contain at least one paths field, a components field or a webhooks field.
@@ -89,28 +91,28 @@ func (d *Document) Validate() error {
 	}
 
 	if err := d.Paths.Validate(); err != nil {
-		return &ErrField{Field: "paths", Err: err}
+		return &errpath.ErrField{Field: "paths", Err: err}
 	}
 
 	if err := d.Webhooks.Validate(); err != nil {
-		return &ErrField{Field: "webhooks", Err: err}
+		return &errpath.ErrField{Field: "webhooks", Err: err}
 	}
 
 	if err := d.Components.Validate(); err != nil {
-		return &ErrField{Field: "components", Err: err}
+		return &errpath.ErrField{Field: "components", Err: err}
 	}
 
 	if err := d.Security.Validate(); err != nil {
-		return &ErrField{Field: "security", Err: err}
+		return &errpath.ErrField{Field: "security", Err: err}
 	}
 
 	if err := d.Tags.Validate(); err != nil {
-		return &ErrField{Field: "tags", Err: err}
+		return &errpath.ErrField{Field: "tags", Err: err}
 	}
 
 	if d.ExternalDocs != nil {
 		if err := d.ExternalDocs.Validate(); err != nil {
-			return &ErrField{Field: "externalDocs", Err: err}
+			return &errpath.ErrField{Field: "externalDocs", Err: err}
 		}
 	}
 
@@ -125,15 +127,15 @@ func (l *loader) collectDocument(doc *Document, ref ref) {
 
 func (l *loader) resolveDocument(doc *Document) error {
 	if err := l.resolvePaths(doc.Paths); err != nil {
-		return &ErrField{Field: "paths", Err: err}
+		return &errpath.ErrField{Field: "paths", Err: err}
 	}
 
 	if err := l.resolveWebhooks(doc.Webhooks); err != nil {
-		return &ErrField{Field: "webhooks", Err: err}
+		return &errpath.ErrField{Field: "webhooks", Err: err}
 	}
 
 	if err := l.resolveComponents(doc.Components); err != nil {
-		return &ErrField{Field: "components", Err: err}
+		return &errpath.ErrField{Field: "components", Err: err}
 	}
 
 	return nil

@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -15,7 +16,7 @@ type LinkParameters map[string]*LinkParameter
 func (ps LinkParameters) Validate() error {
 	for name, p := range ps.ByIndex() {
 		if err := p.Validate(); err != nil {
-			return &ErrKey{Key: name, Err: err}
+			return &errpath.ErrKey{Key: name, Err: err}
 		}
 	}
 
