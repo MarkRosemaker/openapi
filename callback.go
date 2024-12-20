@@ -3,6 +3,7 @@ package openapi
 import (
 	"iter"
 
+	"github.com/MarkRosemaker/errpath"
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
@@ -23,7 +24,7 @@ type Callback map[RuntimeExpression]*PathItemRef
 func (c Callback) Validate() error {
 	for expr, p := range c.ByIndex() {
 		if err := p.Validate(); err != nil {
-			return &ErrKey{Key: string(expr), Err: err}
+			return &errpath.ErrKey{Key: string(expr), Err: err}
 		}
 	}
 
@@ -47,7 +48,7 @@ func (l *loader) resolveCallbackRef(c *CallbackRef) error {
 func (l *loader) resolveCallback(c *Callback) error {
 	for expr, p := range c.ByIndex() {
 		if err := l.resolvePathItemRef(p); err != nil {
-			return &ErrKey{Key: string(expr), Err: err}
+			return &errpath.ErrKey{Key: string(expr), Err: err}
 		}
 	}
 
