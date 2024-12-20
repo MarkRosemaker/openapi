@@ -3,6 +3,8 @@ package openapi
 import (
 	"fmt"
 	"regexp"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 var reKey = regexp.MustCompile(`^[a-zA-Z0-9\.\-_]+$`)
@@ -54,7 +56,7 @@ func validateKey(key string) error {
 		return nil
 	}
 
-	return &ErrKey{Key: key, Err: &ErrInvalid[string]{
+	return &errpath.ErrKey{Key: key, Err: &errpath.ErrInvalid[string]{
 		Value:   key,
 		Message: fmt.Sprintf(`must match the regular expression %q`, reKey),
 	}}
@@ -62,50 +64,50 @@ func validateKey(key string) error {
 
 func (c *Components) Validate() error {
 	if err := c.Schemas.Validate(); err != nil {
-		return &ErrField{Field: "schemas", Err: err}
+		return &errpath.ErrField{Field: "schemas", Err: err}
 	}
 
 	// validate the key: check if it is a valid key
 	for name := range c.Responses.ByIndex() {
 		if err := validateKey(name); err != nil {
-			return &ErrField{Field: "responses", Err: err}
+			return &errpath.ErrField{Field: "responses", Err: err}
 		}
 	}
 
 	if err := c.Responses.Validate(); err != nil {
-		return &ErrField{Field: "responses", Err: err}
+		return &errpath.ErrField{Field: "responses", Err: err}
 	}
 
 	if err := c.Parameters.Validate(); err != nil {
-		return &ErrField{Field: "parameters", Err: err}
+		return &errpath.ErrField{Field: "parameters", Err: err}
 	}
 
 	if err := c.Examples.Validate(); err != nil {
-		return &ErrField{Field: "examples", Err: err}
+		return &errpath.ErrField{Field: "examples", Err: err}
 	}
 
 	if err := c.RequestBodies.Validate(); err != nil {
-		return &ErrField{Field: "requestBodies", Err: err}
+		return &errpath.ErrField{Field: "requestBodies", Err: err}
 	}
 
 	if err := c.Headers.Validate(); err != nil {
-		return &ErrField{Field: "headers", Err: err}
+		return &errpath.ErrField{Field: "headers", Err: err}
 	}
 
 	if err := c.SecuritySchemes.Validate(); err != nil {
-		return &ErrField{Field: "securitySchemes", Err: err}
+		return &errpath.ErrField{Field: "securitySchemes", Err: err}
 	}
 
 	if err := c.Links.Validate(); err != nil {
-		return &ErrField{Field: "links", Err: err}
+		return &errpath.ErrField{Field: "links", Err: err}
 	}
 
 	if err := c.Callbacks.Validate(); err != nil {
-		return &ErrField{Field: "callbacks", Err: err}
+		return &errpath.ErrField{Field: "callbacks", Err: err}
 	}
 
 	if err := c.PathItems.Validate(); err != nil {
-		return &ErrField{Field: "pathItems", Err: err}
+		return &errpath.ErrField{Field: "pathItems", Err: err}
 	}
 
 	if err := validateExtensions(c.Extensions); err != nil {
@@ -130,43 +132,43 @@ func (l *loader) collectComponents(cs Components, ref ref) {
 
 func (l *loader) resolveComponents(c Components) error {
 	if err := l.resolveSchemas(c.Schemas); err != nil {
-		return &ErrField{Field: "schemas", Err: err}
+		return &errpath.ErrField{Field: "schemas", Err: err}
 	}
 
 	if err := l.resolveResponses(c.Responses); err != nil {
-		return &ErrField{Field: "responses", Err: err}
+		return &errpath.ErrField{Field: "responses", Err: err}
 	}
 
 	if err := l.resolveParameters(c.Parameters); err != nil {
-		return &ErrField{Field: "parameters", Err: err}
+		return &errpath.ErrField{Field: "parameters", Err: err}
 	}
 
 	if err := l.resolveExamples(c.Examples); err != nil {
-		return &ErrField{Field: "examples", Err: err}
+		return &errpath.ErrField{Field: "examples", Err: err}
 	}
 
 	if err := l.resolveRequestBodies(c.RequestBodies); err != nil {
-		return &ErrField{Field: "requestBodies", Err: err}
+		return &errpath.ErrField{Field: "requestBodies", Err: err}
 	}
 
 	if err := l.resolveHeaders(c.Headers); err != nil {
-		return &ErrField{Field: "headers", Err: err}
+		return &errpath.ErrField{Field: "headers", Err: err}
 	}
 
 	if err := l.resolveSecuritySchemes(c.SecuritySchemes); err != nil {
-		return &ErrField{Field: "securitySchemes", Err: err}
+		return &errpath.ErrField{Field: "securitySchemes", Err: err}
 	}
 
 	if err := l.resolveLinks(c.Links); err != nil {
-		return &ErrField{Field: "links", Err: err}
+		return &errpath.ErrField{Field: "links", Err: err}
 	}
 
 	if err := l.resolveCallbackRefs(c.Callbacks); err != nil {
-		return &ErrField{Field: "callbacks", Err: err}
+		return &errpath.ErrField{Field: "callbacks", Err: err}
 	}
 
 	if err := l.resolvePathItems(c.PathItems); err != nil {
-		return &ErrField{Field: "pathItems", Err: err}
+		return &errpath.ErrField{Field: "pathItems", Err: err}
 	}
 
 	return nil
