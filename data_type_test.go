@@ -3,6 +3,7 @@ package openapi_test
 import (
 	"testing"
 
+	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/openapi"
 )
 
@@ -18,7 +19,7 @@ func TestDataType(t *testing.T) {
 		t.Fatal("expected an error for an invalid data type")
 	}
 
-	err = &openapi.ErrField{Field: "type", Err: err}
+	err = &errpath.ErrField{Field: "type", Err: err}
 	if want := `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object"`; want != err.Error() {
 		t.Fatalf("expected %q, got %q", want, err.Error())
 	}
