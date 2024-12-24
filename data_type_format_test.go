@@ -7,7 +7,7 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-const validFormats = `"int32", "int64", "float", "double", "byte", "binary", "date", "date-time", "duration", "email", "password", "uuid", "uri", "uriref", "zip-code"`
+const validFormats = `"int32", "int64", "float", "double", "byte", "binary", "date", "date-time", "duration", "email", "password", "uuid", "uri", "uriref", "zip-code", "ipv4", "ipv6"`
 
 func TestFormat(t *testing.T) {
 	// test a valid data type format

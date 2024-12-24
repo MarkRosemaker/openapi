@@ -40,6 +40,10 @@ const (
 	FormatURIRef Format = "uriref"
 	// FormatZipCode represents a zip code.
 	FormatZipCode Format = "zip-code"
+	// FormatIPv4 represents an IPv4 address.
+	FormatIPv4 Format = "ipv4"
+	// FormatIPv6 represents an IPv6 address.
+	FormatIPv6 Format = "ipv6"
 )
 
 var allFormats = []Format{
@@ -49,6 +53,7 @@ var allFormats = []Format{
 	FormatEmail, FormatPassword,
 	FormatUUID,
 	FormatURI, FormatURIRef, FormatZipCode,
+	FormatIPv4, FormatIPv6,
 }
 
 // Validate validates the format.
