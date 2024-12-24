@@ -1,5 +1,7 @@
 github.com/MarkRosemaker/errpath v0.0.0-20241220022008-ec59299c34af h1:T09cKTmOta40dFJ1rAeP3AUHz5thXBTBZCvC6rleT4Q=
 github.com/MarkRosemaker/errpath v0.0.0-20241220022008-ec59299c34af/go.mod h1:VnXpUlsS3n1gSToedcQl2FCARGoA16CyitbCanUIv+I=
+github.com/MarkRosemaker/jsonutil v0.0.0-20241223110547-86001e867c3d h1:KtIqdxYHjES4xQ3VL37B8MDdzB7a2J77FuHag9FAHx8=
+github.com/MarkRosemaker/jsonutil v0.0.0-20241223110547-86001e867c3d/go.mod h1:Is5X1l+cMB/VfhN3CwoHLpqQiO5JPqozGAPMJ4P+oYY=
 github.com/go-api-libs/types v0.0.0-20241018234418-7b7d63d674a1 h1:OxkuiFLdBXzlPp4/X++QM1KFCSr1WqitVhaJBfNLhso=
 github.com/go-api-libs/types v0.0.0-20241018234418-7b7d63d674a1/go.mod h1:063p7ZQdS0JBGdTTqC6lvtVGWXx4IRsOFm+Ucm27HmE=
 github.com/go-json-experiment/json v0.0.0-20241221011554-badceb87ffc9 h1:jlyA2E4tLYswVd6kZ1a60mFIbEXZuDBFxUaxxlUThBg=
