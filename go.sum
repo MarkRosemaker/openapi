@@ -2,8 +2,8 @@ github.com/MarkRosemaker/errpath v0.0.0-20241220022008-ec59299c34af h1:T09cKTmOt
 github.com/MarkRosemaker/errpath v0.0.0-20241220022008-ec59299c34af/go.mod h1:VnXpUlsS3n1gSToedcQl2FCARGoA16CyitbCanUIv+I=
 github.com/go-api-libs/types v0.0.0-20241018234418-7b7d63d674a1 h1:OxkuiFLdBXzlPp4/X++QM1KFCSr1WqitVhaJBfNLhso=
 github.com/go-api-libs/types v0.0.0-20241018234418-7b7d63d674a1/go.mod h1:063p7ZQdS0JBGdTTqC6lvtVGWXx4IRsOFm+Ucm27HmE=
-github.com/go-json-experiment/json v0.0.0-20240815175050-ebd3a8989ca1 h1:xcuWappghOVI8iNWoF2OKahVejd1LSVi/v4JED44Amo=
-github.com/go-json-experiment/json v0.0.0-20240815175050-ebd3a8989ca1/go.mod h1:BWmvoE1Xia34f3l/ibJweyhrT+aROb/FQ6d+37F0e2s=
+github.com/go-json-experiment/json v0.0.0-20241221011554-badceb87ffc9 h1:jlyA2E4tLYswVd6kZ1a60mFIbEXZuDBFxUaxxlUThBg=
+github.com/go-json-experiment/json v0.0.0-20241221011554-badceb87ffc9/go.mod h1:BWmvoE1Xia34f3l/ibJweyhrT+aROb/FQ6d+37F0e2s=
 golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c h1:7dEasQXItcW1xKJ2+gg5VOiBnqWrJc+rq0DPKyvvdbY=
 golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c/go.mod h1:NQtJDoLvd6faHhE7m4T/1IY708gDefGGjR/iUW8yQQ8=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

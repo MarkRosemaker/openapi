@@ -9,11 +9,14 @@ import (
 	"errors"
 	"reflect"
 
+	"github.com/go-json-experiment/json/internal"
 	"github.com/go-json-experiment/json/internal/jsonflags"
 	"github.com/go-json-experiment/json/internal/jsonopts"
 	"github.com/go-json-experiment/json/internal/jsonwire"
 	"github.com/go-json-experiment/json/jsontext"
 )
+
+var errNonStringValue = errors.New("JSON value must be string type")
 
 // Interfaces for custom serialization.
 var (
@@ -118,12 +121,17 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			xe.Flags.Set(jsonflags.WithinArshalCall | 0)
 			currDepth, currLength := xe.Tokens.DepthLength()
 			if (prevDepth != currDepth || prevLength+1 != currLength) && err == nil {
-				err = errors.New("must write exactly one JSON value")
+				err = errNonSingularValue
 			}
 			if err != nil {
 				err = wrapSkipFunc(err, "marshal method")
-				// TODO: Avoid wrapping semantic or I/O errors.
-				return &SemanticError{action: "marshal", GoType: t, Err: err}
+				if xe.Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return internal.NewMarshalerError(va.Addr().Interface(), err, "MarshalJSONV2") // unlike unmarshal, always wrapped
+				}
+				if !export.IsIOError(err) {
+					err = newSemanticErrorWithPosition(enc, t, prevDepth, prevLength, err)
+				}
+				return err
 			}
 			return nil
 		}
@@ -134,12 +142,17 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			val, err := marshaler.MarshalJSON()
 			if err != nil {
 				err = wrapSkipFunc(err, "marshal method")
-				// TODO: Avoid wrapping semantic errors.
-				return &SemanticError{action: "marshal", GoType: t, Err: err}
+				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return internal.NewMarshalerError(va.Addr().Interface(), err, "MarshalJSON") // unlike unmarshal, always wrapped
+				}
+				err = newMarshalErrorBefore(enc, t, err)
+				return collapseSemanticErrors(err)
 			}
 			if err := enc.WriteValue(val); err != nil {
-				// TODO: Avoid wrapping semantic or I/O errors.
-				return &SemanticError{action: "marshal", JSONKind: jsontext.Value(val).Kind(), GoType: t, Err: err}
+				if isSyntacticError(err) {
+					err = newMarshalErrorBefore(enc, t, err)
+				}
+				return err
 			}
 			return nil
 		}
@@ -148,9 +161,14 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) (err error) {
 			appender := va.Addr().Interface().(encodingTextAppender)
 			if err := export.Encoder(enc).AppendRaw('"', false, appender.AppendText); err != nil {
-				// TODO: Avoid wrapping semantic, syntactic, or I/O errors.
 				err = wrapSkipFunc(err, "append method")
-				return &SemanticError{action: "marshal", JSONKind: '"', GoType: t, Err: err}
+				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return internal.NewMarshalerError(va.Addr().Interface(), err, "AppendText") // unlike unmarshal, always wrapped
+				}
+				if !isSemanticError(err) && !export.IsIOError(err) {
+					err = newMarshalErrorBefore(enc, t, err)
+				}
+				return err
 			}
 			return nil
 		}
@@ -162,9 +180,14 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				b2, err := marshaler.MarshalText()
 				return append(b, b2...), err
 			}); err != nil {
-				// TODO: Avoid wrapping semantic, syntactic, or I/O errors.
 				err = wrapSkipFunc(err, "marshal method")
-				return &SemanticError{action: "marshal", JSONKind: '"', GoType: t, Err: err}
+				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return internal.NewMarshalerError(va.Addr().Interface(), err, "MarshalText") // unlike unmarshal, always wrapped
+				}
+				if !isSemanticError(err) && !export.IsIOError(err) {
+					err = newMarshalErrorBefore(enc, t, err)
+				}
+				return err
 			}
 			return nil
 		}
@@ -175,9 +198,10 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				if err := export.Encoder(enc).AppendRaw('"', false, func(b []byte) ([]byte, error) {
 					return appender.AppendTo(b), nil
 				}); err != nil {
-					// TODO: Avoid wrapping semantic, syntactic, or I/O errors.
-					err = wrapSkipFunc(err, "append method")
-					return &SemanticError{action: "marshal", JSONKind: '"', GoType: t, Err: err}
+					if !isSemanticError(err) && !export.IsIOError(err) {
+						err = newMarshalErrorBefore(enc, t, err)
+					}
+					return err
 				}
 				return nil
 			}
@@ -196,12 +220,17 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			xd.Flags.Set(jsonflags.WithinArshalCall | 0)
 			currDepth, currLength := xd.Tokens.DepthLength()
 			if (prevDepth != currDepth || prevLength+1 != currLength) && err == nil {
-				err = errors.New("must read exactly one JSON value")
+				err = errNonSingularValue
 			}
 			if err != nil {
 				err = wrapSkipFunc(err, "unmarshal method")
-				// TODO: Avoid wrapping semantic, syntactic, or I/O errors.
-				return &SemanticError{action: "unmarshal", GoType: t, Err: err}
+				if xd.Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return err // unlike marshal, never wrapped
+				}
+				if !isSyntacticError(err) && !export.IsIOError(err) {
+					err = newSemanticErrorWithPosition(dec, t, prevDepth, prevLength, err)
+				}
+				return err
 			}
 			return nil
 		}
@@ -215,8 +244,11 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			unmarshaler := va.Addr().Interface().(UnmarshalerV1)
 			if err := unmarshaler.UnmarshalJSON(val); err != nil {
 				err = wrapSkipFunc(err, "unmarshal method")
-				// TODO: Avoid wrapping semantic, syntactic, or I/O errors.
-				return &SemanticError{action: "unmarshal", JSONKind: val.Kind(), GoType: t, Err: err}
+				if export.Decoder(dec).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return err // unlike marshal, never wrapped
+				}
+				err = newUnmarshalErrorAfter(dec, t, err)
+				return collapseSemanticErrors(err)
 			}
 			return nil
 		}
@@ -230,15 +262,19 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 				return err // must be a syntactic or I/O error
 			}
 			if val.Kind() != '"' {
-				err = errors.New("JSON value must be string type")
-				return &SemanticError{action: "unmarshal", JSONKind: val.Kind(), GoType: t, Err: err}
+				return newUnmarshalErrorAfter(dec, t, errNonStringValue)
 			}
 			s := jsonwire.UnquoteMayCopy(val, flags.IsVerbatim())
 			unmarshaler := va.Addr().Interface().(encoding.TextUnmarshaler)
 			if err := unmarshaler.UnmarshalText(s); err != nil {
 				err = wrapSkipFunc(err, "unmarshal method")
-				// TODO: Avoid wrapping semantic, syntactic, or I/O errors.
-				return &SemanticError{action: "unmarshal", JSONKind: val.Kind(), GoType: t, Err: err}
+				if export.Decoder(dec).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return err // unlike marshal, never wrapped
+				}
+				if !isSemanticError(err) && !isSyntacticError(err) && !export.IsIOError(err) {
+					err = newUnmarshalErrorAfter(dec, t, err)
+				}
+				return err
 			}
 			return nil
 		}
