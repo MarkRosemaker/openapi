@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
+	"github.com/go-json-experiment/json/jsontext"
 )
 
 var (
@@ -114,10 +115,11 @@ func TestLoadFromReader_Error(t *testing.T) {
 	t.Run("invalid json", func(t *testing.T) {
 		t.Parallel()
 
-		if _, err := openapi.LoadFromReader(strings.NewReader(`{"openapi":"3.0.`)); err == nil {
-			t.Fatal("expected error")
-		} else if want := "unexpected EOF"; err.Error() != want {
-			t.Fatalf("got: %v, want: %v", err, want)
+		_, err := openapi.LoadFromReader(strings.NewReader(`{"openapi":"3.0.`))
+		synErr := errAs[jsontext.SyntacticError](t, err)
+		if synErr.JSONPointer != "/openapi" || synErr.ByteOffset != 16 ||
+			synErr.Err.Error() != "unexpected EOF" {
+			t.Fatalf("got: %#v", synErr)
 		}
 	})
 
