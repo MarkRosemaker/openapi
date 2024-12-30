@@ -4,7 +4,7 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -31,6 +31,31 @@ func (c Callback) Validate() error {
 	return nil
 }
 
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (c Callback) ByIndex() iter.Seq2[RuntimeExpression, *PathItemRef] {
+	return ordmap.ByIndex(c, getIndexRef[PathItem, *PathItem])
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (c Callback) Sort() {
+	ordmap.Sort(c, setIndexRef[PathItem, *PathItem])
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (c *Callback) Set(key RuntimeExpression, p *PathItemRef) {
+	ordmap.Set(c, key, p, getIndexRef[PathItem, *PathItem], setIndexRef[PathItem, *PathItem])
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (c *Callback) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(c, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (c *Callback) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(c, dec, opts, setIndexRef[PathItem, *PathItem])
+}
+
 func (l *loader) collectCallbackRef(c *CallbackRef, ref ref) {
 	if c.Value != nil {
 		l.collectCallback(c.Value, ref)
@@ -53,19 +78,4 @@ func (l *loader) resolveCallback(c *Callback) error {
 	}
 
 	return nil
-}
-
-// ByIndex returns the keys of the map in the order of the index.
-func (c Callback) ByIndex() iter.Seq2[RuntimeExpression, *PathItemRef] {
-	return _json.OrderedMapByIndex(c, getIndexRef[PathItem, *PathItem])
-}
-
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (c *Callback) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(c, dec, opts, setIndexRef[PathItem, *PathItem])
-}
-
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (c *Callback) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(c, enc, opts)
 }
