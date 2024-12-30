@@ -4,7 +4,7 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -25,6 +25,31 @@ func (hs Headers) Validate() error {
 	return nil
 }
 
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (hs Headers) ByIndex() iter.Seq2[string, *HeaderRef] {
+	return ordmap.ByIndex(hs, getIndexRef[Header, *Header])
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (hs Headers) Sort() {
+	ordmap.Sort(hs, setIndexRef[Header, *Header])
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (hs *Headers) Set(key string, h *HeaderRef) {
+	ordmap.Set(hs, key, h, getIndexRef[Header, *Header], setIndexRef[Header, *Header])
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (hs *Headers) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(hs, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (hs *Headers) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(hs, dec, opts, setIndexRef[Header, *Header])
+}
+
 func (l *loader) collectHeaders(hs Headers, ref ref) {
 	for k, h := range hs.ByIndex() {
 		l.collectHeaderRef(h, append(ref, k))
@@ -39,19 +64,4 @@ func (l *loader) resolveHeaders(hs Headers) error {
 	}
 
 	return nil
-}
-
-// ByIndex returns the keys of the map in the order of the index.
-func (h Headers) ByIndex() iter.Seq2[string, *HeaderRef] {
-	return _json.OrderedMapByIndex(h, getIndexRef[Header, *Header])
-}
-
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (h *Headers) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(h, dec, opts, setIndexRef[Header, *Header])
-}
-
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (h *Headers) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(h, enc, opts)
 }

@@ -3,7 +3,8 @@ package openapi
 import (
 	"iter"
 
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/errpath"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -17,11 +18,36 @@ func (ss Schemas) Validate() error {
 		}
 
 		if err := s.Validate(); err != nil {
-			return &ErrKey{Key: name, Err: err}
+			return &errpath.ErrKey{Key: name, Err: err}
 		}
 	}
 
 	return nil
+}
+
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (rs Schemas) ByIndex() iter.Seq2[string, *Schema] {
+	return ordmap.ByIndex(rs, getIndexSchema)
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (rs Schemas) Sort() {
+	ordmap.Sort(rs, setIndexSchema)
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (rs *Schemas) Set(key string, v *Schema) {
+	ordmap.Set(rs, key, v, getIndexSchema, setIndexSchema)
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (rs *Schemas) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(rs, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (rs *Schemas) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(rs, dec, opts, setIndexSchema)
 }
 
 func (l *loader) collectSchemas(ss Schemas, ref ref) {
@@ -33,24 +59,9 @@ func (l *loader) collectSchemas(ss Schemas, ref ref) {
 func (l *loader) resolveSchemas(ss Schemas) error {
 	for name, s := range ss.ByIndex() {
 		if err := l.resolveSchema(s); err != nil {
-			return &ErrKey{Key: name, Err: err}
+			return &errpath.ErrKey{Key: name, Err: err}
 		}
 	}
 
 	return nil
-}
-
-// ByIndex returns the keys of the map in the order of the index.
-func (ss Schemas) ByIndex() iter.Seq2[string, *Schema] {
-	return _json.OrderedMapByIndex(ss, getIndexSchema)
-}
-
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (ss *Schemas) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(ss, dec, opts, setIndexSchema)
-}
-
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (ss *Schemas) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(ss, enc, opts)
 }

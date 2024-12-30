@@ -13,8 +13,8 @@ type LinkParameter struct {
 	idx int
 }
 
-func getIndexLinkParameter(p *LinkParameter) int      { return p.idx }
-func setIndexLinkParameter(p *LinkParameter, idx int) { p.idx = idx }
+func getIndexLinkParameter(p *LinkParameter) int                     { return p.idx }
+func setIndexLinkParameter(p *LinkParameter, idx int) *LinkParameter { p.idx = idx; return p }
 
 // Validate validates the link parameter.
 func (p *LinkParameter) Validate() error { return p.Expression.Validate() }

@@ -4,7 +4,7 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -25,6 +25,31 @@ func (ls Links) Validate() error {
 	return nil
 }
 
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (ls Links) ByIndex() iter.Seq2[string, *LinkRef] {
+	return ordmap.ByIndex(ls, getIndexRef[Link, *Link])
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (ls Links) Sort() {
+	ordmap.Sort(ls, setIndexRef[Link, *Link])
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (ls *Links) Set(key string, l *LinkRef) {
+	ordmap.Set(ls, key, l, getIndexRef[Link, *Link], setIndexRef[Link, *Link])
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (ls *Links) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(ls, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (ls *Links) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(ls, dec, opts, setIndexRef[Link, *Link])
+}
+
 func (l *loader) collectLinks(ls Links, ref ref) {
 	for expr, lr := range ls.ByIndex() {
 		l.collectLinkRef(lr, append(ref, expr))
@@ -39,19 +64,4 @@ func (l *loader) resolveLinks(ls Links) error {
 	}
 
 	return nil
-}
-
-// ByIndex returns the keys of the map in the order of the index.
-func (l Links) ByIndex() iter.Seq2[string, *LinkRef] {
-	return _json.OrderedMapByIndex(l, getIndexRef[Link, *Link])
-}
-
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (l *Links) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(l, dec, opts, setIndexRef[Link, *Link])
-}
-
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (l *Links) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(l, enc, opts)
 }

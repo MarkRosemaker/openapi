@@ -4,7 +4,7 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -23,17 +23,27 @@ func (ps LinkParameters) Validate() error {
 	return nil
 }
 
-// ByIndex returns the keys of the map in the order of the index.
+// ByIndex returns a sequence of key-value pairs ordered by index.
 func (ps LinkParameters) ByIndex() iter.Seq2[string, *LinkParameter] {
-	return _json.OrderedMapByIndex(ps, getIndexLinkParameter)
+	return ordmap.ByIndex(ps, getIndexLinkParameter)
 }
 
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (ps *LinkParameters) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(ps, dec, opts, setIndexLinkParameter)
+// Sort sorts the map by key and sets the indices accordingly.
+func (ps LinkParameters) Sort() {
+	ordmap.Sort(ps, setIndexLinkParameter)
 }
 
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
+// Set sets a value in the map, adding it at the end of the order.
+func (ps *LinkParameters) Set(key string, p *LinkParameter) {
+	ordmap.Set(ps, key, p, getIndexLinkParameter, setIndexLinkParameter)
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
 func (ps *LinkParameters) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(ps, enc, opts)
+	return ordmap.MarshalJSONV2(ps, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (ps *LinkParameters) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(ps, dec, opts, setIndexLinkParameter)
 }

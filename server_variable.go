@@ -46,5 +46,5 @@ func (s *ServerVariable) Validate() error {
 	return nil
 }
 
-func getIndexServerVariable(v *ServerVariable) int    { return v.idx }
-func setIndexServerVariable(v *ServerVariable, i int) { v.idx = i }
+func getIndexServerVariable(v *ServerVariable) int                    { return v.idx }
+func setIndexServerVariable(v *ServerVariable, i int) *ServerVariable { v.idx = i; return v }

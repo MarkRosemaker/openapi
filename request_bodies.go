@@ -3,7 +3,8 @@ package openapi
 import (
 	"iter"
 
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/errpath"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -17,11 +18,36 @@ func (rs RequestBodies) Validate() error {
 		}
 
 		if err := r.Validate(); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 
 	return nil
+}
+
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (rs RequestBodies) ByIndex() iter.Seq2[string, *RequestBodyRef] {
+	return ordmap.ByIndex(rs, getIndexRef[RequestBody, *RequestBody])
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (rs RequestBodies) Sort() {
+	ordmap.Sort(rs, setIndexRef[RequestBody, *RequestBody])
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (rs *RequestBodies) Set(key string, r *RequestBodyRef) {
+	ordmap.Set(rs, key, r, getIndexRef[RequestBody, *RequestBody], setIndexRef[RequestBody, *RequestBody])
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (rs *RequestBodies) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(rs, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (rs *RequestBodies) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(rs, dec, opts, setIndexRef[RequestBody, *RequestBody])
 }
 
 func (l *loader) collectRequestBodies(rs RequestBodies, ref ref) {
@@ -33,24 +59,9 @@ func (l *loader) collectRequestBodies(rs RequestBodies, ref ref) {
 func (l *loader) resolveRequestBodies(rs RequestBodies) error {
 	for k, r := range rs.ByIndex() {
 		if err := l.resolveRequestBodyRef(r); err != nil {
-			return &ErrKey{Key: k, Err: err}
+			return &errpath.ErrKey{Key: k, Err: err}
 		}
 	}
 
 	return nil
-}
-
-// ByIndex returns the keys of the map in the order of the index.
-func (rs RequestBodies) ByIndex() iter.Seq2[string, *RequestBodyRef] {
-	return _json.OrderedMapByIndex(rs, getIndexRef[RequestBody, *RequestBody])
-}
-
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (rs *RequestBodies) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(rs, dec, opts, setIndexRef[RequestBody, *RequestBody])
-}
-
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (rs *RequestBodies) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(rs, enc, opts)
 }

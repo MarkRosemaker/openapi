@@ -3,7 +3,8 @@ package openapi
 import (
 	"iter"
 
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/errpath"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -35,24 +36,50 @@ type Responses[K ~string] map[K]*ResponseRef
 func (rs Responses[K]) Validate() error {
 	for keyOrCode, r := range rs.ByIndex() {
 		if err := r.Validate(); err != nil {
-			return &ErrKey{Key: string(keyOrCode), Err: err}
+			return &errpath.ErrKey{Key: string(keyOrCode), Err: err}
 		}
 	}
 
 	return nil
 }
 
-// ByIndex returns the keys of the map in the order of the index.
+// ByIndex returns a sequence of key-value pairs ordered by index.
 func (rs Responses[K]) ByIndex() iter.Seq2[K, *ResponseRef] {
-	return _json.OrderedMapByIndex(rs, getIndexRef[Response, *Response])
+	return ordmap.ByIndex(rs, getIndexRef[Response, *Response])
 }
 
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (r *Responses[_]) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(r, dec, opts, setIndexRef[Response, *Response])
+// Sort sorts the map by key and sets the indices accordingly.
+func (rs Responses[_]) Sort() {
+	ordmap.Sort(rs, setIndexRef[Response, *Response])
 }
 
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (r *Responses[_]) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(r, enc, opts)
+// Set sets a value in the map, adding it at the end of the order.
+func (rs *Responses[K]) Set(key K, v *ResponseRef) {
+	ordmap.Set(rs, key, v, getIndexRef[Response, *Response], setIndexRef[Response, *Response])
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (rs *Responses[_]) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(rs, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (rs *Responses[_]) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(rs, dec, opts, setIndexRef[Response, *Response])
+}
+
+func (l *loader) collectResponses(rs ResponsesByName, ref ref) {
+	for name, r := range rs.ByIndex() {
+		l.collectResponseRef(r, append(ref, name))
+	}
+}
+
+func (l *loader) resolveResponses(rs ResponsesByName) error {
+	for name, r := range rs.ByIndex() {
+		if err := l.resolveResponseRef(r); err != nil {
+			return &errpath.ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
 }

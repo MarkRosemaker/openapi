@@ -4,18 +4,13 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
 
 // ServerVariables is an ordered map of server variable.
 type ServerVariables map[string]*ServerVariable
-
-// ByIndex returns the keys of the map in the order of the index.
-func (vars ServerVariables) ByIndex() iter.Seq2[string, *ServerVariable] {
-	return _json.OrderedMapByIndex(vars, getIndexServerVariable)
-}
 
 // Validate validates each server variable.
 func (vars ServerVariables) Validate() error {
@@ -28,12 +23,27 @@ func (vars ServerVariables) Validate() error {
 	return nil
 }
 
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (sv *ServerVariables) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(sv, dec, opts, setIndexServerVariable)
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (vars ServerVariables) ByIndex() iter.Seq2[string, *ServerVariable] {
+	return ordmap.ByIndex(vars, getIndexServerVariable)
 }
 
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (sv ServerVariables) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(&sv, enc, opts)
+// Sort sorts the map by key and sets the indices accordingly.
+func (vars ServerVariables) Sort() {
+	ordmap.Sort(vars, setIndexServerVariable)
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (vars *ServerVariables) Set(key string, v *ServerVariable) {
+	ordmap.Set(vars, key, v, getIndexServerVariable, setIndexServerVariable)
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (vars *ServerVariables) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(vars, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (vars *ServerVariables) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(vars, dec, opts, setIndexServerVariable)
 }

@@ -45,6 +45,9 @@ type PathItem struct {
 	idx int
 }
 
+func getIndexPathItem(p *PathItem) int              { return p.idx }
+func setIndexPathItem(p *PathItem, i int) *PathItem { p.idx = i; return p }
+
 // Operations iterates over all operations in the path item.
 func (p *PathItem) Operations(yield func(string, *Operation) bool) {
 	if op := p.Get; op != nil {

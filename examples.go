@@ -4,7 +4,7 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -27,6 +27,31 @@ func (exs Examples) Validate() error {
 	return nil
 }
 
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (exs Examples) ByIndex() iter.Seq2[string, *ExampleRef] {
+	return ordmap.ByIndex(exs, getIndexRef[Example, *Example])
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (exs Examples) Sort() {
+	ordmap.Sort(exs, setIndexRef[Example, *Example])
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (exs *Examples) Set(key string, ex *ExampleRef) {
+	ordmap.Set(exs, key, ex, getIndexRef[Example, *Example], setIndexRef[Example, *Example])
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (exs *Examples) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(exs, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (exs *Examples) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(exs, dec, opts, setIndexRef[Example, *Example])
+}
+
 func (l *loader) collectExamples(exs Examples, ref ref) {
 	for k, ex := range exs.ByIndex() {
 		l.collectExampleRef(ex, append(ref, k))
@@ -41,19 +66,4 @@ func (l *loader) resolveExamples(exs Examples) error {
 	}
 
 	return nil
-}
-
-// ByIndex returns the keys of the map in the order of the index.
-func (ex Examples) ByIndex() iter.Seq2[string, *ExampleRef] {
-	return _json.OrderedMapByIndex(ex, getIndexRef[Example, *Example])
-}
-
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (ex *Examples) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(ex, dec, opts, setIndexRef[Example, *Example])
-}
-
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (ex *Examples) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(ex, enc, opts)
 }
