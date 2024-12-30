@@ -32,6 +32,10 @@ var (
 	// This exists for now to provide performance benefits to netip types.
 	// There is no semantic difference with this change.
 	appenderToType = reflect.TypeFor[interface{ AppendTo([]byte) []byte }]()
+
+	allMarshalerTypes   = []reflect.Type{jsonMarshalerV2Type, jsonMarshalerV1Type, textAppenderType, textMarshalerType}
+	allUnmarshalerTypes = []reflect.Type{jsonUnmarshalerV2Type, jsonUnmarshalerV1Type, textUnmarshalerType}
+	allMethodTypes      = append(allMarshalerTypes, allUnmarshalerTypes...)
 )
 
 // TODO(https://go.dev/issue/62384): Use encoding.TextAppender instead
@@ -109,11 +113,106 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 		return fncs
 	}
 
-	// Handle custom marshaler.
-	switch which := implementsWhich(t, jsonMarshalerV2Type, jsonMarshalerV1Type, textAppenderType, textMarshalerType); which {
-	case jsonMarshalerV2Type:
+	if needAddr, ok := implements(t, textMarshalerType); ok {
 		fncs.nonDefault = true
+		prevMarshal := fncs.marshal
 		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
+			if mo.Flags.Get(jsonflags.CallMethodsWithLegacySemantics) &&
+				(needAddr && va.forcedAddr) {
+				return prevMarshal(enc, va, mo)
+			}
+			marshaler := va.Addr().Interface().(encoding.TextMarshaler)
+			if err := export.Encoder(enc).AppendRaw('"', false, func(b []byte) ([]byte, error) {
+				b2, err := marshaler.MarshalText()
+				return append(b, b2...), err
+			}); err != nil {
+				err = wrapSkipFunc(err, "marshal method")
+				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return internal.NewMarshalerError(va.Addr().Interface(), err, "MarshalText") // unlike unmarshal, always wrapped
+				}
+				if !isSemanticError(err) && !export.IsIOError(err) {
+					err = newMarshalErrorBefore(enc, t, err)
+				}
+				return err
+			}
+			return nil
+		}
+		// TODO(https://go.dev/issue/62384): Rely on encoding.TextAppender instead.
+		if implementsAny(t, appenderToType) && t.PkgPath() == "net/netip" {
+			fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
+				appender := va.Addr().Interface().(interface{ AppendTo([]byte) []byte })
+				if err := export.Encoder(enc).AppendRaw('"', false, func(b []byte) ([]byte, error) {
+					return appender.AppendTo(b), nil
+				}); err != nil {
+					if !isSemanticError(err) && !export.IsIOError(err) {
+						err = newMarshalErrorBefore(enc, t, err)
+					}
+					return err
+				}
+				return nil
+			}
+		}
+	}
+
+	if needAddr, ok := implements(t, textAppenderType); ok {
+		fncs.nonDefault = true
+		prevMarshal := fncs.marshal
+		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) (err error) {
+			if mo.Flags.Get(jsonflags.CallMethodsWithLegacySemantics) &&
+				(needAddr && va.forcedAddr) {
+				return prevMarshal(enc, va, mo)
+			}
+			appender := va.Addr().Interface().(encodingTextAppender)
+			if err := export.Encoder(enc).AppendRaw('"', false, appender.AppendText); err != nil {
+				err = wrapSkipFunc(err, "append method")
+				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return internal.NewMarshalerError(va.Addr().Interface(), err, "AppendText") // unlike unmarshal, always wrapped
+				}
+				if !isSemanticError(err) && !export.IsIOError(err) {
+					err = newMarshalErrorBefore(enc, t, err)
+				}
+				return err
+			}
+			return nil
+		}
+	}
+
+	if needAddr, ok := implements(t, jsonMarshalerV1Type); ok {
+		fncs.nonDefault = true
+		prevMarshal := fncs.marshal
+		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
+			if mo.Flags.Get(jsonflags.CallMethodsWithLegacySemantics) &&
+				((needAddr && va.forcedAddr) || export.Encoder(enc).Tokens.Last.NeedObjectName()) {
+				return prevMarshal(enc, va, mo)
+			}
+			marshaler := va.Addr().Interface().(MarshalerV1)
+			val, err := marshaler.MarshalJSON()
+			if err != nil {
+				err = wrapSkipFunc(err, "marshal method")
+				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return internal.NewMarshalerError(va.Addr().Interface(), err, "MarshalJSON") // unlike unmarshal, always wrapped
+				}
+				err = newMarshalErrorBefore(enc, t, err)
+				return collapseSemanticErrors(err)
+			}
+			if err := enc.WriteValue(val); err != nil {
+				if isSyntacticError(err) {
+					err = newMarshalErrorBefore(enc, t, err)
+				}
+				return err
+			}
+			return nil
+		}
+	}
+
+	if needAddr, ok := implements(t, jsonMarshalerV2Type); ok {
+		fncs.nonDefault = true
+		prevMarshal := fncs.marshal
+		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
+			if mo.Flags.Get(jsonflags.CallMethodsWithLegacySemantics) &&
+				((needAddr && va.forcedAddr) || export.Encoder(enc).Tokens.Last.NeedObjectName()) {
+				return prevMarshal(enc, va, mo)
+			}
 			xe := export.Encoder(enc)
 			prevDepth, prevLength := xe.Tokens.DepthLength()
 			xe.Flags.Set(jsonflags.WithinArshalCall | 1)
@@ -135,84 +234,75 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			}
 			return nil
 		}
-	case jsonMarshalerV1Type:
+	}
+
+	if _, ok := implements(t, textUnmarshalerType); ok {
 		fncs.nonDefault = true
-		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
-			marshaler := va.Addr().Interface().(MarshalerV1)
-			val, err := marshaler.MarshalJSON()
+		fncs.unmarshal = func(dec *jsontext.Decoder, va addressableValue, uo *jsonopts.Struct) error {
+			xd := export.Decoder(dec)
+			var flags jsonwire.ValueFlags
+			val, err := xd.ReadValue(&flags)
 			if err != nil {
-				err = wrapSkipFunc(err, "marshal method")
-				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
-					return internal.NewMarshalerError(va.Addr().Interface(), err, "MarshalJSON") // unlike unmarshal, always wrapped
-				}
-				err = newMarshalErrorBefore(enc, t, err)
-				return collapseSemanticErrors(err)
+				return err // must be a syntactic or I/O error
 			}
-			if err := enc.WriteValue(val); err != nil {
-				if isSyntacticError(err) {
-					err = newMarshalErrorBefore(enc, t, err)
-				}
-				return err
-			}
-			return nil
-		}
-	case textAppenderType:
-		fncs.nonDefault = true
-		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) (err error) {
-			appender := va.Addr().Interface().(encodingTextAppender)
-			if err := export.Encoder(enc).AppendRaw('"', false, appender.AppendText); err != nil {
-				err = wrapSkipFunc(err, "append method")
-				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
-					return internal.NewMarshalerError(va.Addr().Interface(), err, "AppendText") // unlike unmarshal, always wrapped
-				}
-				if !isSemanticError(err) && !export.IsIOError(err) {
-					err = newMarshalErrorBefore(enc, t, err)
-				}
-				return err
-			}
-			return nil
-		}
-	case textMarshalerType:
-		fncs.nonDefault = true
-		fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
-			marshaler := va.Addr().Interface().(encoding.TextMarshaler)
-			if err := export.Encoder(enc).AppendRaw('"', false, func(b []byte) ([]byte, error) {
-				b2, err := marshaler.MarshalText()
-				return append(b, b2...), err
-			}); err != nil {
-				err = wrapSkipFunc(err, "marshal method")
-				if export.Encoder(enc).Flags.Get(jsonflags.ReportLegacyErrorValues) {
-					return internal.NewMarshalerError(va.Addr().Interface(), err, "MarshalText") // unlike unmarshal, always wrapped
-				}
-				if !isSemanticError(err) && !export.IsIOError(err) {
-					err = newMarshalErrorBefore(enc, t, err)
-				}
-				return err
-			}
-			return nil
-		}
-		// TODO(https://go.dev/issue/62384): Rely on encoding.TextAppender instead.
-		if implementsWhich(t, appenderToType) != nil && t.PkgPath() == "net/netip" {
-			fncs.marshal = func(enc *jsontext.Encoder, va addressableValue, mo *jsonopts.Struct) error {
-				appender := va.Addr().Interface().(interface{ AppendTo([]byte) []byte })
-				if err := export.Encoder(enc).AppendRaw('"', false, func(b []byte) ([]byte, error) {
-					return appender.AppendTo(b), nil
-				}); err != nil {
-					if !isSemanticError(err) && !export.IsIOError(err) {
-						err = newMarshalErrorBefore(enc, t, err)
-					}
-					return err
+			if val.Kind() == 'n' {
+				if !uo.Flags.Get(jsonflags.MergeWithLegacySemantics) {
+					va.SetZero()
 				}
 				return nil
 			}
+			if val.Kind() != '"' {
+				return newUnmarshalErrorAfter(dec, t, errNonStringValue)
+			}
+			s := jsonwire.UnquoteMayCopy(val, flags.IsVerbatim())
+			unmarshaler := va.Addr().Interface().(encoding.TextUnmarshaler)
+			if err := unmarshaler.UnmarshalText(s); err != nil {
+				err = wrapSkipFunc(err, "unmarshal method")
+				if export.Decoder(dec).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return err // unlike marshal, never wrapped
+				}
+				if !isSemanticError(err) && !isSyntacticError(err) && !export.IsIOError(err) {
+					err = newUnmarshalErrorAfter(dec, t, err)
+				}
+				return err
+			}
+			return nil
 		}
 	}
 
-	// Handle custom unmarshaler.
-	switch which := implementsWhich(t, jsonUnmarshalerV2Type, jsonUnmarshalerV1Type, textUnmarshalerType); which {
-	case jsonUnmarshalerV2Type:
+	if _, ok := implements(t, jsonUnmarshalerV1Type); ok {
 		fncs.nonDefault = true
+		prevUnmarshal := fncs.unmarshal
 		fncs.unmarshal = func(dec *jsontext.Decoder, va addressableValue, uo *jsonopts.Struct) error {
+			if uo.Flags.Get(jsonflags.CallMethodsWithLegacySemantics) &&
+				export.Decoder(dec).Tokens.Last.NeedObjectName() {
+				return prevUnmarshal(dec, va, uo)
+			}
+			val, err := dec.ReadValue()
+			if err != nil {
+				return err // must be a syntactic or I/O error
+			}
+			unmarshaler := va.Addr().Interface().(UnmarshalerV1)
+			if err := unmarshaler.UnmarshalJSON(val); err != nil {
+				err = wrapSkipFunc(err, "unmarshal method")
+				if export.Decoder(dec).Flags.Get(jsonflags.ReportLegacyErrorValues) {
+					return err // unlike marshal, never wrapped
+				}
+				err = newUnmarshalErrorAfter(dec, t, err)
+				return collapseSemanticErrors(err)
+			}
+			return nil
+		}
+	}
+
+	if _, ok := implements(t, jsonUnmarshalerV2Type); ok {
+		fncs.nonDefault = true
+		prevUnmarshal := fncs.unmarshal
+		fncs.unmarshal = func(dec *jsontext.Decoder, va addressableValue, uo *jsonopts.Struct) error {
+			if uo.Flags.Get(jsonflags.CallMethodsWithLegacySemantics) &&
+				export.Decoder(dec).Tokens.Last.NeedObjectName() {
+				return prevUnmarshal(dec, va, uo)
+			}
 			xd := export.Decoder(dec)
 			prevDepth, prevLength := xd.Tokens.DepthLength()
 			xd.Flags.Set(jsonflags.WithinArshalCall | 1)
@@ -234,62 +324,33 @@ func makeMethodArshaler(fncs *arshaler, t reflect.Type) *arshaler {
 			}
 			return nil
 		}
-	case jsonUnmarshalerV1Type:
-		fncs.nonDefault = true
-		fncs.unmarshal = func(dec *jsontext.Decoder, va addressableValue, uo *jsonopts.Struct) error {
-			val, err := dec.ReadValue()
-			if err != nil {
-				return err // must be a syntactic or I/O error
-			}
-			unmarshaler := va.Addr().Interface().(UnmarshalerV1)
-			if err := unmarshaler.UnmarshalJSON(val); err != nil {
-				err = wrapSkipFunc(err, "unmarshal method")
-				if export.Decoder(dec).Flags.Get(jsonflags.ReportLegacyErrorValues) {
-					return err // unlike marshal, never wrapped
-				}
-				err = newUnmarshalErrorAfter(dec, t, err)
-				return collapseSemanticErrors(err)
-			}
-			return nil
-		}
-	case textUnmarshalerType:
-		fncs.nonDefault = true
-		fncs.unmarshal = func(dec *jsontext.Decoder, va addressableValue, uo *jsonopts.Struct) error {
-			xd := export.Decoder(dec)
-			var flags jsonwire.ValueFlags
-			val, err := xd.ReadValue(&flags)
-			if err != nil {
-				return err // must be a syntactic or I/O error
-			}
-			if val.Kind() != '"' {
-				return newUnmarshalErrorAfter(dec, t, errNonStringValue)
-			}
-			s := jsonwire.UnquoteMayCopy(val, flags.IsVerbatim())
-			unmarshaler := va.Addr().Interface().(encoding.TextUnmarshaler)
-			if err := unmarshaler.UnmarshalText(s); err != nil {
-				err = wrapSkipFunc(err, "unmarshal method")
-				if export.Decoder(dec).Flags.Get(jsonflags.ReportLegacyErrorValues) {
-					return err // unlike marshal, never wrapped
-				}
-				if !isSemanticError(err) && !isSyntacticError(err) && !export.IsIOError(err) {
-					err = newUnmarshalErrorAfter(dec, t, err)
-				}
-				return err
-			}
-			return nil
-		}
 	}
 
 	return fncs
 }
 
-// implementsWhich is like t.Implements(ifaceType) for a list of interfaces,
+// implementsAny is like t.Implements(ifaceType) for a list of interfaces,
 // but checks whether either t or reflect.PointerTo(t) implements the interface.
-func implementsWhich(t reflect.Type, ifaceTypes ...reflect.Type) (which reflect.Type) {
+func implementsAny(t reflect.Type, ifaceTypes ...reflect.Type) bool {
 	for _, ifaceType := range ifaceTypes {
-		if t.Implements(ifaceType) || reflect.PointerTo(t).Implements(ifaceType) {
-			return ifaceType
+		if _, ok := implements(t, ifaceType); ok {
+			return true
 		}
 	}
-	return nil
+	return false
+}
+
+// implements is like t.Implements(ifaceType) but checks whether
+// either t or reflect.PointerTo(t) implements the interface.
+// It also reports whether the value needs to be addressed
+// in order to satisfy the interface.
+func implements(t, ifaceType reflect.Type) (needAddr, ok bool) {
+	switch {
+	case t.Implements(ifaceType):
+		return false, true
+	case reflect.PointerTo(t).Implements(ifaceType):
+		return true, true
+	default:
+		return false, false
+	}
 }
