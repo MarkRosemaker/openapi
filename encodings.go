@@ -4,7 +4,7 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -22,17 +22,27 @@ func (es Encodings) Validate() error {
 	return nil
 }
 
-// ByIndex returns the keys of the map in the order of the index.
-func (e Encodings) ByIndex() iter.Seq2[string, *Encoding] {
-	return _json.OrderedMapByIndex(e, getIndexEncoding)
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (es Encodings) ByIndex() iter.Seq2[string, *Encoding] {
+	return ordmap.ByIndex(es, getIndexEncoding)
 }
 
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (c *Encodings) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(c, dec, opts, setIndexEncoding)
+// Sort sorts the map by key and sets the indices accordingly.
+func (es Encodings) Sort() {
+	ordmap.Sort(es, setIndexEncoding)
 }
 
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (c *Encodings) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(c, enc, opts)
+// Set sets a value in the map, adding it at the end of the order.
+func (es *Encodings) Set(key string, e *Encoding) {
+	ordmap.Set(es, key, e, getIndexEncoding, setIndexEncoding)
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (es *Encodings) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(es, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (es *Encodings) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(es, dec, opts, setIndexEncoding)
 }

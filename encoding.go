@@ -29,8 +29,8 @@ type Encoding struct {
 	idx int
 }
 
-func getIndexEncoding(mt *Encoding) int      { return mt.idx }
-func setIndexEncoding(mt *Encoding, idx int) { mt.idx = idx }
+func getIndexEncoding(mt *Encoding) int                { return mt.idx }
+func setIndexEncoding(mt *Encoding, idx int) *Encoding { mt.idx = idx; return mt }
 
 func (e *Encoding) Validate() error {
 	if err := e.Headers.Validate(); err != nil {
