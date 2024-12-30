@@ -4,7 +4,7 @@ import (
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
+	"github.com/MarkRosemaker/ordmap"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
@@ -25,6 +25,31 @@ func (c Content) Validate() error {
 	return nil
 }
 
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (c Content) ByIndex() iter.Seq2[MediaRange, *MediaType] {
+	return ordmap.ByIndex(c, getIndexMediaType)
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (c Content) Sort() {
+	ordmap.Sort(c, setIndexMediaType)
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (c *Content) Set(mr MediaRange, mt *MediaType) {
+	ordmap.Set(c, mr, mt, getIndexMediaType, setIndexMediaType)
+}
+
+// MarshalJSONV2 marshals the key-value pairs in order.
+func (c *Content) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONV2(c, enc, opts)
+}
+
+// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
+func (c *Content) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONV2(c, dec, opts, setIndexMediaType)
+}
+
 func (l *loader) resolveContent(c Content) error {
 	for mr, mt := range c.ByIndex() {
 		if err := l.resolveMediaType(mt); err != nil {
@@ -33,19 +58,4 @@ func (l *loader) resolveContent(c Content) error {
 	}
 
 	return nil
-}
-
-// ByIndex returns the keys of the map in the order of the index.
-func (c Content) ByIndex() iter.Seq2[MediaRange, *MediaType] {
-	return _json.OrderedMapByIndex(c, getIndexMediaType)
-}
-
-// UnmarshalJSONV2 unmarshals the map from JSON and sets the index of each variable.
-func (c *Content) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return _json.UnmarshalOrderedMap(c, dec, opts, setIndexMediaType)
-}
-
-// MarshalJSONV2 marshals the map to JSON in the order of the index.
-func (c *Content) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return _json.MarshalOrderedMap(c, enc, opts)
 }
