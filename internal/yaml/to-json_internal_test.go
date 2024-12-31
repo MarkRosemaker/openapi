@@ -1,6 +1,7 @@
 package yaml
 
 import (
+	"errors"
 	"io"
 	"testing"
 
@@ -17,12 +18,17 @@ func TestEncodeToJSON_Error(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		synErr := &jsontext.SyntacticError{}
 		if err := encodeToJSON(enc, &yaml.Node{
 			Kind: yaml.SequenceNode,
 		}); err == nil {
 			t.Fatal("expected error")
-		} else if want := "jsontext: missing string for object name"; err.Error() != want {
-			t.Fatalf("got: %q, want: %q", err.Error(), want)
+		} else if !errors.As(err, &synErr) {
+			t.Fatalf("got: %T, want: %T", err, synErr)
+		} else if synErr.JSONPointer != "" {
+			t.Fatalf("got: %q", synErr.JSONPointer)
+		} else if want := `object member name must be a string`; synErr.Err.Error() != want {
+			t.Fatalf("got: %q, want: %q", want, synErr.Err)
 		}
 	})
 
@@ -32,12 +38,18 @@ func TestEncodeToJSON_Error(t *testing.T) {
 			t.Fatal(err)
 		}
 
+		synErr := &jsontext.SyntacticError{}
+
 		if err := encodeToJSON(enc, &yaml.Node{
 			Kind: yaml.MappingNode,
 		}); err == nil {
 			t.Fatal("expected error")
-		} else if want := "jsontext: missing string for object name"; err.Error() != want {
-			t.Fatalf("got: %q, want: %q", err.Error(), want)
+		} else if !errors.As(err, &synErr) {
+			t.Fatalf("got: %T, want: %T", err, synErr)
+		} else if synErr.JSONPointer != "" {
+			t.Fatalf("got: %q", synErr.JSONPointer)
+		} else if want := `object member name must be a string`; synErr.Err.Error() != want {
+			t.Fatalf("got: %q, want: %s", want, synErr.Err)
 		}
 	})
 }
