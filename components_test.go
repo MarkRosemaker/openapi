@@ -166,6 +166,9 @@ func TestComponents_Validate_Error(t *testing.T) {
 			}},
 		}, `callbacks["MyCallback"]["{$request.query.callbackUrl}/data"].parameters[0].name is required`},
 		{openapi.Components{
+			PathItems: openapi.PathItems{" ": &openapi.PathItemRef{}},
+		}, `pathItems[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
+		{openapi.Components{
 			PathItems: openapi.PathItems{"MyPathItem": &openapi.PathItemRef{
 				Value: &openapi.PathItem{
 					Parameters: openapi.ParameterList{{
