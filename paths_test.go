@@ -51,6 +51,9 @@ func TestPaths_Validate_Error(t *testing.T) {
 			Patch: &openapi.Operation{OperationID: "myOperation"},
 		}}, `["/"].GET.operationId ("myOperation") is invalid: must be unique` + "\n" +
 			`["/"].PATCH.operationId ("myOperation") is invalid: must be unique`},
+		{openapi.Paths{"/user/{id}": {
+			Get: &openapi.Operation{},
+		}}, `["/user/{id}"].GET.parameters: {id} not defined`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			t.Parallel()
