@@ -7,9 +7,13 @@ import (
 
 	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
+	"github.com/go-json-experiment/json/jsontext"
 )
 
-var typeRefEmptyStruct = reflect.TypeFor[refEmptyStruct]()
+var (
+	typeRefEmptyStruct = reflect.TypeFor[refEmptyStruct]()
+	typeEmptyStruct    = reflect.TypeFor[emptyStruct]()
+)
 
 type (
 	refEmptyStruct = refOrValue[emptyStruct, *emptyStruct]
@@ -18,19 +22,20 @@ type (
 
 func (emptyStruct) Validate() error { return nil }
 
-func isJSONSemanticError(t *testing.T, err error, goType reflect.Type) error {
+func errAs[T any, E interface {
+	*T
+	error
+}](t *testing.T, err error,
+) E {
 	t.Helper()
 
-	jsonErr := &json.SemanticError{}
-	if !errors.As(err, &jsonErr) {
-		t.Fatalf("expected json.SemanticError, got: %v", err)
+	var zero T
+	target := E(&zero)
+	if !errors.As(err, &target) {
+		t.Fatalf("want: %T, got: %T", target, err)
 	}
 
-	if goType != jsonErr.GoType {
-		t.Fatalf("json.SemanticError is not of type %s but of %s", goType, jsonErr.GoType)
-	}
-
-	return jsonErr.Err
+	return target
 }
 
 func TestRef_UnmarshalJSONV2(t *testing.T) {
@@ -39,21 +44,23 @@ func TestRef_UnmarshalJSONV2(t *testing.T) {
 	t.Run("reference", func(t *testing.T) {
 		err := json.Unmarshal([]byte(`{"$ref":"#/components/schemas/Pet"`),
 			&refEmptyStruct{}, _json.Options)
-		err = isJSONSemanticError(t, err, typeRefEmptyStruct)
-
-		if want := "unexpected EOF"; err.Error() != want {
-			t.Fatalf("want: %s, got: %s", want, err)
+		synErr := errAs[jsontext.SyntacticError](t, err)
+		if synErr.JSONPointer != "" || synErr.ByteOffset != 34 ||
+			synErr.Err.Error() != "unexpected EOF" {
+			t.Fatalf("got: %#v", synErr.Err)
 		}
 	})
 
 	t.Run("object", func(t *testing.T) {
 		err := json.Unmarshal([]byte([]byte(`{"foo":"bar"}`)),
 			&refEmptyStruct{}, _json.Options)
-		err = isJSONSemanticError(t, err, typeRefEmptyStruct)
-		err = isJSONSemanticError(t, err, reflect.TypeFor[emptyStruct]())
-
-		if want := `unknown name "foo"`; err.Error() != want {
-			t.Fatalf("want: %s, got: %s", want, err)
+		semErr := errAs[json.SemanticError](t, err)
+		if semErr.GoType != typeRefEmptyStruct {
+			t.Fatalf("want: %s, got: %s", typeRefEmptyStruct, semErr.GoType)
+		} else if semErr = errAs[json.SemanticError](t, semErr.Err); semErr.GoType != typeEmptyStruct {
+			t.Fatalf("want: %s, got: %s", typeEmptyStruct, semErr.GoType)
+		} else if want := "unknown object member name"; semErr.Err.Error() != want {
+			t.Fatalf("want: %s, got: %q", want, semErr.Err)
 		}
 	})
 }
