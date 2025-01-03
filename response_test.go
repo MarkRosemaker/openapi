@@ -74,3 +74,34 @@ func TestResponse_JSON(t *testing.T) {
   "description": "object created"
 }`), &openapi.Response{})
 }
+
+func TestResponse_Validate_Error(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct {
+		p   openapi.Response
+		err string
+	}{
+		{openapi.Response{}, "description is required"},
+		{openapi.Response{
+			Description: "some description",
+			Headers:     openapi.Headers{"foo": {Value: &openapi.Header{}}},
+		}, `headers["foo"]: schema or content is required`},
+		{openapi.Response{
+			Description: "some description",
+			Content: openapi.Content{"application/json": {
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
+			}},
+		}, `content["application/json"].schema.type is required`},
+		{openapi.Response{
+			Description: "some description",
+			Links:       openapi.Links{"address": {Value: &openapi.Link{}}},
+		}, `links.address: operationRef or operationId must be set`},
+	} {
+		t.Run(tc.err, func(t *testing.T) {
+			if err := tc.p.Validate(); err == nil || err.Error() != tc.err {
+				t.Fatalf("expected: %s, got: %s", tc.err, err)
+			}
+		})
+	}
+}

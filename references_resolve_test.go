@@ -321,6 +321,18 @@ func TestResolve_Error(t *testing.T) {
 		{`{"paths":{"/": {
 			"parameters": [{"$ref": "#/components/parameters/myparam"}]
 	}}}`, `paths["/"].parameters[0]: couldn't resolve "#/components/parameters/myparam"`},
+		{`{"components":{"responses": {"MyResponse": {
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/ResponseSchema"}
+            }
+          }
+}}}}`, `components.responses["MyResponse"].content["application/json"].schema: couldn't resolve "#/components/schemas/ResponseSchema"`},
+		{`{"components":{"responses": {"MyResponse": {
+	  "links": {
+        "address": {"$ref": "#/components/links/Address"}
+	  }
+}}}}`, `components.responses["MyResponse"].links.address: couldn't resolve "#/components/links/Address"`},
 	} {
 		data := []byte(tc.in)
 
