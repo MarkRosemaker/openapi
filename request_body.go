@@ -1,6 +1,10 @@
 package openapi
 
-import "strings"
+import (
+	"strings"
+
+	"github.com/MarkRosemaker/errpath"
+)
 
 // RequestBody describes a single request body.
 //
@@ -17,19 +21,33 @@ type RequestBody struct {
 	Content Content `json:"content" yaml:"content"`
 
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",inline" yaml:"-"`
 }
 
 func (r *RequestBody) Validate() error {
 	r.Description = strings.TrimSpace(r.Description)
 
 	if len(r.Content) == 0 {
-		return &ErrField{Field: "content", Err: &ErrRequired{}}
+		return &errpath.ErrField{Field: "content", Err: &errpath.ErrRequired{}}
 	}
 
 	if err := r.Content.Validate(); err != nil {
-		return &ErrField{Field: "content", Err: err}
+		return &errpath.ErrField{Field: "content", Err: err}
 	}
 
 	return validateExtensions(r.Extensions)
+}
+
+func (l *loader) collectRequestBodyRef(r *RequestBodyRef, ref ref) {
+	if r.Value != nil {
+		l.collectRequestBody(r.Value, ref)
+	}
+}
+
+func (l *loader) collectRequestBody(r *RequestBody, ref ref) {
+	l.requestBodies[ref.String()] = r
+}
+
+func (l *loader) resolveRequestBodyRef(r *RequestBodyRef) error {
+	return resolveRef(r, l.requestBodies, l.resolveRequestBody)
 }
