@@ -28,8 +28,13 @@ type (
 	SchemaRefList []*SchemaRef
 )
 
-func getIndexRef[T any, O referencable[T]](ref *refOrValue[T, O]) int    { return ref.idx }
-func setIndexRef[T any, O referencable[T]](ref *refOrValue[T, O], i int) { ref.idx = i }
+func getIndexRef[T any, O referencable[T]](ref *refOrValue[T, O]) int { return ref.idx }
+func setIndexRef[T any, O referencable[T]](
+	ref *refOrValue[T, O], i int,
+) *refOrValue[T, O] {
+	ref.idx = i
+	return ref
+}
 
 func (l *loader) resolveSchemaRefList(ss SchemaRefList) error {
 	for i, s := range ss {
