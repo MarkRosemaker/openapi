@@ -172,6 +172,21 @@ func TestResolve(t *testing.T) {
 				}
 			}
 		}`,
+		`"components": {
+			"schemas": {"MySchema": {"type": "object"}},
+			"responses": {
+				"MyResponse": {
+					"description": "A response",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MySchema"
+							}
+						}
+					}
+				}
+			}
+		}`,
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			data := []byte(fmt.Sprintf(
@@ -241,7 +256,7 @@ func TestResolve_Error(t *testing.T) {
 }}}`, `components.schemas["Pet"].allOf[0]: couldn't resolve "#/components/schemas/Dog"`},
 		{`{"components":{"responses": {
 "PetResponse": {"headers": {"myheader": {"$ref": "#/components/headers/someheader"}}}
-}}}`, `components.responses["PetResponse"]["myheader"]: couldn't resolve "#/components/headers/someheader"`},
+}}}`, `components.responses["PetResponse"].headers["myheader"]: couldn't resolve "#/components/headers/someheader"`},
 		{`{"components":{"parameters": {
 "MyParameter": {
 	"schema": {"items": {"$ref": "#/components/schemas/MyItems"}}
@@ -311,7 +326,7 @@ func TestResolve_Error(t *testing.T) {
 
 		t.Run("from data", func(t *testing.T) {
 			if _, err := openapi.LoadFromData(data); err == nil || err.Error() != tc.err {
-				t.Fatalf("expected error: %q, got: %v", tc.err, err)
+				t.Fatalf("expected error: %s, got: %v", tc.err, err)
 			}
 		})
 
