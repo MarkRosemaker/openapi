@@ -26,6 +26,7 @@ paths:
                 description: subscription information
                 required:
                   - subscriptionId
+                type: object
                 properties:
                   subscriptionId:
                     description: this unique identifier allows management of the subscription

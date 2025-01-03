@@ -102,5 +102,15 @@ func fixReferences(v validator) {
 		for _, p := range *v {
 			resolveExamples(p.Value.Examples)
 		}
+	case *openapi.OperationResponses:
+		for _, r := range *v {
+			mt := r.Value.Content["application/json"]
+			resolveSchemaRef(mt.Schema)
+			resolveExamples(mt.Examples)
+		}
+	case *openapi.PathItem:
+		resolveSchemaRef(v.Get.Responses["default"].Value.Content["text/html"].Schema)
+	case *openapi.Components:
+		v.Responses["GeneralError"].Value.Content["application/json"].Schema.Value = v.Schemas["GeneralError"]
 	}
 }
