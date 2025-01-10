@@ -333,6 +333,12 @@ func TestResolve_Error(t *testing.T) {
         "address": {"$ref": "#/components/links/Address"}
 	  }
 }}}}`, `components.responses["MyResponse"].links.address: couldn't resolve "#/components/links/Address"`},
+		{`{"components":{"schemas": {"MySchema": {
+	  "properties": {"foo": {"$ref": "#/components/schemas/Foo"}}
+}}}}`, `components.schemas["MySchema"].properties["foo"]: couldn't resolve "#/components/schemas/Foo"`},
+		{`{"components":{"schemas": {"MySchema": {
+"additionalProperties": {"$ref": "#/components/schemas/Foo"}
+}}}}`, `components.schemas["MySchema"].additionalProperties: couldn't resolve "#/components/schemas/Foo"`},
 	} {
 		data := []byte(tc.in)
 
