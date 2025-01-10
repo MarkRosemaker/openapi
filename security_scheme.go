@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 //
@@ -24,14 +26,17 @@ type SecurityScheme struct {
 	// The OpenID connect URL to use
 	OpenIdConnectURL *url.URL `json:"openIdConnectUrl,omitempty" yaml:"openIdConnectUrl,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",inline" yaml:"-"`
 }
 
-const SecuritySchemeBearer = "bearer"
+const (
+	SecuritySchemeBearer = "bearer"
+	SecuritySchemeBasic  = "basic"
+)
 
 func (s *SecurityScheme) Validate() error {
 	if err := s.Type.Validate(); err != nil {
-		return &ErrField{Field: "type", Err: err}
+		return &errpath.ErrField{Field: "type", Err: err}
 	}
 
 	s.Description = strings.TrimSpace(s.Description)
@@ -39,44 +44,58 @@ func (s *SecurityScheme) Validate() error {
 	switch s.Type {
 	case SecuritySchemeTypeAPIKey:
 		if s.Name == "" {
-			return &ErrField{Field: "name", Err: &ErrRequired{}}
+			return &errpath.ErrField{Field: "name", Err: &errpath.ErrRequired{}}
 		}
 
 		if s.In == "" {
-			return &ErrField{Field: "in", Err: &ErrRequired{}}
+			return &errpath.ErrField{Field: "in", Err: &errpath.ErrRequired{}}
 		}
 
 		if err := s.In.Validate(); err != nil {
-			return &ErrField{Field: "in", Err: err}
+			return &errpath.ErrField{Field: "in", Err: err}
 		}
 	case SecuritySchemeTypeHTTP:
 		if s.Scheme == "" {
-			return &ErrField{Field: "scheme", Err: &ErrRequired{}}
+			return &errpath.ErrField{Field: "scheme", Err: &errpath.ErrRequired{}}
 		}
 
 		if SecuritySchemeBearer == strings.ToLower(s.Scheme) {
 			s.Scheme = SecuritySchemeBearer // unify
 
 			if s.BearerFormat == "" {
-				return &ErrField{Field: "bearerFormat", Err: &ErrRequired{}}
+				return &errpath.ErrField{Field: "bearerFormat", Err: &errpath.ErrRequired{}}
 			}
 		}
 	case SecuritySchemeTypeMutualTLS: // nothing to do
 	case SecuritySchemeTypeOAuth2:
 		if s.Flows == nil {
-			return &ErrField{Field: "flows", Err: &ErrRequired{}}
+			return &errpath.ErrField{Field: "flows", Err: &errpath.ErrRequired{}}
 		}
 
 		if err := s.Flows.Validate(); err != nil {
-			return &ErrField{Field: "flows", Err: err}
+			return &errpath.ErrField{Field: "flows", Err: err}
 		}
 	case SecuritySchemeTypeOpenIDConnect:
 		if s.OpenIdConnectURL == nil {
-			return &ErrField{Field: "openIdConnectUrl", Err: &ErrRequired{}}
+			return &errpath.ErrField{Field: "openIdConnectUrl", Err: &errpath.ErrRequired{}}
 		}
 	default:
 		return fmt.Errorf("unimplemented type %q", s.Type)
 	}
 
 	return validateExtensions(s.Extensions)
+}
+
+func (l *loader) collectSecuritySchemeRef(r *SecuritySchemeRef, ref ref) {
+	if r.Value != nil {
+		l.collectSecurityScheme(r.Value, ref)
+	}
+}
+
+func (l *loader) collectSecurityScheme(s *SecurityScheme, ref ref) {
+	l.securitySchemes[ref.String()] = s
+}
+
+func (l *loader) resolveSecuritySchemeRef(r *SecuritySchemeRef) error {
+	return resolveRef(r, l.securitySchemes, nil)
 }
