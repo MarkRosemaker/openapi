@@ -15,6 +15,7 @@ func TestSchema_Validate(t *testing.T) {
 	for i, tc := range []openapi.Schema{
 		{Type: openapi.TypeNumber, Default: 3.14},
 		{Type: openapi.TypeInteger, Default: 3.0},
+		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: 3}, // e.g. seconds
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -54,6 +55,10 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:   openapi.TypeBoolean,
 			Format: openapi.FormatPassword,
 		}, `format ("password") is invalid: only valid for string type, got boolean`},
+		{openapi.Schema{
+			Type:   openapi.TypeBoolean,
+			Format: openapi.FormatDuration,
+		}, `format ("duration") is invalid: only valid for integer or string type, got boolean`},
 		{openapi.Schema{
 			Type:  openapi.TypeBoolean,
 			Items: &openapi.SchemaRef{},
