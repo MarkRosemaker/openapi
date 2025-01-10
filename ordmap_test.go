@@ -23,6 +23,7 @@ func TestOrderedMaps(t *testing.T) {
 	testSort[*openapi.RequestBodies](t)
 	testSort[*openapi.Responses[string]](t)
 	testSort[*openapi.Schemas](t)
+	testSort[*openapi.SchemaRefs](t)
 	testSort[*openapi.ServerVariables](t)
 }
 
