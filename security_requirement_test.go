@@ -13,7 +13,7 @@ func TestSecurityRequirement_Validate_Error(t *testing.T) {
 		s   openapi.SecurityRequirement
 		err string
 	}{
-		{openapi.SecurityRequirement{"foo": nil}, `["foo"]: security requirement must have at least one scope`},
+		{openapi.SecurityRequirement{"foo": nil}, `["foo"]: list may be empty but must not be nil`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
