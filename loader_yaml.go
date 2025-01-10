@@ -11,8 +11,6 @@ import (
 
 // LoadFromReaderYAML reads an OpenAPI specification in YAML format from an io.Reader and parses it into a structured format.
 func (l *loader) LoadFromReaderYAML(r io.Reader) (*Document, error) {
-	l.reset()
-
 	// decode YAML into a Node
 	n := &yaml.Node{}
 	if err := yaml.NewDecoder(r).Decode(n); err != nil {
