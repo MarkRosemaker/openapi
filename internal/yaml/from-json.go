@@ -32,21 +32,9 @@ func decodeFromJSON(dec *jsontext.Decoder, n *yaml.Node) error {
 	}
 
 	switch tkn.Kind() {
-	case '"':
+	case '"', 't', 'f', 'n', '0':
 		n.Kind = yaml.ScalarNode
 		n.Value = tkn.String()
-	case '0':
-		n.Kind = yaml.ScalarNode
-		n.Value = fmt.Sprintf("%v", tkn.Float()) // or tkn.Uint()?
-	case 't':
-		n.Kind = yaml.ScalarNode
-		n.Value = "true"
-	case 'f':
-		n.Kind = yaml.ScalarNode
-		n.Value = "false"
-	case 'n':
-		n.Kind = yaml.ScalarNode
-		n.Value = "null"
 	case '{':
 		n.Kind = yaml.MappingNode
 		return decodeMapFromJSON(dec, n)
