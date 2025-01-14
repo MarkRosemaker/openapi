@@ -1,19 +1,19 @@
-package yaml
+package yaml2json
 
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"strconv"
 
 	"github.com/go-json-experiment/json/jsontext"
 	"gopkg.in/yaml.v3"
 )
 
-// ToJSON converts a YAML node to a JSON.
-func ToJSON(n *yaml.Node) (jsontext.Value, error) {
+// Convert converts a YAML node to a JSON.
+func Convert(n *yaml.Node) (jsontext.Value, error) {
 	w := &bytes.Buffer{}
-	enc := jsontext.NewEncoder(w)
-	if err := encodeToJSON(enc, n); err != nil {
+	if err := encodeToJSON(jsontext.NewEncoder(w), n); err != nil {
 		return nil, err
 	}
 
@@ -82,7 +82,10 @@ func encodeToJSON(enc *jsontext.Encoder, n *yaml.Node) error {
 		}
 
 		return enc.WriteToken(jsontext.String(n.Value))
-	// case yaml.AliasNode: // not supported yet (TODO)
+	case yaml.AliasNode:
+		return encodeToJSON(enc, n.Alias)
+	case 0:
+		return io.EOF
 	default:
 		return fmt.Errorf("unsupported node kind: %v", n.Kind)
 	}

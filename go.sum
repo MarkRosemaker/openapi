@@ -1,9 +1,15 @@
 github.com/MarkRosemaker/errpath v0.0.0-20241223110529-3530cd011135 h1:Nl01q9JfiXLRfb8C2YIJZXSxpuiLxHEfvjrQz6Ex75Q=
 github.com/MarkRosemaker/errpath v0.0.0-20241223110529-3530cd011135/go.mod h1:VnXpUlsS3n1gSToedcQl2FCARGoA16CyitbCanUIv+I=
+github.com/MarkRosemaker/json2yaml v0.0.0-20250114195556-f9332257fc2d h1:uEIZJVHS9SWs3jAzsjFeo0ScILTTc4sc/PPnFeskN+s=
+github.com/MarkRosemaker/json2yaml v0.0.0-20250114195556-f9332257fc2d/go.mod h1:1rws36ZCaCMCo+c2oCeKc/d19cPtRQeoW6GQwsQJOq8=
 github.com/MarkRosemaker/jsonutil v0.0.0-20250114201208-e81a63afd92c h1:udz3xOyJEKZHFzuHqpNnj8Z+tmSZ6BsjrF8YQAJrxAE=
 github.com/MarkRosemaker/jsonutil v0.0.0-20250114201208-e81a63afd92c/go.mod h1:oADYyP2jHXwC80qZwZaRr+3rIBnVNepyGzx/apEx67w=
 github.com/MarkRosemaker/ordmap v0.0.0-20250114205602-77066c6e652f h1:Y0ZGL4xeQzNJaqZm1RjqjPoeSWplN4BF3JdDNTwosdM=
 github.com/MarkRosemaker/ordmap v0.0.0-20250114205602-77066c6e652f/go.mod h1:FXXuqAM5WHRJVkqkebmBR7Xc3jKus86B6Xp4JGo//gs=
+github.com/MarkRosemaker/yaml v0.0.0-20250114211012-766c81671567 h1:5eWrbGdxMDiPbkjzaecanBwj7pVjQzpVCkIgmqvZg6U=
+github.com/MarkRosemaker/yaml v0.0.0-20250114211012-766c81671567/go.mod h1:YFlsM3ejML747ckTBrEiUTU3fMsUCG+P1Im+GdCbMJc=
+github.com/MarkRosemaker/yaml2json v0.0.0-20250114210910-e54fa2e35c95 h1:Ms71wiXAkAQIPhZBF3b+uomH6yZe5XpNpF+UCOO7OII=
+github.com/MarkRosemaker/yaml2json v0.0.0-20250114210910-e54fa2e35c95/go.mod h1:29Vwp0gyvimq/M7t01dJ5cAEKC38F4vyulu8g1wrQRU=
 github.com/go-api-libs/types v0.0.0-20241220214721-81dc6f654a15 h1:qzyov+tF9CXDxENN5cOEIyUif8dkQV4WhXQD2EadSuU=
 github.com/go-api-libs/types v0.0.0-20241220214721-81dc6f654a15/go.mod h1:nLeHWQNyIo6OZqGOKsRJeZOIjk3B4owR7U768OjHyqM=
 github.com/go-json-experiment/json v0.0.0-20250114205114-c14f990d7e5f h1:uhuvRxQ/U/x33pChkJRoiGG+P8YpogBI4hkfcqIHzXE=

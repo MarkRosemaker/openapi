@@ -1,4 +1,4 @@
-package yaml
+package json2yaml
 
 import (
 	"bytes"
@@ -9,8 +9,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// FromJSON converts a JSON value to a YAML node.
-func FromJSON(b jsontext.Value) (*yaml.Node, error) {
+// Convert converts a JSON value to a YAML node.
+func Convert(b jsontext.Value) (*yaml.Node, error) {
 	dec := jsontext.NewDecoder(bytes.NewReader(b))
 
 	n := &yaml.Node{}
@@ -18,6 +18,7 @@ func FromJSON(b jsontext.Value) (*yaml.Node, error) {
 		return nil, err
 	}
 
+	// check if we reached the end
 	if dec.PeekKind() != 0 {
 		return nil, fmt.Errorf("expected EOF, got %v", dec.PeekKind())
 	}

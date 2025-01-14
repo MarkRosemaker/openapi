@@ -42,3 +42,13 @@ folded: >
 
 # Special characters
 quoted: "This string contains: special characters, colons: and dashes -"
+
+# Aliases
+foo:
+  bar: &bar
+    qux: 'quxqux'
+    baz: 'bazbaz'
+greeting:
+  audience: 'world'
+  bar: *bar  #greeting.bar has the same values as foo.bar.
+             #So greeting.bar.baz is 'bazbaz'

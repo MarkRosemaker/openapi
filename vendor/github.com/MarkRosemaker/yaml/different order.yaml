@@ -1,0 +1,29 @@
+string: Hello, World!
+int: 42
+float: 3.14
+bool: true
+bool2: false
+null_value: null
+list:
+    - item1
+    - item2
+    - item3
+dictionary:
+    key2: value2
+    key1: value1
+nested:
+    list_of_dicts:
+        - name: item1
+          value: 1
+        - name: item2
+          value: 2
+    dict_of_lists:
+        key1:
+            - item1
+            - item2
+        key2:
+            - item3
+            - item4
+block: |-
+    This is a block
+    style multiline string.
