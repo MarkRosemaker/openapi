@@ -111,8 +111,7 @@ func marshalInlinedFallbackAll(enc *jsontext.Encoder, va addressableValue, mo *j
 		mk := newAddressableValue(m.Type().Key())
 		mv := newAddressableValue(m.Type().Elem())
 		marshalKey := func(mk addressableValue) error {
-			xe := export.Encoder(enc)
-			b, err := jsonwire.AppendQuote(enc.UnusedBuffer(), mk.String(), &xe.Flags)
+			b, err := jsonwire.AppendQuote(enc.UnusedBuffer(), mk.String(), &mo.Flags)
 			if err != nil {
 				return newMarshalErrorBefore(enc, m.Type().Key(), err)
 			}
@@ -187,7 +186,7 @@ func unmarshalInlinedFallbackNext(dec *jsontext.Decoder, va addressableValue, uo
 					*b = append(*b, ',')
 				}
 			} else {
-				return newUnmarshalErrorAfter(dec, v.Type(), errRawInlinedNotObject)
+				return newUnmarshalErrorAfterWithSkipping(dec, uo, v.Type(), errRawInlinedNotObject)
 			}
 		}
 		*b = append(*b, quotedName...)

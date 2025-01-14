@@ -58,14 +58,14 @@ func (rs *Responses[K]) Set(key K, v *ResponseRef) {
 	ordmap.Set(rs, key, v, getIndexRef[Response, *Response], setIndexRef[Response, *Response])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (rs *Responses[_]) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(rs, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (rs *Responses[_]) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(rs, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (rs *Responses[_]) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(rs, dec, opts, setIndexRef[Response, *Response])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (rs *Responses[_]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(rs, dec, opts, setIndexRef[Response, *Response])
 }
 
 func (l *loader) collectResponses(rs ResponsesByName, ref ref) {

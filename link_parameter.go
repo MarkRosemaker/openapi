@@ -19,14 +19,14 @@ func setIndexLinkParameter(p *LinkParameter, idx int) *LinkParameter { p.idx = i
 // Validate validates the link parameter.
 func (p *LinkParameter) Validate() error { return p.Expression.Validate() }
 
-// UnmarshalJSONV2 unmarschals the link parameter into its appropriate type.
+// UnmarshalJSONFrom unmarschals the link parameter into its appropriate type.
 // NOTE: For now, we only implemented the case of it being a runtime expression.
-func (p *LinkParameter) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+func (p *LinkParameter) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
 	return json.UnmarshalDecode(dec, &p.Expression, opts)
 }
 
-// MarshalJSONV2 marschals the link parameter into its appropriate type.
+// MarshalJSONTo marschals the link parameter into its appropriate type.
 // NOTE: For now, we only implemented the case of it being a runtime expression.
-func (p *LinkParameter) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+func (p *LinkParameter) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
 	return json.MarshalEncode(enc, p.Expression)
 }

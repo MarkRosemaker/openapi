@@ -25,14 +25,14 @@ func (scs *Scopes) Set(key string, s *String) {
 	ordmap.Set(scs, key, s, getIndexScope, setIndexScope)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (scs *Scopes) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(scs, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (scs *Scopes) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(scs, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (scs *Scopes) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(scs, dec, opts, setIndexScope)
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (scs *Scopes) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(scs, dec, opts, setIndexScope)
 }
 
 type String struct {
@@ -41,13 +41,13 @@ type String struct {
 	idx int
 }
 
-// UnmarshalJSONV2 unmarshals the value of the String.
-func (s *String) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+// UnmarshalJSONFrom unmarshals the value of the String.
+func (s *String) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
 	return json.UnmarshalDecode(dec, &s.Value, opts)
 }
 
-// MarshalJSONV2 marshals the value of the String.
-func (s *String) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+// MarshalJSONTo marshals the value of the String.
+func (s *String) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
 	return json.MarshalEncode(enc, s.Value, opts)
 }
 

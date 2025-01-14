@@ -46,14 +46,14 @@ func (c *Callback) Set(key RuntimeExpression, p *PathItemRef) {
 	ordmap.Set(c, key, p, getIndexRef[PathItem, *PathItem], setIndexRef[PathItem, *PathItem])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (c *Callback) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(c, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (c *Callback) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(c, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (c *Callback) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(c, dec, opts, setIndexRef[PathItem, *PathItem])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (c *Callback) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(c, dec, opts, setIndexRef[PathItem, *PathItem])
 }
 
 func (l *loader) collectCallbackRef(c *CallbackRef, ref ref) {

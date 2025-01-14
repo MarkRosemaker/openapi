@@ -66,7 +66,7 @@ func (r *refOrValue[T, O]) Validate() error {
 	return r.Value.Validate()
 }
 
-func (r *refOrValue[T, O]) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
 	// we don't know if this is a reference or not, so we read the value first
 	val, err := dec.ReadValue()
 	if err != nil {
@@ -97,7 +97,7 @@ func (r *refOrValue[T, O]) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Opti
 	return nil
 }
 
-func (r *refOrValue[_, _]) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+func (r *refOrValue[_, _]) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
 	if r.Ref == nil {
 		return json.MarshalEncode(enc, r.Value, opts)
 	}

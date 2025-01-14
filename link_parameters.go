@@ -38,12 +38,12 @@ func (ps *LinkParameters) Set(key string, p *LinkParameter) {
 	ordmap.Set(ps, key, p, getIndexLinkParameter, setIndexLinkParameter)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (ps *LinkParameters) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(ps, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (ps *LinkParameters) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(ps, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (ps *LinkParameters) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(ps, dec, opts, setIndexLinkParameter)
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (ps *LinkParameters) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(ps, dec, opts, setIndexLinkParameter)
 }

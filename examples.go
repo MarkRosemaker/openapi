@@ -42,14 +42,14 @@ func (exs *Examples) Set(key string, ex *ExampleRef) {
 	ordmap.Set(exs, key, ex, getIndexRef[Example, *Example], setIndexRef[Example, *Example])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (exs *Examples) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(exs, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (exs *Examples) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(exs, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (exs *Examples) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(exs, dec, opts, setIndexRef[Example, *Example])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (exs *Examples) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(exs, dec, opts, setIndexRef[Example, *Example])
 }
 
 func (l *loader) collectExamples(exs Examples, ref ref) {

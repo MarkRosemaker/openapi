@@ -66,19 +66,19 @@ func (om MyOrderedMap) Sort() {
 	ordmap.Sort(om, setIndex)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (om *MyOrderedMap) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(om, enc, opts)
-}
-
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (om *MyOrderedMap) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(om, dec, opts, setIndex)
-}
-
 // Set sets a value in the map, adding it at the end of the order.
 func (om *MyOrderedMap) Set(key string, v *ValueWithIndex) {
 	ordmap.Set(om, key, v, getIndex, setIndex)
+}
+
+// MarshalJSONTo marshals the key-value pairs in order.
+func (om *MyOrderedMap) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(om, enc, opts)
+}
+
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (om *MyOrderedMap) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(om, dec, opts, setIndex)
 }
 ```
 

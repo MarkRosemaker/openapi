@@ -40,14 +40,14 @@ func (hs *Headers) Set(key string, h *HeaderRef) {
 	ordmap.Set(hs, key, h, getIndexRef[Header, *Header], setIndexRef[Header, *Header])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (hs *Headers) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(hs, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (hs *Headers) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(hs, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (hs *Headers) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(hs, dec, opts, setIndexRef[Header, *Header])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (hs *Headers) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(hs, dec, opts, setIndexRef[Header, *Header])
 }
 
 func (l *loader) collectHeaders(hs Headers, ref ref) {

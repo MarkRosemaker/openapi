@@ -11,14 +11,14 @@ type Value[V any] struct {
 	idx int
 }
 
-// UnmarshalJSONV2 unmarshals a value by just decoding the value.
+// UnmarshalJSONFrom unmarshals a value by just decoding the value.
 // The index is set by the caller.
-func (cs *Value[_]) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
+func (cs *Value[_]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
 	return json.UnmarshalDecode(dec, &cs.V, opts)
 }
 
-// MarshalJSONV2 marshals a value by encoding just the value and ignoring the index.
-func (v Value[_]) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
+// MarshalJSONTo marshals a value by encoding just the value and ignoring the index.
+func (v Value[_]) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
 	return json.MarshalEncode(enc, v.V, opts)
 }
 

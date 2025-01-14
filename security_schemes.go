@@ -40,14 +40,14 @@ func (ss *SecuritySchemes) Set(key string, v *SecuritySchemeRef) {
 	ordmap.Set(ss, key, v, getIndexRef[SecurityScheme, *SecurityScheme], setIndexRef[SecurityScheme, *SecurityScheme])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (ss *SecuritySchemes) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(ss, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (ss *SecuritySchemes) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(ss, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (ss *SecuritySchemes) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(ss, dec, opts, setIndexRef[SecurityScheme, *SecurityScheme])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (ss *SecuritySchemes) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(ss, dec, opts, setIndexRef[SecurityScheme, *SecurityScheme])
 }
 
 func (l *loader) collectSecuritySchemes(ss SecuritySchemes, ref ref) {

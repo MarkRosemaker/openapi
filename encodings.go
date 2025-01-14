@@ -37,12 +37,12 @@ func (es *Encodings) Set(key string, e *Encoding) {
 	ordmap.Set(es, key, e, getIndexEncoding, setIndexEncoding)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (es *Encodings) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(es, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (es *Encodings) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(es, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (es *Encodings) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(es, dec, opts, setIndexEncoding)
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (es *Encodings) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(es, dec, opts, setIndexEncoding)
 }

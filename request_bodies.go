@@ -40,14 +40,14 @@ func (rs *RequestBodies) Set(key string, r *RequestBodyRef) {
 	ordmap.Set(rs, key, r, getIndexRef[RequestBody, *RequestBody], setIndexRef[RequestBody, *RequestBody])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (rs *RequestBodies) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(rs, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (rs *RequestBodies) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(rs, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (rs *RequestBodies) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(rs, dec, opts, setIndexRef[RequestBody, *RequestBody])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (rs *RequestBodies) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(rs, dec, opts, setIndexRef[RequestBody, *RequestBody])
 }
 
 func (l *loader) collectRequestBodies(rs RequestBodies, ref ref) {

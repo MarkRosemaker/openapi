@@ -40,14 +40,14 @@ func (ls *Links) Set(key string, l *LinkRef) {
 	ordmap.Set(ls, key, l, getIndexRef[Link, *Link], setIndexRef[Link, *Link])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (ls *Links) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(ls, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (ls *Links) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(ls, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (ls *Links) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(ls, dec, opts, setIndexRef[Link, *Link])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (ls *Links) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(ls, dec, opts, setIndexRef[Link, *Link])
 }
 
 func (l *loader) collectLinks(ls Links, ref ref) {

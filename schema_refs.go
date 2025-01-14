@@ -36,14 +36,14 @@ func (ss *SchemaRefs) Set(key string, v *SchemaRef) {
 	ordmap.Set(ss, key, v, getIndexRef[Schema, *Schema], setIndexRef[Schema, *Schema])
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (ss *SchemaRefs) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(ss, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (ss *SchemaRefs) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(ss, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (ss *SchemaRefs) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(ss, dec, opts, setIndexRef[Schema, *Schema])
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (ss *SchemaRefs) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(ss, dec, opts, setIndexRef[Schema, *Schema])
 }
 
 func (l *loader) resolveSchemaRefs(ss SchemaRefs) error {

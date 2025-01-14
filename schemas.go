@@ -40,14 +40,14 @@ func (rs *Schemas) Set(key string, v *Schema) {
 	ordmap.Set(rs, key, v, getIndexSchema, setIndexSchema)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (rs *Schemas) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(rs, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (rs *Schemas) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(rs, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (rs *Schemas) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(rs, dec, opts, setIndexSchema)
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (rs *Schemas) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(rs, dec, opts, setIndexSchema)
 }
 
 func (l *loader) collectSchemas(ss Schemas, ref ref) {

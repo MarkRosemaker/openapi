@@ -38,12 +38,12 @@ func (vars *ServerVariables) Set(key string, v *ServerVariable) {
 	ordmap.Set(vars, key, v, getIndexServerVariable, setIndexServerVariable)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (vars *ServerVariables) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(vars, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (vars *ServerVariables) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(vars, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (vars *ServerVariables) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(vars, dec, opts, setIndexServerVariable)
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (vars *ServerVariables) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(vars, dec, opts, setIndexServerVariable)
 }

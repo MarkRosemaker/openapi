@@ -40,14 +40,14 @@ func (c *Content) Set(mr MediaRange, mt *MediaType) {
 	ordmap.Set(c, mr, mt, getIndexMediaType, setIndexMediaType)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (c *Content) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(c, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (c *Content) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(c, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (c *Content) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(c, dec, opts, setIndexMediaType)
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (c *Content) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(c, dec, opts, setIndexMediaType)
 }
 
 func (l *loader) resolveContent(c Content) error {

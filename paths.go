@@ -112,14 +112,14 @@ func (ps *Paths) Set(path Path, pathItem *PathItem) {
 	ordmap.Set(ps, path, pathItem, getIndexPathItem, setIndexPathItem)
 }
 
-// MarshalJSONV2 marshals the key-value pairs in order.
-func (ps *Paths) MarshalJSONV2(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONV2(ps, enc, opts)
+// MarshalJSONTo marshals the key-value pairs in order.
+func (ps *Paths) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+	return ordmap.MarshalJSONTo(ps, enc, opts)
 }
 
-// UnmarshalJSONV2 unmarshals the key-value pairs in order and sets the indices.
-func (ps *Paths) UnmarshalJSONV2(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONV2(ps, dec, opts, setIndexPathItem)
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (ps *Paths) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+	return ordmap.UnmarshalJSONFrom(ps, dec, opts, setIndexPathItem)
 }
 
 func (l *loader) resolvePaths(ps Paths) error {
