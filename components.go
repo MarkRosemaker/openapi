@@ -131,6 +131,20 @@ func (c *Components) SortAll() {
 	c.PathItems.Sort()
 }
 
+func (c Components) isEmpty() bool {
+	return len(c.Schemas) == 0 &&
+		len(c.Responses) == 0 &&
+		len(c.Parameters) == 0 &&
+		len(c.Examples) == 0 &&
+		len(c.RequestBodies) == 0 &&
+		len(c.Headers) == 0 &&
+		len(c.SecuritySchemes) == 0 &&
+		len(c.Links) == 0 &&
+		len(c.Callbacks) == 0 &&
+		len(c.PathItems) == 0 &&
+		len(c.Extensions) == 0
+}
+
 func (l *loader) collectComponents(cs Components, ref ref) {
 	l.collectSchemas(cs.Schemas, append(ref, "schemas"))
 	l.collectResponses(cs.Responses, append(ref, "responses"))
@@ -186,11 +200,4 @@ func (l *loader) resolveComponents(c Components) error {
 	}
 
 	return nil
-}
-
-func (c Components) isEmpty() bool {
-	return len(c.Schemas) == 0 && len(c.Responses) == 0 && len(c.Parameters) == 0 &&
-		len(c.Examples) == 0 && len(c.RequestBodies) == 0 && len(c.Headers) == 0 &&
-		len(c.SecuritySchemes) == 0 && len(c.Links) == 0 && len(c.Callbacks) == 0 &&
-		len(c.PathItems) == 0 && len(c.Extensions) == 0
 }
