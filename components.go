@@ -117,6 +117,20 @@ func (c *Components) Validate() error {
 	return nil
 }
 
+// For each field that is a map, sorts the map by key.
+func (c *Components) SortAll() {
+	c.Schemas.Sort()
+	c.Responses.Sort()
+	c.Parameters.Sort()
+	c.Examples.Sort()
+	c.RequestBodies.Sort()
+	c.Headers.Sort()
+	c.SecuritySchemes.Sort()
+	c.Links.Sort()
+	c.Callbacks.Sort()
+	c.PathItems.Sort()
+}
+
 func (l *loader) collectComponents(cs Components, ref ref) {
 	l.collectSchemas(cs.Schemas, append(ref, "schemas"))
 	l.collectResponses(cs.Responses, append(ref, "responses"))

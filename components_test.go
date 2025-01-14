@@ -188,3 +188,74 @@ func TestComponents_Validate_Error(t *testing.T) {
 		})
 	}
 }
+
+func TestComponents_Sort(t *testing.T) {
+	t.Parallel()
+
+	doc, err := openapi.LoadFromDataJSON([]byte(`{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Example API",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "https://example.com"
+		}
+	],
+	"paths": {
+		"/users": {}
+	},
+	"components": {
+		"schemas": {
+			"Foo": {
+				"type": "string"
+			},
+			"Bar": {
+				"type": "string"
+			}
+		}
+	}
+}
+`))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	doc.Components.SortAll()
+
+	out, err := doc.ToJSON()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	const want = `{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Example API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://example.com"
+    }
+  ],
+  "paths": {
+    "/users": {}
+  },
+  "components": {
+    "schemas": {
+      "Bar": {
+        "type": "string"
+      },
+      "Foo": {
+        "type": "string"
+      }
+    }
+  }
+}`
+
+	if string(out) != want {
+		t.Fatalf("got: %q, want: %q", out, want)
+	}
+}
