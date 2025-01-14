@@ -6,16 +6,15 @@ import (
 	"os"
 	"path/filepath"
 
-	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 )
 
 func (d Document) WriteJSON(w io.Writer) error {
-	return json.MarshalWrite(w, d, _json.Options)
+	return json.MarshalWrite(w, d, jsonOpts)
 }
 
 func (d *Document) ToJSON() ([]byte, error) {
-	return json.Marshal(d, _json.Options)
+	return json.Marshal(d, jsonOpts)
 }
 
 func (d *Document) WriteToFile(path string) error {

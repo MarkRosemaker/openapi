@@ -4,7 +4,6 @@ import (
 	"io"
 	"unicode"
 
-	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 )
 
@@ -13,7 +12,7 @@ func (l *loader) LoadFromReaderJSON(r io.Reader) (*Document, error) {
 	l.reset()
 
 	doc := &Document{}
-	if err := json.UnmarshalRead(r, doc, _json.Options); err != nil {
+	if err := json.UnmarshalRead(r, doc, jsonOpts); err != nil {
 		return nil, err
 	}
 
@@ -34,7 +33,7 @@ func (l *loader) LoadFromDataJSON(data []byte) (*Document, error) {
 	l.reset()
 
 	doc := &Document{}
-	if err := json.Unmarshal(data, doc, _json.Options); err != nil {
+	if err := json.Unmarshal(data, doc, jsonOpts); err != nil {
 		return nil, err
 	}
 

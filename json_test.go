@@ -5,11 +5,20 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/MarkRosemaker/jsonutil"
 	"github.com/MarkRosemaker/openapi"
-	_json "github.com/MarkRosemaker/openapi/internal/json"
 	"github.com/go-json-experiment/json"
 	"github.com/go-json-experiment/json/jsontext"
 )
+
+var jsonOpts = json.JoinOptions([]json.Options{
+	// unevaluatedProperties is set to false in most objects according to the OpenAPI specification
+	// also protect against deleting unknown fields when overwriting later
+	json.RejectUnknownMembers(true),
+	json.WithMarshalers(json.NewMarshalers(json.MarshalFuncV2(jsonutil.URLMarshal))),
+	json.WithUnmarshalers(json.NewUnmarshalers(json.UnmarshalFuncV2(jsonutil.URLUnmarshal))),
+	jsontext.WithIndent("  "), // indent with two spaces
+}...)
 
 func resolveSchemaRef(s *openapi.SchemaRef) {
 	if s != nil && s.Ref != nil && s.Value == nil {
@@ -47,7 +56,7 @@ func testJSON(t *testing.T, exampleJSON []byte, v validator) {
 			t.Fatalf("write to file: %v", err)
 		}
 	default:
-		if err := json.Unmarshal(exampleJSON, v, _json.Options); err != nil {
+		if err := json.Unmarshal(exampleJSON, v, jsonOpts); err != nil {
 			t.Fatalf("initial unmarshal: %v", err)
 		}
 	}
@@ -59,7 +68,7 @@ func testJSON(t *testing.T, exampleJSON []byte, v validator) {
 		t.Fatalf("validate: %v", err)
 	}
 
-	b, err := json.Marshal(v, _json.Options)
+	b, err := json.Marshal(v, jsonOpts)
 	if err != nil {
 		t.Fatal(err)
 	}

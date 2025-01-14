@@ -1,4 +1,4 @@
-package json
+package openapi
 
 import (
 	"github.com/MarkRosemaker/jsonutil"
@@ -6,7 +6,7 @@ import (
 	"github.com/go-json-experiment/json/jsontext"
 )
 
-var Options = json.JoinOptions([]json.Options{
+var jsonOpts = json.JoinOptions([]json.Options{
 	// unevaluatedProperties is set to false in most objects according to the OpenAPI specification
 	// also protect against deleting unknown fields when overwriting later
 	json.RejectUnknownMembers(true),
