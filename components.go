@@ -118,7 +118,7 @@ func (c *Components) Validate() error {
 }
 
 // For each field that is a map, sorts the map by key.
-func (c *Components) SortAll() {
+func (c *Components) SortMaps() {
 	c.Schemas.Sort()
 	c.Responses.Sort()
 	c.Parameters.Sort()

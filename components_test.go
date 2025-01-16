@@ -189,7 +189,7 @@ func TestComponents_Validate_Error(t *testing.T) {
 	}
 }
 
-func TestComponents_Sort(t *testing.T) {
+func TestSortMaps(t *testing.T) {
 	t.Parallel()
 
 	doc, err := openapi.LoadFromDataJSON([]byte(`{
@@ -222,7 +222,7 @@ func TestComponents_Sort(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	doc.Components.SortAll()
+	doc.SortMaps()
 
 	out, err := doc.ToJSON()
 	if err != nil {
