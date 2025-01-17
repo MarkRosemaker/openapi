@@ -13,7 +13,7 @@ type OAuthFlowImplicit struct {
 	// The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
 	RefreshURL *url.URL `json:"refreshUrl,omitempty" yaml:"refreshUrl,omitempty"`
 	// REQUIRED. The available scopes for the OAuth2 security scheme. A map between the scope name and a short description for it. The map MAY be empty.
-	Scopes Scopes `json:"scopes" yaml:"scopes"`
+	Scopes MapOfStrings `json:"scopes" yaml:"scopes"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
 }
@@ -37,7 +37,7 @@ type OAuthFlowPassword struct {
 	// The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
 	RefreshURL *url.URL `json:"refreshUrl,omitempty" yaml:"refreshUrl,omitempty"`
 	// REQUIRED. The available scopes for the OAuth2 security scheme. A map between the scope name and a short description for it. The map MAY be empty.
-	Scopes Scopes `json:"scopes" yaml:"scopes"`
+	Scopes MapOfStrings `json:"scopes" yaml:"scopes"`
 
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`
@@ -67,7 +67,7 @@ type OAuthFlowAuthorizationCode struct {
 	// The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
 	RefreshURL *url.URL `json:"refreshUrl,omitempty" yaml:"refreshUrl,omitempty"`
 	// REQUIRED. The available scopes for the OAuth2 security scheme. A map between the scope name and a short description for it. The map MAY be empty.
-	Scopes Scopes `json:"scopes" yaml:"scopes"`
+	Scopes MapOfStrings `json:"scopes" yaml:"scopes"`
 
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",inline" yaml:",inline"`

@@ -16,7 +16,7 @@ func TestOrderedMaps(t *testing.T) {
 	testSort[*openapi.Headers](t)
 	testSort[*openapi.LinkParameters](t)
 	testSort[*openapi.Links](t)
-	testSort[*openapi.Scopes](t)
+	testSort2[*openapi.MapOfStrings](t)
 	testSort[*openapi.Parameters](t)
 	testSort[*openapi.PathItems](t)
 	testSort[*openapi.Paths](t)
@@ -47,6 +47,51 @@ func testSort[MP interface {
 	MP(&om).Set("c", &c)
 	MP(&om).Set("a", &a)
 	MP(&om).Set("b", &b)
+
+	keys := []K{"c", "a", "b"}
+
+	i := 0
+	for k := range om.ByIndex() {
+		if k != keys[i] {
+			t.Fatalf("got: %v, want: %v", k, keys[i])
+		}
+
+		i++
+	}
+
+	om.Sort()
+
+	keysSorted := []K{"a", "b", "c"}
+
+	i = 0
+	for k := range om.ByIndex() {
+		if k != keysSorted[i] {
+			t.Fatalf("got: %v, want: %v", k, keysSorted[i])
+		}
+
+		i++
+	}
+}
+
+func testSort2[MP interface {
+	Set(K, V)
+	*M
+}, M interface {
+	Sort()
+	ordmap.ByIndexer[K, V]
+}, K ~string, V any](t *testing.T,
+) {
+	t.Helper()
+
+	var om M
+
+	om.Sort() // no panic
+
+	// set some values
+	var a, b, c V
+	MP(&om).Set("c", c)
+	MP(&om).Set("a", a)
+	MP(&om).Set("b", b)
 
 	keys := []K{"c", "a", "b"}
 
