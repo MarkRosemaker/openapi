@@ -3,6 +3,8 @@ package openapi
 import (
 	"errors"
 	"strings"
+
+	"github.com/MarkRosemaker/errpath"
 )
 
 // The `Link object` represents a possible design-time link for a response.
@@ -51,6 +53,12 @@ func (l *Link) Validate() error {
 	// NOTE: We don't check RequestBody or Parameters yet.
 
 	l.Description = strings.TrimSpace(l.Description)
+
+	if l.Server != nil {
+		if err := l.Server.Validate(); err != nil {
+			return &errpath.ErrField{Field: "server", Err: err}
+		}
+	}
 
 	return validateExtensions(l.Extensions)
 }
