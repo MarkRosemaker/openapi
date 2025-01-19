@@ -93,6 +93,7 @@ func (p *PathItem) Operations(yield func(string, *Operation) bool) {
 }
 
 // SetOperation sets the operation for the given method.
+// The method is case-insensitive.
 func (p *PathItem) SetOperation(method string, op *Operation) {
 	switch strings.ToUpper(method) {
 	case http.MethodGet:

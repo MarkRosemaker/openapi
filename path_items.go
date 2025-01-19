@@ -11,6 +11,7 @@ import (
 
 type PathItems map[string]*PathItemRef
 
+// Validate checks that all keys and values are valid.
 func (ps PathItems) Validate() error {
 	for name, p := range ps.ByIndex() {
 		if err := validateKey(name); err != nil {

@@ -15,6 +15,7 @@ type ParsedPath struct {
 	VariableNames []string
 }
 
+// Parse parses the path, returning a ParsedPath which includes a format specifier (see [fmt]) and a list of all variable names in order.
 func (path Path) Parse() ParsedPath {
 	p := ParsedPath{}
 
