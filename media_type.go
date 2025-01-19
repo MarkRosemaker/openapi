@@ -35,6 +35,7 @@ type MediaType struct {
 func getIndexMediaType(mt *MediaType) int                 { return mt.idx }
 func setIndexMediaType(mt *MediaType, idx int) *MediaType { mt.idx = idx; return mt }
 
+// Validate validates the media type.
 func (mt *MediaType) Validate() error {
 	if mt.Schema != nil {
 		if err := mt.Schema.Validate(); err != nil {

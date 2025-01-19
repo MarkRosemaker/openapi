@@ -154,7 +154,12 @@ func TestComponents_Validate_Error(t *testing.T) {
 			SecuritySchemes: openapi.SecuritySchemes{"MyRequestBody": &openapi.SecuritySchemeRef{
 				Value: &openapi.SecurityScheme{},
 			}},
-		}, `securitySchemes["MyRequestBody"].type is invalid, must be one of: "apiKey", "http", "mutualTLS", "oauth2", "openIdConnect"`},
+		}, `securitySchemes["MyRequestBody"].type is required`},
+		{openapi.Components{
+			SecuritySchemes: openapi.SecuritySchemes{"MyRequestBody": &openapi.SecuritySchemeRef{
+				Value: &openapi.SecurityScheme{Type: "foo"},
+			}},
+		}, `securitySchemes["MyRequestBody"].type ("foo") is invalid, must be one of: "apiKey", "http", "mutualTLS", "oauth2", "openIdConnect"`},
 		{openapi.Components{
 			Links: openapi.Links{"MyLink": &openapi.LinkRef{
 				Value: &openapi.Link{},

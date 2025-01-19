@@ -65,7 +65,7 @@ func TestSecurityScheme_Validate_Error(t *testing.T) {
 	}{
 		{
 			openapi.SecurityScheme{},
-			`type is invalid, must be one of: "apiKey", "http", "mutualTLS", "oauth2", "openIdConnect"`,
+			`type is required`,
 		},
 		{
 			openapi.SecurityScheme{Type: openapi.SecuritySchemeTypeAPIKey},

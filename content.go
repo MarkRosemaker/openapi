@@ -9,8 +9,15 @@ import (
 	"github.com/go-json-experiment/json/jsontext"
 )
 
+// The content of a request body. The key is a media type or media type range, see [RFC7231 Appendix D], and the value describes it. For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
+// [Specification]
+// ([Specification])
+//
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#fixed-fields-10
+// [RFC7231 Appendix D]: https://datatracker.ietf.org/doc/html/rfc7231#appendix-D
 type Content map[MediaRange]*MediaType
 
+// Validate validates the request body content.
 func (c Content) Validate() error {
 	for mr, mt := range c.ByIndex() {
 		if err := mr.Validate(); err != nil {

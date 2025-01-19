@@ -83,6 +83,10 @@ type Schema struct {
 
 	// an index to the original location of this object
 	idx int
+
+	// NOTE: consider adding:
+	// Indicates whether the property can have a null value.
+	// Nullable bool `json:"nullable,omitempty,omitzero" yaml:"nullable,omitempty"`
 }
 
 func getIndexSchema(s *Schema) int              { return s.idx }
