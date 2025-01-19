@@ -76,7 +76,7 @@ func TestContent_Validate_Error(t *testing.T) {
 			"not a real media type": &openapi.MediaType{},
 		}, `["not a real media type"]: mime: expected slash after first token`},
 		{openapi.Content{
-			"application/json": &openapi.MediaType{
+			openapi.MediaRangeJSON: &openapi.MediaType{
 				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
 			},
 		}, `["application/json"].schema.type is required`},

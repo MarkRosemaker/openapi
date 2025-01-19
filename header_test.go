@@ -49,7 +49,7 @@ func TestHeader_Validate_Error(t *testing.T) {
 		{
 			openapi.Header{
 				Content: openapi.Content{
-					"application/json": {
+					openapi.MediaRangeJSON: {
 						Schema: &openapi.SchemaRef{
 							Value: &openapi.Schema{},
 						},
@@ -59,11 +59,11 @@ func TestHeader_Validate_Error(t *testing.T) {
 			`content["application/json"].schema.type is required`,
 		},
 		{openapi.Header{
-			Content: openapi.Content{"application/json": {}},
+			Content: openapi.Content{openapi.MediaRangeJSON: {}},
 			Style:   "foo",
 		}, `style ("foo") is invalid, must be one of: "matrix", "label", "form", "simple", "spaceDelimited", "pipeDelimited", "deepObject"`},
 		{openapi.Header{
-			Content: openapi.Content{"application/json": {}},
+			Content: openapi.Content{openapi.MediaRangeJSON: {}},
 			Explode: true,
 		}, `explode (true) is invalid: property has no effect when schema is not present`},
 		{openapi.Header{

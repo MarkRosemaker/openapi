@@ -98,7 +98,7 @@ func fixReferences(v validator) {
 	switch v := v.(type) {
 	case *openapi.Callback:
 		for _, pi := range *v {
-			resolveSchemaRef(pi.Value.Post.RequestBody.Value.Content["application/json"].Schema)
+			resolveSchemaRef(pi.Value.Post.RequestBody.Value.Content[openapi.MediaRangeJSON].Schema)
 		}
 	case *openapi.Content:
 		for _, mt := range *v {
@@ -115,13 +115,13 @@ func fixReferences(v validator) {
 		}
 	case *openapi.OperationResponses:
 		for _, r := range *v {
-			mt := r.Value.Content["application/json"]
+			mt := r.Value.Content[openapi.MediaRangeJSON]
 			resolveSchemaRef(mt.Schema)
 			resolveExamples(mt.Examples)
 		}
 	case *openapi.PathItem:
-		resolveSchemaRef(v.Get.Responses["default"].Value.Content["text/html"].Schema)
+		resolveSchemaRef(v.Get.Responses["default"].Value.Content[openapi.MediaRangeHTML].Schema)
 	case *openapi.Components:
-		v.Responses["GeneralError"].Value.Content["application/json"].Schema.Value = v.Schemas["GeneralError"]
+		v.Responses["GeneralError"].Value.Content[openapi.MediaRangeJSON].Schema.Value = v.Schemas["GeneralError"]
 	}
 }

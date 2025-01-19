@@ -174,7 +174,7 @@ func TestRequestBody_Validate_Error(t *testing.T) {
 			Content: openapi.Content{"foo; bar": &openapi.MediaType{}},
 		}, `content["foo; bar"]: mime: invalid media parameter`},
 		{openapi.RequestBody{
-			Content:    openapi.Content{"application/json": &openapi.MediaType{}},
+			Content:    openapi.Content{openapi.MediaRangeJSON: &openapi.MediaType{}},
 			Extensions: []byte(`{"foo": "bar"}`),
 		}, "foo: " + openapi.ErrUnknownField.Error()},
 	} {
