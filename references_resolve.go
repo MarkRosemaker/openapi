@@ -86,17 +86,13 @@ func (l *loader) resolveMediaType(mt *MediaType) error {
 		}
 	}
 
-	// if mt.Example != nil && mt.Examples != nil {
-	// 	return errors.New("example and examples are mutually exclusive")
-	// }
+	if err := l.resolveExamples(mt.Examples); err != nil {
+		return &errpath.ErrField{Field: "examples", Err: err}
+	}
 
-	// if err := mt.Examples.Validate(); err != nil {
-	// 	return &errpath.ErrField{Field: "examples", Err: err}
-	// }
-
-	// if err := mt.Encoding.Validate(); err != nil {
-	// 	return &errpath.ErrField{Field: "encoding", Err: err}
-	// }
+	if err := l.resolveEncodings(mt.Encoding); err != nil {
+		return &errpath.ErrField{Field: "encoding", Err: err}
+	}
 
 	return nil
 }

@@ -45,3 +45,11 @@ func (e *Encoding) Validate() error {
 
 	return validateExtensions(e.Extensions)
 }
+
+func (l *loader) resolveEncoding(e *Encoding) error {
+	if err := l.resolveHeaders(e.Headers); err != nil {
+		return &errpath.ErrField{Field: "headers", Err: err}
+	}
+
+	return nil
+}

@@ -46,3 +46,13 @@ func (es *Encodings) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) err
 func (es *Encodings) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
 	return ordmap.UnmarshalJSONFrom(es, dec, opts, setIndexEncoding)
 }
+
+func (l *loader) resolveEncodings(es Encodings) error {
+	for k, e := range es.ByIndex() {
+		if err := l.resolveEncoding(e); err != nil {
+			return &errpath.ErrKey{Key: k, Err: err}
+		}
+	}
+
+	return nil
+}
