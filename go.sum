@@ -12,8 +12,8 @@ github.com/MarkRosemaker/yaml2json v0.0.0-20250114210910-e54fa2e35c95 h1:Ms71wiX
 github.com/MarkRosemaker/yaml2json v0.0.0-20250114210910-e54fa2e35c95/go.mod h1:29Vwp0gyvimq/M7t01dJ5cAEKC38F4vyulu8g1wrQRU=
 github.com/go-api-libs/types v0.0.0-20241220214721-81dc6f654a15 h1:qzyov+tF9CXDxENN5cOEIyUif8dkQV4WhXQD2EadSuU=
 github.com/go-api-libs/types v0.0.0-20241220214721-81dc6f654a15/go.mod h1:nLeHWQNyIo6OZqGOKsRJeZOIjk3B4owR7U768OjHyqM=
-github.com/go-json-experiment/json v0.0.0-20250114205114-c14f990d7e5f h1:uhuvRxQ/U/x33pChkJRoiGG+P8YpogBI4hkfcqIHzXE=
-github.com/go-json-experiment/json v0.0.0-20250114205114-c14f990d7e5f/go.mod h1:BWmvoE1Xia34f3l/ibJweyhrT+aROb/FQ6d+37F0e2s=
+github.com/go-json-experiment/json v0.0.0-20250119165339-d96285104214 h1:1dlB1X7A6QDvLxtJmzIEdtHTlWFrkfxrlRyb7VjZqQc=
+github.com/go-json-experiment/json v0.0.0-20250119165339-d96285104214/go.mod h1:BWmvoE1Xia34f3l/ibJweyhrT+aROb/FQ6d+37F0e2s=
 golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 h1:yqrTHse8TCMW1M1ZCP+VAR/l0kKxwaAIqN/il7x4voA=
 golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8/go.mod h1:tujkw807nyEEAamNbDrEGzRav+ilXA7PCRAd6xsmwiU=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

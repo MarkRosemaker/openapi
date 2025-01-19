@@ -19,7 +19,7 @@ github.com/MarkRosemaker/yaml2json
 # github.com/go-api-libs/types v0.0.0-20241220214721-81dc6f654a15
 ## explicit; go 1.23.2
 github.com/go-api-libs/types
-# github.com/go-json-experiment/json v0.0.0-20250114205114-c14f990d7e5f
+# github.com/go-json-experiment/json v0.0.0-20250119165339-d96285104214
 ## explicit; go 1.23
 github.com/go-json-experiment/json
 github.com/go-json-experiment/json/internal

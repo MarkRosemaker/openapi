@@ -8,7 +8,7 @@ require (
 	github.com/MarkRosemaker/ordmap v0.0.0-20250114205602-77066c6e652f
 	github.com/MarkRosemaker/yaml v0.0.0-20250114211012-766c81671567
 	github.com/go-api-libs/types v0.0.0-20241220214721-81dc6f654a15
-	github.com/go-json-experiment/json v0.0.0-20250114205114-c14f990d7e5f
+	github.com/go-json-experiment/json v0.0.0-20250119165339-d96285104214
 )
 
 require (
