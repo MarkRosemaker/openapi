@@ -189,6 +189,16 @@ func TestOperation_Validate_Error(t *testing.T) {
 		{openapi.Operation{
 			Extensions: jsontext.Value(`{"foo": "bar"}`),
 		}, `foo: ` + openapi.ErrUnknownField.Error()},
+		{openapi.Operation{
+			Responses: openapi.OperationResponses{
+				openapi.StatusCodeDefault: &openapi.ResponseRef{},
+			},
+		}, `responses["default"]: must not be the only response`},
+		{openapi.Operation{
+			Responses: openapi.OperationResponses{
+				"500": &openapi.ResponseRef{},
+			},
+		}, `responses["500"]: single response must be a successful response`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.op.Validate(); err == nil {

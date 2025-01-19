@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/MarkRosemaker/errpath"
@@ -65,6 +66,26 @@ func (o *Operation) Validate() error {
 			return &errpath.ErrField{
 				Field: "responses",
 				Err:   &errpath.ErrKey{Key: string(code), Err: err},
+			}
+		}
+	}
+
+	if len(o.Responses) == 1 {
+		// only one response, special requirements
+		for code := range o.Responses {
+			if code == StatusCodeDefault {
+				return &errpath.ErrField{Field: "responses", Err: &errpath.ErrKey{
+					Key: string(StatusCodeDefault),
+					Err: errors.New("must not be the only response"),
+				}}
+			}
+
+			// must be a successful response
+			if !code.IsSuccess() {
+				return &errpath.ErrField{Field: "responses", Err: &errpath.ErrKey{
+					Key: string(code),
+					Err: errors.New("single response must be a successful response"),
+				}}
 			}
 		}
 	}
