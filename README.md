@@ -11,9 +11,9 @@
   <img alt="OpenAPI Logo" src=openapi-logo.svg width=300>
 </p>
 
-<h1 align="center">
+<h3 align="center">
   Transform and master your API specs with ease.
-</h1>
+</h3>
 
 Package openapi provides a suite of tools for working with OpenAPI specifications, making it easier to parse, format, manipulate, and generate code from these specs. 
 
