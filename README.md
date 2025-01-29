@@ -8,7 +8,7 @@
 </div>
 
 <p align="center">
-  <img alt="OpenAPI Logo" src=https://upload.wikimedia.org/wikipedia/commons/b/b2/OpenAPI_Specification_Logo_Pantone.svg height=300>
+  <img alt="OpenAPI Logo" src="OpenAPI logo.svg" width=300>
 </p>
 
 <h1 align="center">
