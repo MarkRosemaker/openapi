@@ -2,7 +2,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/MarkRosemaker/openapi.svg)](https://pkg.go.dev/github.com/MarkRosemaker/openapi)
 [![Go Report Card](https://goreportcard.com/badge/github.com/MarkRosemaker/openapi)](https://goreportcard.com/report/github.com/MarkRosemaker/openapi)
 ![Code Coverage](https://img.shields.io/badge/coverage-96.4%25-brightgreen)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![License: Apache](https://img.shields.io/badge/License-Apache-yellow.svg)](./LICENSE)
 <p align="center">
   <img alt="openapi logo" src=https://avatars3.githubusercontent.com/u/16343502 width=200>
 </p>
