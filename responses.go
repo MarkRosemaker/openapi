@@ -75,9 +75,17 @@ func (l *loader) collectResponses(rs ResponsesByName, ref ref) {
 }
 
 func (l *loader) resolveResponses(rs ResponsesByName) error {
+	return resolveResponses(l, rs)
+}
+
+func (l *loader) resolveOperationResponses(rs OperationResponses) error {
+	return resolveResponses(l, rs)
+}
+
+func resolveResponses[K ~string](l *loader, rs Responses[K]) error {
 	for name, r := range rs.ByIndex() {
 		if err := l.resolveResponseRef(r); err != nil {
-			return &errpath.ErrKey{Key: name, Err: err}
+			return &errpath.ErrKey{Key: string(name), Err: err}
 		}
 	}
 

@@ -3,8 +3,6 @@ package openapi
 import (
 	"fmt"
 	"strings"
-
-	"github.com/MarkRosemaker/errpath"
 )
 
 type ref []string
@@ -47,64 +45,6 @@ func resolveRef[T any, O referencable[T]](
 }
 
 func (l *loader) collectPaths(ps Paths, ref ref) {
-}
-
-func (l *loader) resolveOperation(o *Operation) error {
-	if err := l.resolveParameterList(o.Parameters); err != nil {
-		return &errpath.ErrField{Field: "parameters", Err: err}
-	}
-
-	if o.RequestBody != nil {
-		if err := l.resolveRequestBodyRef(o.RequestBody); err != nil {
-			return &errpath.ErrField{Field: "requestBody", Err: err}
-		}
-	}
-
-	if err := l.resolveOperationResponses(o.Responses); err != nil {
-		return &errpath.ErrField{Field: "responses", Err: err}
-	}
-
-	if err := l.resolveCallbacks(o.Callbacks); err != nil {
-		return &errpath.ErrField{Field: "callbacks", Err: err}
-	}
-
-	return nil
-}
-
-func (l *loader) resolveRequestBody(r *RequestBody) error {
-	if err := l.resolveContent(r.Content); err != nil {
-		return &errpath.ErrField{Field: "content", Err: err}
-	}
-
-	return nil
-}
-
-func (l *loader) resolveMediaType(mt *MediaType) error {
-	if mt.Schema != nil {
-		if err := l.resolveSchemaRef(mt.Schema); err != nil {
-			return &errpath.ErrField{Field: "schema", Err: err}
-		}
-	}
-
-	if err := l.resolveExamples(mt.Examples); err != nil {
-		return &errpath.ErrField{Field: "examples", Err: err}
-	}
-
-	if err := l.resolveEncodings(mt.Encoding); err != nil {
-		return &errpath.ErrField{Field: "encoding", Err: err}
-	}
-
-	return nil
-}
-
-func (l *loader) resolveOperationResponses(rs OperationResponses) error {
-	for code, r := range rs.ByIndex() {
-		if err := l.resolveResponseRef(r); err != nil {
-			return &errpath.ErrKey{Key: string(code), Err: err}
-		}
-	}
-
-	return nil
 }
 
 func (l *loader) resolveCallbacks(cs Callbacks) error {

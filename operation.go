@@ -108,3 +108,25 @@ func (o *Operation) Validate() error {
 
 	return validateExtensions(o.Extensions)
 }
+
+func (l *loader) resolveOperation(o *Operation) error {
+	if err := l.resolveParameterList(o.Parameters); err != nil {
+		return &errpath.ErrField{Field: "parameters", Err: err}
+	}
+
+	if o.RequestBody != nil {
+		if err := l.resolveRequestBodyRef(o.RequestBody); err != nil {
+			return &errpath.ErrField{Field: "requestBody", Err: err}
+		}
+	}
+
+	if err := l.resolveOperationResponses(o.Responses); err != nil {
+		return &errpath.ErrField{Field: "responses", Err: err}
+	}
+
+	if err := l.resolveCallbacks(o.Callbacks); err != nil {
+		return &errpath.ErrField{Field: "callbacks", Err: err}
+	}
+
+	return nil
+}

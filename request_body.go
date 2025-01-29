@@ -48,6 +48,14 @@ func (l *loader) collectRequestBody(r *RequestBody, ref ref) {
 	l.requestBodies[ref.String()] = r
 }
 
+func (l *loader) resolveRequestBody(r *RequestBody) error {
+	if err := l.resolveContent(r.Content); err != nil {
+		return &errpath.ErrField{Field: "content", Err: err}
+	}
+
+	return nil
+}
+
 func (l *loader) resolveRequestBodyRef(r *RequestBodyRef) error {
 	return resolveRef(r, l.requestBodies, l.resolveRequestBody)
 }
