@@ -19,6 +19,8 @@ Package openapi provides a suite of tools for working with OpenAPI specification
 
 Whether you're looking to clean up existing API documentation or integrate API design into your development pipeline, this package is built to streamline your workflow.
 
+**This package is currently being utilized to format OpenAPI specifications in the [go-api-libs](https://github.com/go-api-libs) project.**
+
 ## Introduction
 
 The primary goals of this package are:
