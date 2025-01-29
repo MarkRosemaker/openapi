@@ -1,15 +1,15 @@
-<p align="center">
-  <img alt="OpenAPI Logo" src=https://upload.wikimedia.org/wikipedia/commons/b/b2/OpenAPI_Specification_Logo_Pantone.svg height=200>
-</p>
-
 <div align="center">
-
 [![Go Reference](https://pkg.go.dev/badge/github.com/MarkRosemaker/openapi.svg)](https://pkg.go.dev/github.com/MarkRosemaker/openapi)
 [![Go Report Card](https://goreportcard.com/badge/github.com/MarkRosemaker/openapi)](https://goreportcard.com/report/github.com/MarkRosemaker/openapi)
 ![Code Coverage](https://img.shields.io/badge/coverage-96.4%25-brightgreen)
 [![License: Apache](https://img.shields.io/badge/License-Apache-yellow.svg)](./LICENSE)
-
 </div>
+
+<p align="center">
+  <img alt="OpenAPI Logo" src=https://upload.wikimedia.org/wikipedia/commons/b/b2/OpenAPI_Specification_Logo_Pantone.svg height=300>
+</p>
+
+# Transform and master your API specs with ease.
 
 Package openapi provides a suite of tools for working with OpenAPI specifications, making it easier to parse, format, manipulate, and generate code from these specs. 
 
