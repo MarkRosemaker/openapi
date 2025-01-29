@@ -63,6 +63,7 @@ func main() {
     // sort keys of each component in alphabetical order
     doc.Components.SortMaps()
 
+	// write an improved version of your spec
     if err := doc.WriteToFile("path/to/openapi.json"); err != nil {
         fmt.Println("Error writing to file:", err)
         return
