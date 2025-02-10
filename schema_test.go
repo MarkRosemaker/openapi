@@ -9,6 +9,15 @@ import (
 
 func pointer[T any](v T) *T { return &v }
 
+func TestSchema_JSON(t *testing.T) {
+	t.Parallel()
+
+	testJSON(t, []byte(`{
+		"type": "object",
+		"example": null
+	}`), &openapi.Schema{})
+}
+
 func TestSchema_Validate(t *testing.T) {
 	t.Parallel()
 
