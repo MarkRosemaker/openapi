@@ -126,7 +126,7 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
 			}}
 		}
-	case FormatDateTime, FormatEmail, FormatPassword,
+	case FormatDate, FormatDateTime, FormatEmail, FormatPassword,
 		FormatUUID, FormatURI, FormatURIRef, FormatZipCode,
 		FormatIPv4, FormatIPv6:
 		if s.Type != TypeString {
