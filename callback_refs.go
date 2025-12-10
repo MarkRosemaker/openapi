@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type CallbackRefs map[string]*CallbackRef
@@ -40,14 +40,18 @@ func (cs *CallbackRefs) Set(key string, c *CallbackRef) {
 	ordmap.Set(cs, key, c, getIndexRef[Callback, *Callback], setIndexRef[Callback, *Callback])
 }
 
+var _ json.MarshalerTo = (*CallbackRefs)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (cs *CallbackRefs) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(cs, enc, opts)
+func (cs *CallbackRefs) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(cs, enc)
 }
 
+var _ json.UnmarshalerFrom = (*CallbackRefs)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (cs *CallbackRefs) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(cs, dec, opts, setIndexRef[Callback, *Callback])
+func (cs *CallbackRefs) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(cs, dec, setIndexRef[Callback, *Callback])
 }
 
 func (l *loader) collectCallbackRefs(cs CallbackRefs, ref ref) {

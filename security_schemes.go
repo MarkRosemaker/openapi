@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type SecuritySchemes map[SecuritySchemeName]*SecuritySchemeRef
@@ -52,14 +52,18 @@ func (ss *SecuritySchemes) Set(key SecuritySchemeName, v *SecuritySchemeRef) {
 	ordmap.Set(ss, key, v, getIndexRef[SecurityScheme, *SecurityScheme], setIndexRef[SecurityScheme, *SecurityScheme])
 }
 
+var _ json.MarshalerTo = (*SecuritySchemes)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (ss *SecuritySchemes) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(ss, enc, opts)
+func (ss *SecuritySchemes) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ss, enc)
 }
 
+var _ json.UnmarshalerFrom = (*SecuritySchemes)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (ss *SecuritySchemes) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(ss, dec, opts, setIndexRef[SecurityScheme, *SecurityScheme])
+func (ss *SecuritySchemes) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ss, dec, setIndexRef[SecurityScheme, *SecurityScheme])
 }
 
 func (l *loader) collectSecuritySchemes(ss SecuritySchemes, ref ref) {

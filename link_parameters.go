@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // A map representing parameters to pass to an operation as specified with `operationId` or identified via `operationRef`. The key is the parameter name to be used, whereas the value can be a constant or an expression to be evaluated and passed to the linked operation.
@@ -38,12 +38,16 @@ func (ps *LinkParameters) Set(key string, p *LinkParameter) {
 	ordmap.Set(ps, key, p, getIndexLinkParameter, setIndexLinkParameter)
 }
 
+var _ json.MarshalerTo = (*LinkParameters)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (ps *LinkParameters) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(ps, enc, opts)
+func (ps *LinkParameters) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ps, enc)
 }
 
+var _ json.UnmarshalerFrom = (*LinkParameters)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (ps *LinkParameters) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(ps, dec, opts, setIndexLinkParameter)
+func (ps *LinkParameters) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ps, dec, setIndexLinkParameter)
 }

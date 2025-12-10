@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type SchemaRefs map[string]*SchemaRef
@@ -36,14 +36,18 @@ func (ss *SchemaRefs) Set(key string, v *SchemaRef) {
 	ordmap.Set(ss, key, v, getIndexRef[Schema, *Schema], setIndexRef[Schema, *Schema])
 }
 
+var _ json.MarshalerTo = (*SchemaRefs)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (ss *SchemaRefs) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(ss, enc, opts)
+func (ss *SchemaRefs) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ss, enc)
 }
 
+var _ json.UnmarshalerFrom = (*SchemaRefs)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (ss *SchemaRefs) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(ss, dec, opts, setIndexRef[Schema, *Schema])
+func (ss *SchemaRefs) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ss, dec, setIndexRef[Schema, *Schema])
 }
 
 func (l *loader) resolveSchemaRefs(ss SchemaRefs) error {

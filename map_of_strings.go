@@ -1,11 +1,11 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type MapOfStrings map[string]String
@@ -25,14 +25,18 @@ func (scs *MapOfStrings) Set(key string, s String) {
 	ordmap.Set(scs, key, s, getIndexScope, setIndexScope)
 }
 
+var _ json.MarshalerTo = (*MapOfStrings)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (scs *MapOfStrings) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(scs, enc, opts)
+func (scs *MapOfStrings) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(scs, enc)
 }
 
+var _ json.UnmarshalerFrom = (*MapOfStrings)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (scs *MapOfStrings) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(scs, dec, opts, setIndexScope)
+func (scs *MapOfStrings) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(scs, dec, setIndexScope)
 }
 
 type String struct {
@@ -41,14 +45,18 @@ type String struct {
 	idx int
 }
 
+var _ json.UnmarshalerFrom = (*String)(nil)
+
 // UnmarshalJSONFrom unmarshals the value of the String.
-func (s *String) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return json.UnmarshalDecode(dec, &s.Value, opts)
+func (s *String) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return json.UnmarshalDecode(dec, &s.Value)
 }
 
+var _ json.MarshalerTo = (*String)(nil)
+
 // MarshalJSONTo marshals the value of the String.
-func (s *String) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return json.MarshalEncode(enc, s.Value, opts)
+func (s *String) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return json.MarshalEncode(enc, s.Value)
 }
 
 func getIndexScope(s String) int           { return s.idx }

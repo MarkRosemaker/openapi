@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type Parameters map[string]*ParameterRef
@@ -40,14 +40,18 @@ func (ps *Parameters) Set(name string, p *ParameterRef) {
 	ordmap.Set(ps, name, p, getIndexRef[Parameter, *Parameter], setIndexRef[Parameter, *Parameter])
 }
 
+var _ json.MarshalerTo = (*Parameters)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (ps *Parameters) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(ps, enc, opts)
+func (ps *Parameters) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ps, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Parameters)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (ps *Parameters) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(ps, dec, opts, setIndexRef[Parameter, *Parameter])
+func (ps *Parameters) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ps, dec, setIndexRef[Parameter, *Parameter])
 }
 
 func (l *loader) collectParameters(ps Parameters, ref ref) {

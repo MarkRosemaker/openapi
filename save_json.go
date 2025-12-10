@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/v2"
+	"errors"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-
-	"github.com/go-json-experiment/json"
 )
 
 func (d Document) WriteJSON(w io.Writer) error {
@@ -33,7 +33,17 @@ func (d *Document) WriteToFile(path string) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
-	return d.WriteJSON(f)
+	return errorsJoin(d.WriteJSON(f), f.Close())
+}
+
+func errorsJoin(err1, err2 error) error {
+	if err1 == nil {
+		return err2
+	}
+	if err2 == nil {
+		return err1
+	}
+
+	return errors.Join(err1, err2)
 }

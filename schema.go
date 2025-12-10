@@ -1,13 +1,13 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
 	"fmt"
 	"regexp"
 	"slices"
 	"strings"
 
 	"github.com/MarkRosemaker/errpath"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // The Schema Object allows the definition of input and output data types.

@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type Schemas map[string]*Schema
@@ -40,14 +40,18 @@ func (rs *Schemas) Set(key string, v *Schema) {
 	ordmap.Set(rs, key, v, getIndexSchema, setIndexSchema)
 }
 
+var _ json.MarshalerTo = (*Schemas)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (rs *Schemas) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(rs, enc, opts)
+func (rs *Schemas) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(rs, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Schemas)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (rs *Schemas) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(rs, dec, opts, setIndexSchema)
+func (rs *Schemas) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(rs, dec, setIndexSchema)
 }
 
 func (l *loader) collectSchemas(ss Schemas, ref ref) {

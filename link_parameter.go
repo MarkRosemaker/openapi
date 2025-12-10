@@ -1,8 +1,8 @@
 package openapi
 
 import (
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 )
 
 // LinkParameter is an expression that is the value of a parameter map in a Link Object.
@@ -19,14 +19,18 @@ func setIndexLinkParameter(p *LinkParameter, idx int) *LinkParameter { p.idx = i
 // Validate validates the link parameter.
 func (p *LinkParameter) Validate() error { return p.Expression.Validate() }
 
+var _ json.UnmarshalerFrom = (*LinkParameter)(nil)
+
 // UnmarshalJSONFrom unmarschals the link parameter into its appropriate type.
 // NOTE: For now, we only implemented the case of it being a runtime expression.
-func (p *LinkParameter) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return json.UnmarshalDecode(dec, &p.Expression, opts)
+func (p *LinkParameter) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return json.UnmarshalDecode(dec, &p.Expression)
 }
+
+var _ json.MarshalerTo = (*LinkParameter)(nil)
 
 // MarshalJSONTo marschals the link parameter into its appropriate type.
 // NOTE: For now, we only implemented the case of it being a runtime expression.
-func (p *LinkParameter) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+func (p *LinkParameter) MarshalJSONTo(enc *jsontext.Encoder) error {
 	return json.MarshalEncode(enc, p.Expression)
 }

@@ -2,11 +2,11 @@ package yaml2json
 
 import (
 	"bytes"
+	"encoding/json/jsontext"
 	"fmt"
 	"io"
 	"strconv"
 
-	"github.com/go-json-experiment/json/jsontext"
 	"gopkg.in/yaml.v3"
 )
 
@@ -29,7 +29,7 @@ func encodeToJSON(enc *jsontext.Encoder, n *yaml.Node) error {
 
 		return encodeToJSON(enc, n.Content[0])
 	case yaml.SequenceNode:
-		if err := enc.WriteToken(jsontext.ArrayStart); err != nil {
+		if err := enc.WriteToken(jsontext.BeginArray); err != nil {
 			return err
 		}
 
@@ -39,14 +39,14 @@ func encodeToJSON(enc *jsontext.Encoder, n *yaml.Node) error {
 			}
 		}
 
-		return enc.WriteToken(jsontext.ArrayEnd)
+		return enc.WriteToken(jsontext.EndArray)
 	case yaml.MappingNode:
 		l := len(n.Content)
 		if l%2 != 0 {
 			return fmt.Errorf("unbalanced mapping node")
 		}
 
-		if err := enc.WriteToken(jsontext.ObjectStart); err != nil {
+		if err := enc.WriteToken(jsontext.BeginObject); err != nil {
 			return err
 		}
 
@@ -60,7 +60,7 @@ func encodeToJSON(enc *jsontext.Encoder, n *yaml.Node) error {
 			}
 		}
 
-		return enc.WriteToken(jsontext.ObjectEnd)
+		return enc.WriteToken(jsontext.EndObject)
 	case yaml.ScalarNode:
 		if n.Style == 0 {
 			switch n.Value {

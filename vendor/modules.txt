@@ -1,34 +1,26 @@
 # github.com/MarkRosemaker/errpath v0.0.0-20241223110529-3530cd011135
 ## explicit; go 1.23.2
 github.com/MarkRosemaker/errpath
-# github.com/MarkRosemaker/json2yaml v0.0.0-20250114195556-f9332257fc2d
+# github.com/MarkRosemaker/json2yaml v0.0.0-20251208203737-0c5e035d8679
 ## explicit; go 1.23.4
 github.com/MarkRosemaker/json2yaml
-# github.com/MarkRosemaker/jsonutil v0.0.0-20250114201208-e81a63afd92c
-## explicit; go 1.23.2
+# github.com/MarkRosemaker/jsonutil v0.0.0-20251208205702-a8b03148ea3a
+## explicit; go 1.24
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/ordmap v0.0.0-20250114205602-77066c6e652f
+# github.com/MarkRosemaker/ordmap v0.0.0-20251210171329-e85d24015f9c
 ## explicit; go 1.23.2
 github.com/MarkRosemaker/ordmap
-# github.com/MarkRosemaker/yaml v0.0.0-20250114211012-766c81671567
+# github.com/MarkRosemaker/yaml v0.0.0-20251210071319-19c2e5051239
 ## explicit; go 1.23.4
 github.com/MarkRosemaker/yaml
-# github.com/MarkRosemaker/yaml2json v0.0.0-20250114210910-e54fa2e35c95
+# github.com/MarkRosemaker/yaml2json v0.0.0-20251208205025-7b6431088b7b
 ## explicit; go 1.23.4
 github.com/MarkRosemaker/yaml2json
-# github.com/go-api-libs/types v0.0.0-20241220214721-81dc6f654a15
+# github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d
 ## explicit; go 1.23.2
 github.com/go-api-libs/types
-# github.com/go-json-experiment/json v0.0.0-20250119165339-d96285104214
-## explicit; go 1.23
-github.com/go-json-experiment/json
-github.com/go-json-experiment/json/internal
-github.com/go-json-experiment/json/internal/jsonflags
-github.com/go-json-experiment/json/internal/jsonopts
-github.com/go-json-experiment/json/internal/jsonwire
-github.com/go-json-experiment/json/jsontext
-# golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8
-## explicit; go 1.22.0
+# golang.org/x/exp v0.0.0-20251209150349-8475f28825e9
+## explicit; go 1.24.0
 golang.org/x/exp/maps
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit

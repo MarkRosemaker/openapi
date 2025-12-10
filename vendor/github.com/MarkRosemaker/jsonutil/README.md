@@ -7,7 +7,7 @@
   <img alt="jsonutil logo: cute golang gopher in JSON brackets with gear in the background and text saying v2" src=logo.jpg width=300>
 </p>
 
-`jsonutil` is a Go package that provides custom [JSON v2](https://github.com/go-json-experiment/json) marshaling and unmarshaling functions for specific data types.
+`jsonutil` is a Go package that provides custom [JSON v2](https://pkg.go.dev/encoding/json/v2) marshaling and unmarshaling functions for specific data types.
 
 This package is particularly useful when you need to handle JSON encoding and decoding for types like `time.Duration` and `url.URL` in a customized manner.
 
@@ -39,11 +39,11 @@ To use the custom marshaler and unmarshaler for `url.URL`, you can import the pa
 package main
 
 import (
+	"encoding/json/v2"
 	"fmt"
 	"net/url"
 
 	"github.com/MarkRosemaker/jsonutil"
-	"github.com/go-json-experiment/json"
 )
 
 var jsonOpts = json.JoinOptions(
@@ -87,11 +87,11 @@ To use the custom marshaler and unmarshaler for `time.Duration`, you can import 
 package main
 
 import (
+	"encoding/json/v2"
 	"fmt"
 	"time"
 
 	"github.com/MarkRosemaker/jsonutil"
-	"github.com/go-json-experiment/json"
 )
 
 var jsonOpts = json.JoinOptions(

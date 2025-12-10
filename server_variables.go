@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // ServerVariables is an ordered map of server variable.
@@ -38,12 +38,16 @@ func (vars *ServerVariables) Set(key string, v *ServerVariable) {
 	ordmap.Set(vars, key, v, getIndexServerVariable, setIndexServerVariable)
 }
 
+var _ json.MarshalerTo = (*ServerVariables)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (vars *ServerVariables) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(vars, enc, opts)
+func (vars *ServerVariables) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(vars, enc)
 }
 
+var _ json.UnmarshalerFrom = (*ServerVariables)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (vars *ServerVariables) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(vars, dec, opts, setIndexServerVariable)
+func (vars *ServerVariables) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(vars, dec, setIndexServerVariable)
 }

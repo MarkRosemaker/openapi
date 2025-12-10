@@ -1,6 +1,6 @@
 # YAML Marshalling and Unmarshalling
 
-This repository provides functionality for YAML marshalling and unmarshalling similar to [JSON v2](https://github.com/go-json-experiment/json). It allows users to use the same JSON options they would use for JSON v2 to encode and decode YAML.
+This repository provides functionality for YAML marshalling and unmarshalling similar to [JSON v2](https://pkg.go.dev/encoding/json/v2). It allows users to use the same JSON options they would use for JSON v2 to encode and decode YAML.
 
 ## Features
 

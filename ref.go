@@ -2,12 +2,12 @@ package openapi
 
 import (
 	"bytes"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"fmt"
 	"strings"
 
 	"github.com/MarkRosemaker/errpath"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Reference is a simple object to allow referencing other components in the OpenAPI document, internally and externally.
@@ -66,7 +66,9 @@ func (r *refOrValue[T, O]) Validate() error {
 	return r.Value.Validate()
 }
 
-func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
+var _ json.UnmarshalerFrom = (*refOrValue[Example, *Example])(nil)
+
+func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	// we don't know if this is a reference or not, so we read the value first
 	val, err := dec.ReadValue()
 	if err != nil {
@@ -76,7 +78,7 @@ func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Op
 	// try to unmarshal as a reference
 	ref := &Reference{}
 	if err := json.UnmarshalDecode(
-		jsontext.NewDecoder(bytes.NewBuffer(val), opts), ref, opts,
+		jsontext.NewDecoder(bytes.NewBuffer(val), dec.Options()), ref,
 	); err == nil && ref.Identifier != "" {
 		// we successfully unmarshalled as a reference
 		r.Ref = ref // set the reference
@@ -86,7 +88,7 @@ func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Op
 	// it is not a reference, unmarshal as object
 	var v O
 	if err := json.UnmarshalDecode(
-		jsontext.NewDecoder(bytes.NewBuffer(val), opts), &v, opts,
+		jsontext.NewDecoder(bytes.NewBuffer(val), dec.Options()), &v,
 	); err != nil {
 		var t T
 		return fmt.Errorf("value of %T: %w", t, err)
@@ -97,10 +99,12 @@ func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Op
 	return nil
 }
 
-func (r *refOrValue[_, _]) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
+var _ json.MarshalerTo = (*refOrValue[Example, *Example])(nil)
+
+func (r *refOrValue[_, _]) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if r.Ref == nil {
-		return json.MarshalEncode(enc, r.Value, opts)
+		return json.MarshalEncode(enc, r.Value)
 	}
 
-	return json.MarshalEncode(enc, r.Ref, opts)
+	return json.MarshalEncode(enc, r.Ref)
 }

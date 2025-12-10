@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Encodings is a map between a property name and its encoding information.
@@ -37,14 +37,18 @@ func (es *Encodings) Set(key string, e *Encoding) {
 	ordmap.Set(es, key, e, getIndexEncoding, setIndexEncoding)
 }
 
+var _ json.MarshalerTo = (*Encodings)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (es *Encodings) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(es, enc, opts)
+func (es *Encodings) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(es, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Encodings)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (es *Encodings) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(es, dec, opts, setIndexEncoding)
+func (es *Encodings) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(es, dec, setIndexEncoding)
 }
 
 func (l *loader) resolveEncodings(es Encodings) error {

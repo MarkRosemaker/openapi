@@ -1,10 +1,9 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
 	"fmt"
 	"net/url"
-
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Example represents an example of a schema.

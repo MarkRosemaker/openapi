@@ -2,13 +2,13 @@ package openapi_test
 
 import (
 	"bytes"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"path/filepath"
 	"testing"
 
 	"github.com/MarkRosemaker/jsonutil"
 	"github.com/MarkRosemaker/openapi"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 var jsonOpts = json.JoinOptions([]json.Options{
@@ -78,11 +78,11 @@ func testJSON(t *testing.T, exampleJSON []byte, v validator) {
 	got := jsontext.Value(b)
 	want := jsontext.Value(exampleJSON)
 
-	if err := want.Indent("", "\t"); err != nil {
+	if err := want.Indent(); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := got.Indent("", "\t"); err != nil {
+	if err := got.Indent(); err != nil {
 		t.Fatal(err)
 	}
 

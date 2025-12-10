@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type Links map[string]*LinkRef
@@ -40,14 +40,18 @@ func (ls *Links) Set(key string, l *LinkRef) {
 	ordmap.Set(ls, key, l, getIndexRef[Link, *Link], setIndexRef[Link, *Link])
 }
 
+var _ json.MarshalerTo = (*Links)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (ls *Links) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(ls, enc, opts)
+func (ls *Links) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ls, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Links)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (ls *Links) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(ls, dec, opts, setIndexRef[Link, *Link])
+func (ls *Links) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ls, dec, setIndexRef[Link, *Link])
 }
 
 func (l *loader) collectLinks(ls Links, ref ref) {

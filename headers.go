@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type Headers map[string]*HeaderRef
@@ -40,14 +40,18 @@ func (hs *Headers) Set(key string, h *HeaderRef) {
 	ordmap.Set(hs, key, h, getIndexRef[Header, *Header], setIndexRef[Header, *Header])
 }
 
+var _ json.MarshalerTo = (*Headers)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (hs *Headers) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(hs, enc, opts)
+func (hs *Headers) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(hs, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Headers)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (hs *Headers) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(hs, dec, opts, setIndexRef[Header, *Header])
+func (hs *Headers) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(hs, dec, setIndexRef[Header, *Header])
 }
 
 func (l *loader) collectHeaders(hs Headers, ref ref) {

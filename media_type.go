@@ -1,10 +1,10 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
 	"errors"
 
 	"github.com/MarkRosemaker/errpath"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Each Media Type Object provides schema and examples for the media type identified by its key.

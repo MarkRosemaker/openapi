@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Callback is a map of possible out-of band callbacks related to the parent operation.
@@ -46,14 +46,18 @@ func (c *Callback) Set(key RuntimeExpression, p *PathItemRef) {
 	ordmap.Set(c, key, p, getIndexRef[PathItem, *PathItem], setIndexRef[PathItem, *PathItem])
 }
 
+var _ json.MarshalerTo = (*Callback)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (c *Callback) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(c, enc, opts)
+func (c *Callback) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(c, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Callback)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (c *Callback) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(c, dec, opts, setIndexRef[PathItem, *PathItem])
+func (c *Callback) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(c, dec, setIndexRef[PathItem, *PathItem])
 }
 
 func (l *loader) collectCallbackRef(c *CallbackRef, ref ref) {

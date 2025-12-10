@@ -1,21 +1,23 @@
 package ordmap
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"fmt"
 
 	"github.com/MarkRosemaker/errpath"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
+var _ json.UnmarshalerFrom = (*OrderedMap[string, any])(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (om *OrderedMap[K, V]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return UnmarshalJSONFrom(om, dec, opts, setIndex)
+func (om *OrderedMap[K, V]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return UnmarshalJSONFrom(om, dec, setIndex)
 }
 
 // UnmarshalJSONFrom is a helper function to unmarshal an ordered map setting the indices in order.
 func UnmarshalJSONFrom[M ~map[K]R, K comparable, R any](
-	m *M, dec *jsontext.Decoder, opts json.Options,
+	m *M, dec *jsontext.Decoder,
 	setIndex func(R, int) R,
 ) error {
 	tkn, err := dec.ReadToken()
@@ -40,12 +42,12 @@ func UnmarshalJSONFrom[M ~map[K]R, K comparable, R any](
 		}
 
 		var key K
-		if err := json.UnmarshalDecode(dec, &key, opts); err != nil {
+		if err := json.UnmarshalDecode(dec, &key, dec.Options()); err != nil {
 			return err
 		}
 
 		var v R
-		if err := json.UnmarshalDecode(dec, &v, opts); err != nil {
+		if err := json.UnmarshalDecode(dec, &v, dec.Options()); err != nil {
 			return &errpath.ErrKey{Key: fmt.Sprint(key), Err: err}
 		}
 

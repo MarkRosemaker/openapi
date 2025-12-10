@@ -2,10 +2,10 @@ package json2yaml
 
 import (
 	"bytes"
+	"encoding/json/jsontext"
 	"fmt"
 	"io"
 
-	"github.com/go-json-experiment/json/jsontext"
 	"gopkg.in/yaml.v3"
 )
 

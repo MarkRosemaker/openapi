@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"errors"
 	"strings"
 
 	"github.com/MarkRosemaker/errpath"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Extensions represents additional fields that can be added to OpenAPI objects.

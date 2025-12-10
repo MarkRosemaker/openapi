@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type PathItems map[string]*PathItemRef
@@ -41,14 +41,18 @@ func (ps *PathItems) Set(key string, v *PathItemRef) {
 	ordmap.Set(ps, key, v, getIndexRef[PathItem, *PathItem], setIndexRef[PathItem, *PathItem])
 }
 
+var _ json.MarshalerTo = (*PathItems)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (ps *PathItems) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(ps, enc, opts)
+func (ps *PathItems) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ps, enc)
 }
 
+var _ json.UnmarshalerFrom = (*PathItems)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (ps *PathItems) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(ps, dec, opts, setIndexRef[PathItem, *PathItem])
+func (ps *PathItems) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ps, dec, setIndexRef[PathItem, *PathItem])
 }
 
 func (l *loader) collectPathItems(ps PathItems, ref ref) {

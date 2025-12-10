@@ -1,10 +1,10 @@
 package openapi_test
 
 import (
+	"encoding/json/jsontext"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 func TestEncoding_JSON(t *testing.T) {

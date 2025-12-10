@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
 	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/MarkRosemaker/errpath"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Header represents a single header parameter to be included in the operation.

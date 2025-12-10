@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // The content of a request body. The key is a media type or media type range, see [RFC7231 Appendix D], and the value describes it. For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
@@ -47,14 +47,18 @@ func (c *Content) Set(mr MediaRange, mt *MediaType) {
 	ordmap.Set(c, mr, mt, getIndexMediaType, setIndexMediaType)
 }
 
+var _ json.MarshalerTo = (*Content)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (c *Content) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(c, enc, opts)
+func (c *Content) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(c, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Content)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (c *Content) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(c, dec, opts, setIndexMediaType)
+func (c *Content) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(c, dec, setIndexMediaType)
 }
 
 func (l *loader) resolveContent(c Content) error {

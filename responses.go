@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // OperationsResponses is a container for the expected responses of an operation.
@@ -58,14 +58,18 @@ func (rs *Responses[K]) Set(key K, v *ResponseRef) {
 	ordmap.Set(rs, key, v, getIndexRef[Response, *Response], setIndexRef[Response, *Response])
 }
 
+var _ json.MarshalerTo = (*Responses[string])(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (rs *Responses[_]) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(rs, enc, opts)
+func (rs *Responses[_]) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(rs, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Responses[string])(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (rs *Responses[_]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(rs, dec, opts, setIndexRef[Response, *Response])
+func (rs *Responses[_]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(rs, dec, setIndexRef[Response, *Response])
 }
 
 func (l *loader) collectResponses(rs ResponsesByName, ref ref) {

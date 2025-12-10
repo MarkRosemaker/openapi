@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Examples is a map of examples.
@@ -42,14 +42,18 @@ func (exs *Examples) Set(key string, ex *ExampleRef) {
 	ordmap.Set(exs, key, ex, getIndexRef[Example, *Example], setIndexRef[Example, *Example])
 }
 
+var _ json.MarshalerTo = (*Examples)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (exs *Examples) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(exs, enc, opts)
+func (exs *Examples) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(exs, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Examples)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (exs *Examples) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(exs, dec, opts, setIndexRef[Example, *Example])
+func (exs *Examples) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(exs, dec, setIndexRef[Example, *Example])
 }
 
 func (l *loader) collectExamples(exs Examples, ref ref) {

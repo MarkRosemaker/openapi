@@ -1,10 +1,9 @@
 package openapi
 
 import (
+	"encoding/json/v2"
 	"io"
 	"unicode"
-
-	"github.com/go-json-experiment/json"
 )
 
 // LoadFromReaderJSON reads an OpenAPI specification in JSON format from an io.Reader and parses it into a structured format.

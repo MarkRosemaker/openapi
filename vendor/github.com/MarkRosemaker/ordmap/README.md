@@ -7,13 +7,13 @@
   <img alt="ordmap logo: a gopher holding a map, surrounded by keys" src=logo.jpg width=300>
 </p>
 
-`ordmap` is a Go package that provides a generic ordered map implementation, primarily designed for JSON v2 marshalling and unmarshalling using the [go-json-experiment](https://github.com/go-json-experiment/json) library.
+`ordmap` is a Go package that provides a generic ordered map implementation, primarily designed for [JSON v2](https://pkg.go.dev/encoding/json/v2) marshalling and unmarshalling.
 
 An ordered map maintains the order of keys based on insertion, allowing you to iterate over the map in the order in which entries were added. This can be particularly useful for applications where the order of elements is important, such as in JSON serialization or when maintaining the sequence of operations.
 
 ## Features
 
-- **Seamless JSON v2 Integration:** Directly integrates with the [JSON v2](https://github.com/go-json-experiment/json) library for efficient and order-preserving marshalling and unmarshalling.
+- **Seamless JSON v2 Integration:** Directly integrates with the [JSON v2](https://pkg.go.dev/encoding/json/v2) library for efficient and order-preserving marshalling and unmarshalling.
 - **Custom Ordered Maps:** Provides robust helper functions to easily define your own custom ordered maps with minimal boilerplate code.
 - **Pre-Defined Ordered Map Alias:** Simplifies usage by offering a pre-defined ordered map type that can be conveniently aliased for specific key and value types.
 - **Efficient Ordered Operations:** Ensures efficient insertion, retrieval, and iteration while maintaining the order of elements, making it ideal for use cases where order matters.
@@ -37,11 +37,11 @@ To create your own custom ordered map, you can utilize helper functions to defin
 package main
 
 import (
+	"encoding/json/v2"
+	"encoding/json/jsontext"
 	"iter"
 
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type MyOrderedMap map[string]*ValueWithIndex

@@ -1,9 +1,10 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
+
 	"github.com/MarkRosemaker/jsonutil"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 var jsonOpts = json.JoinOptions([]json.Options{

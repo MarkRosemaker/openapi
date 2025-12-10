@@ -1,6 +1,8 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"errors"
 	"fmt"
 	"iter"
@@ -8,8 +10,6 @@ import (
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Holds the relative paths to the individual endpoints and their operations.
@@ -112,14 +112,18 @@ func (ps *Paths) Set(path Path, pathItem *PathItem) {
 	ordmap.Set(ps, path, pathItem, getIndexPathItem, setIndexPathItem)
 }
 
+var _ json.MarshalerTo = (*Paths)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (ps *Paths) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(ps, enc, opts)
+func (ps *Paths) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ps, enc)
 }
 
+var _ json.UnmarshalerFrom = (*Paths)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (ps *Paths) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(ps, dec, opts, setIndexPathItem)
+func (ps *Paths) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ps, dec, setIndexPathItem)
 }
 
 func (l *loader) resolvePaths(ps Paths) error {

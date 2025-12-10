@@ -1,12 +1,11 @@
 package types
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"errors"
 	"fmt"
 	"regexp"
-
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // regex from https://emailregex.com/
@@ -27,7 +26,9 @@ func (e Email) Validate() error {
 	return nil
 }
 
-func (e *Email) UnmarshalJSONV2(dec *jsontext.Decoder, _ json.Options) error {
+var _ json.UnmarshalerFrom = (*Email)(nil)
+
+func (e *Email) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	s := ""
 	if err := json.UnmarshalDecode(dec, &s); err != nil {
 		return err

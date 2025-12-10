@@ -1,8 +1,13 @@
 package ordmap
 
 import (
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
+)
+
+var (
+	_ json.UnmarshalerFrom = (*Value[any])(nil)
+	_ json.MarshalerTo     = (*Value[any])(nil)
 )
 
 // Value is a value with an index.
@@ -13,13 +18,13 @@ type Value[V any] struct {
 
 // UnmarshalJSONFrom unmarshals a value by just decoding the value.
 // The index is set by the caller.
-func (cs *Value[_]) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return json.UnmarshalDecode(dec, &cs.V, opts)
+func (cs *Value[_]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return json.UnmarshalDecode(dec, &cs.V, dec.Options())
 }
 
 // MarshalJSONTo marshals a value by encoding just the value and ignoring the index.
-func (v Value[_]) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return json.MarshalEncode(enc, v.V, opts)
+func (v Value[_]) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return json.MarshalEncode(enc, v.V, enc.Options())
 }
 
 // getIndex returns the index of a value.

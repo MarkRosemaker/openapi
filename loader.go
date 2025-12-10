@@ -2,12 +2,11 @@ package openapi
 
 import (
 	"bytes"
+	"encoding/json/jsontext"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // loader helps deserialize an OpenAPI v3 document
@@ -53,17 +52,20 @@ func (l *loader) LoadFromFile(location string) (*Document, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer f.Close()
 
 	// determine the file type and load accordingly
-	switch ext := filepath.Ext(location); ext {
-	case ".json":
-		return l.LoadFromReaderJSON(f)
-	case ".yaml", ".yml": // NOTE: openapi.yaml is recommended by the spec
-		return l.LoadFromReaderYAML(f)
-	default:
-		return nil, fmt.Errorf("unknown file extension: %s", ext)
-	}
+	doc, err := func() (*Document, error) {
+		switch ext := filepath.Ext(location); ext {
+		case ".json":
+			return l.LoadFromReaderJSON(f)
+		case ".yaml", ".yml":
+			return l.LoadFromReaderYAML(f)
+		default:
+			return nil, fmt.Errorf("unsupported file extension: %s", ext)
+		}
+	}()
+
+	return doc, errorsJoin(err, f.Close())
 }
 
 func LoadFromData(data []byte) (*Document, error) {

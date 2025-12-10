@@ -1,11 +1,11 @@
 package yaml
 
 import (
+	"encoding/json/v2"
 	"io"
 
 	"github.com/MarkRosemaker/json2yaml"
 	"github.com/MarkRosemaker/yaml2json"
-	"github.com/go-json-experiment/json"
 	"gopkg.in/yaml.v3"
 )
 

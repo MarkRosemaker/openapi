@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"iter"
 
 	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/ordmap"
-	"github.com/go-json-experiment/json"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 type RequestBodies map[string]*RequestBodyRef
@@ -40,14 +40,18 @@ func (rs *RequestBodies) Set(key string, r *RequestBodyRef) {
 	ordmap.Set(rs, key, r, getIndexRef[RequestBody, *RequestBody], setIndexRef[RequestBody, *RequestBody])
 }
 
+var _ json.MarshalerTo = (*RequestBodies)(nil)
+
 // MarshalJSONTo marshals the key-value pairs in order.
-func (rs *RequestBodies) MarshalJSONTo(enc *jsontext.Encoder, opts json.Options) error {
-	return ordmap.MarshalJSONTo(rs, enc, opts)
+func (rs *RequestBodies) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(rs, enc)
 }
 
+var _ json.UnmarshalerFrom = (*RequestBodies)(nil)
+
 // UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
-func (rs *RequestBodies) UnmarshalJSONFrom(dec *jsontext.Decoder, opts json.Options) error {
-	return ordmap.UnmarshalJSONFrom(rs, dec, opts, setIndexRef[RequestBody, *RequestBody])
+func (rs *RequestBodies) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(rs, dec, setIndexRef[RequestBody, *RequestBody])
 }
 
 func (l *loader) collectRequestBodies(rs RequestBodies, ref ref) {

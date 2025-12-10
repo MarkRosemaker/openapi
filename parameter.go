@@ -1,12 +1,12 @@
 package openapi
 
 import (
+	"encoding/json/jsontext"
 	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/MarkRosemaker/errpath"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 // Parameter describes a single operation parameter.

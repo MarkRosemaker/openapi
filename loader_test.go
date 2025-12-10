@@ -3,13 +3,13 @@ package openapi_test
 import (
 	"bytes"
 	_ "embed"
+	"encoding/json/jsontext"
 	"errors"
 	"io"
 	"strings"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
-	"github.com/go-json-experiment/json/jsontext"
 )
 
 var (
@@ -63,7 +63,7 @@ func TestLoadFromFile_Error(t *testing.T) {
 	t.Run("invalid extension", func(t *testing.T) {
 		if _, err := openapi.LoadFromFile("examples/invalid.txt"); err == nil {
 			t.Fatal("expected error")
-		} else if want := "unknown file extension: .txt"; err.Error() != want {
+		} else if want := "unsupported file extension: .txt"; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})
