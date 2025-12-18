@@ -57,6 +57,7 @@ func TestParameter_JSON(t *testing.T) {
   "name": "freeForm",
   "in": "query",
   "style": "form",
+  "explode": true,
   "schema": {
     "type": "object",
     "additionalProperties": {
@@ -166,14 +167,14 @@ func TestParameter_Validate_Error(t *testing.T) {
 			In:       openapi.ParameterLocationPath,
 			Required: true,
 			Content:  openapi.Content{"foo": {}},
-			Explode:  true,
+			Explode:  yes,
 		}, `explode (true) is invalid: property has no effect when schema is not present`},
 		{openapi.Parameter{
 			Name:     "myname",
 			In:       openapi.ParameterLocationPath,
 			Required: true,
 			Schema:   &openapi.Schema{Type: openapi.TypeString},
-			Explode:  true,
+			Explode:  yes,
 		}, `explode (true) is invalid: property has no effect when schema type is not array or object, got "string"`},
 		{openapi.Parameter{
 			Name:     "myname",

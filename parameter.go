@@ -45,7 +45,7 @@ type Parameter struct {
 	// Describes how the parameter value will be serialized depending on the type of the parameter value. Default values (based on value of `in`): for `query` - `form`; for `path` - `simple`; for `header` - `simple`; for `cookie` - `form`.
 	Style ParameterStyle `json:"style,omitempty" yaml:"style,omitempty"`
 	// When this is true, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters this property has no effect. When `style` is `form`, the default value is `true`. For all other styles, the default value is `false`.
-	Explode bool `json:"explode,omitempty,omitzero" yaml:"explode,omitempty"`
+	Explode *bool `json:"explode,omitempty" yaml:"explode,omitempty"`
 	// Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. This property only applies to parameters with an `in` value of `query`. The default value is `false`.
 	AllowReserved bool `json:"allowReserved,omitempty,omitzero" yaml:"allowReserved,omitempty"`
 	// The schema defining the type used for the parameter.
@@ -128,9 +128,16 @@ func (p *Parameter) Validate() error {
 		if err := p.Style.Validate(); err != nil {
 			return &errpath.ErrField{Field: "style", Err: err}
 		}
+	} else if p.In == ParameterLocationQuery && p.Schema != nil &&
+		(p.Schema.Type == TypeArray || p.Schema.Type == TypeObject) {
+		// Form style is the default for query parameters in OpenAPI 3.0+, regardless of whether the parameter is a primitive, array, or object (when style is omitted).
+		// We set the default explicitly, but just for array and object (to not clutter the specification) to make things clearer.
+		p.Style = ParameterStyleForm
 	}
 
-	if p.Explode {
+	arrayOrObject := p.Schema != nil &&
+		(p.Schema.Type == TypeArray || p.Schema.Type == TypeObject)
+	if p.Explode != nil {
 		if p.Schema == nil {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
@@ -138,12 +145,16 @@ func (p *Parameter) Validate() error {
 			}}
 		}
 
-		if p.Schema.Type != TypeArray && p.Schema.Type != TypeObject {
+		if !arrayOrObject {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", p.Schema.Type),
 			}}
 		}
+	} else if arrayOrObject && p.Style == ParameterStyleForm {
+		// Set the default explicitly
+		explodeDefault := true
+		p.Explode = &explodeDefault
 	}
 
 	if p.Example != nil && p.Examples != nil {

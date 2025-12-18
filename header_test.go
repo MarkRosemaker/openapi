@@ -19,6 +19,8 @@ func TestHeader_JSON(t *testing.T) {
 }`), &openapi.Header{})
 }
 
+var y, yes = true, &y
+
 func TestHeader_Validate_Error(t *testing.T) {
 	t.Parallel()
 
@@ -64,11 +66,11 @@ func TestHeader_Validate_Error(t *testing.T) {
 		}, `style ("foo") is invalid, must be one of: "matrix", "label", "form", "simple", "spaceDelimited", "pipeDelimited", "deepObject"`},
 		{openapi.Header{
 			Content: openapi.Content{openapi.MediaRangeJSON: {}},
-			Explode: true,
+			Explode: yes,
 		}, `explode (true) is invalid: property has no effect when schema is not present`},
 		{openapi.Header{
 			Schema:  &openapi.Schema{Type: openapi.TypeString},
-			Explode: true,
+			Explode: yes,
 		}, `explode (true) is invalid: property has no effect when schema type is not array or object, got "string"`},
 		{openapi.Header{
 			Schema:   &openapi.Schema{Type: openapi.TypeString},

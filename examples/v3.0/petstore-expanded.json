@@ -31,6 +31,7 @@
 						"in": "query",
 						"description": "tags to filter by",
 						"style": "form",
+						"explode": true,
 						"schema": {
 							"type": "array",
 							"items": {

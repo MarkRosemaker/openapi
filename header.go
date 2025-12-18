@@ -22,7 +22,7 @@ type Header struct {
 	// Describes how the parameter value will be serialized depending on the type of the parameter value. Default values is `simple`.
 	Style ParameterStyle `json:"style,omitempty" yaml:"style,omitempty"`
 	// When this is true, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters this property has no effect. When `style` is `form`, the default value is `true`. For all other styles, the default value is `false`.
-	Explode bool `json:"explode,omitempty,omitzero" yaml:"explode,omitempty"`
+	Explode *bool `json:"explode,omitempty" yaml:"explode,omitempty"`
 	// Example of the parameter's potential value. The example SHOULD match the specified schema and encoding properties if present. The `example` field is mutually exclusive of the `examples` field. Furthermore, if referencing a `schema` that contains an example, the `example` value SHALL _override_ the example provided by the schema. To represent examples of media types that cannot naturally be represented in JSON or YAML, a string value can contain the example with escaping where necessary.
 	Example jsontext.Value `json:"example,omitempty" yaml:"example,omitempty"`
 	// Examples of the parameter's potential value. Each example SHOULD contain a value in the correct format as specified in the parameter encoding. The `examples` field is mutually exclusive of the `example` field. Furthermore, if referencing a `schema` that contains an example, the `examples` value SHALL _override_ the example provided by the schema.
@@ -67,7 +67,7 @@ func (h *Header) Validate() error {
 		}
 	}
 
-	if h.Explode {
+	if h.Explode != nil {
 		if h.Schema == nil {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
@@ -75,7 +75,7 @@ func (h *Header) Validate() error {
 			}}
 		}
 
-		if h.Schema.Type != TypeArray && h.Schema.Type != TypeObject {
+		if h.Schema == nil || (h.Schema.Type != TypeArray && h.Schema.Type != TypeObject) {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
 				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", h.Schema.Type),
