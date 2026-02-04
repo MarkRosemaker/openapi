@@ -14,6 +14,6 @@ require (
 	cloud.google.com/go v0.123.0 // indirect
 	github.com/MarkRosemaker/json2yaml v0.0.0-20251208203737-0c5e035d8679 // indirect
 	github.com/MarkRosemaker/yaml2json v0.0.0-20251208205025-7b6431088b7b // indirect
-	golang.org/x/exp v0.0.0-20251219203646-944ab1f22d93 // indirect
+	golang.org/x/exp v0.0.0-20260112195511-716be5621a96 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
