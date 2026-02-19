@@ -1,6 +1,6 @@
 module github.com/MarkRosemaker/openapi
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/MarkRosemaker/errpath v0.0.0-20241223110529-3530cd011135
@@ -14,6 +14,6 @@ require (
 	cloud.google.com/go v0.123.0 // indirect
 	github.com/MarkRosemaker/json2yaml v0.0.0-20251208203737-0c5e035d8679 // indirect
 	github.com/MarkRosemaker/yaml2json v0.0.0-20251208205025-7b6431088b7b // indirect
-	golang.org/x/exp v0.0.0-20260112195511-716be5621a96 // indirect
+	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
