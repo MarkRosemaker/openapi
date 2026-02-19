@@ -189,13 +189,13 @@ func TestResolve(t *testing.T) {
 		}`,
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
-			data := []byte(fmt.Sprintf(
+			data := fmt.Appendf(nil,
 				`{
 "openapi": "3.1.0",
 "info": {
 "title": "test",
 "version": "1.0"
-},%s}`, data))
+},%s}`, data)
 
 			t.Run("from data", func(t *testing.T) {
 				doc, err := openapi.LoadFromData(data)
