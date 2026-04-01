@@ -112,7 +112,7 @@ func (s *Schema) Validate() error {
 	// validate if format is valid for type
 	switch s.Format {
 	case "": // no format
-	case FormatInt32, FormatInt64:
+	case FormatInt32, FormatInt64, FormatUint, FormatUint32, FormatUint64:
 		if s.Type != TypeInteger {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
