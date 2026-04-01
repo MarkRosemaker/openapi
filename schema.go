@@ -144,6 +144,15 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("only valid for integer or string type, got %s", s.Type),
 			}}
 		}
+	case FormatBinary:
+		switch s.Type {
+		case TypeString:
+		default:
+			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
+				Value:   s.Format,
+				Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
+			}}
+		}
 	default:
 		return fmt.Errorf("unimplemented format: %s", s.Format)
 	}
