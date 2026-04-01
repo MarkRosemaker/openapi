@@ -322,6 +322,15 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
 			}}
 		}
+	case bool:
+		switch s.Type {
+		case TypeBoolean: // fits
+		default:
+			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[bool]{
+				Value:   dflt,
+				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+			}}
+		}
 	default:
 		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
 			Value:   s.Default,
