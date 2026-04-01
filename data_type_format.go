@@ -14,6 +14,12 @@ const (
 	FormatInt32 Format = "int32"
 	// FormatInt64 represents a signed 64 bits integer.
 	FormatInt64 Format = "int64"
+	// FormatUint represents an unsigned integer.
+	FormatUint Format = "uint"
+	// FormatUint32 represents an unsigned 32 bits integer.
+	FormatUint32 Format = "uint32"
+	// FormatUint64 represents an unsigned 64 bits integer.
+	FormatUint64 Format = "uint64"
 	// FormatFloat represents a float number.
 	FormatFloat Format = "float"
 	// FormatDouble represents a double number.
@@ -47,7 +53,9 @@ const (
 )
 
 var allFormats = []Format{
-	FormatInt32, FormatInt64, FormatFloat, FormatDouble,
+	FormatInt32, FormatInt64,
+	FormatUint, FormatUint32, FormatUint64,
+	FormatFloat, FormatDouble,
 	FormatByte, FormatBinary,
 	FormatDate, FormatDateTime, FormatDuration,
 	FormatEmail, FormatPassword,
