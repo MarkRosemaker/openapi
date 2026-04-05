@@ -25,6 +25,7 @@ func TestSchema_Validate(t *testing.T) {
 		{Type: openapi.TypeNumber, Default: 3.14},
 		{Type: openapi.TypeInteger, Default: 3.0},
 		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: 3}, // e.g. seconds
+		{Type: openapi.TypeString, Format: openapi.FormatByte},                  // base64-encoded data
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -60,6 +61,10 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:   openapi.TypeString,
 			Format: openapi.FormatDouble,
 		}, `format ("double") is invalid: only valid for number type, got string`},
+		{openapi.Schema{
+			Type:   openapi.TypeBoolean,
+			Format: openapi.FormatByte,
+		}, `format ("byte") is invalid: only valid for string type, got boolean`},
 		{openapi.Schema{
 			Type:   openapi.TypeBoolean,
 			Format: openapi.FormatPassword,
