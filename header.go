@@ -112,8 +112,10 @@ func (l *loader) resolveHeaderRef(h *HeaderRef) error {
 }
 
 func (l *loader) resolveHeader(h *Header) error {
-	if err := l.resolveSchema(h.Schema); err != nil {
-		return &errpath.ErrField{Field: "schema", Err: err}
+	if h.Schema != nil {
+		if err := l.resolveSchema(h.Schema); err != nil {
+			return &errpath.ErrField{Field: "schema", Err: err}
+		}
 	}
 
 	if err := l.resolveExamples(h.Examples); err != nil {
@@ -121,7 +123,7 @@ func (l *loader) resolveHeader(h *Header) error {
 	}
 
 	if err := l.resolveContent(h.Content); err != nil {
-		return &errpath.ErrField{Field: "examples", Err: err}
+		return &errpath.ErrField{Field: "content", Err: err}
 	}
 
 	return nil

@@ -7,6 +7,45 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
+func TestHeader_Resolve_ContentError(t *testing.T) {
+	t.Parallel()
+
+	// A header that uses `content` with a schema $ref that cannot be resolved.
+	// The error path must name the field "content", not "examples" (copy-paste bug).
+	_, err := openapi.LoadFromDataJSON([]byte(`{
+  "openapi": "3.1.0",
+  "info": {"title": "Test", "version": "1.0"},
+  "paths": {
+    "/test": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "X-Test": {
+                "content": {
+                  "application/json": {
+                    "schema": {"$ref": "#/components/schemas/NonExistent"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`))
+	if err == nil {
+		t.Fatal("expected error")
+	}
+
+	const want = `paths["/test"].GET.responses["200"].headers["X-Test"].content["application/json"].schema: couldn't resolve "#/components/schemas/NonExistent"`
+	if got := err.Error(); got != want {
+		t.Fatalf("want: %s\n got: %s", want, got)
+	}
+}
+
 func TestHeader_JSON(t *testing.T) {
 	t.Parallel()
 
