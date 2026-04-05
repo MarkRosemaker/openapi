@@ -144,7 +144,7 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("only valid for integer or string type, got %s", s.Type),
 			}}
 		}
-	case FormatBinary:
+	case FormatByte, FormatBinary:
 		switch s.Type {
 		case TypeString:
 		default:
