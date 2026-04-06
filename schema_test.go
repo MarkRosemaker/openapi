@@ -45,7 +45,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{}, "type is required"},
 		{openapi.Schema{
 			Type: "foo",
-		}, `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object"`},
+		}, `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object", "null"`},
 		{openapi.Schema{
 			Type: openapi.TypeArray,
 		}, `items is required`},

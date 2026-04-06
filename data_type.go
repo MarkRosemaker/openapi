@@ -12,7 +12,7 @@ import (
 //
 // ([Specification])
 //
-// [Specification]: https://spec.openapis.org/oas/v3.1.0#data-types
+// [Specification]: https://spec.openapis.org/oas/v3.2.0.html#data-types
 type DataType string
 
 const (
@@ -22,10 +22,13 @@ const (
 	TypeArray   DataType = "array"
 	TypeBoolean DataType = "boolean"
 	TypeObject  DataType = "object"
+	// TypeNull represents a null value.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#data-types
+	TypeNull DataType = "null"
 )
 
 var allDataTypes = []DataType{
-	TypeInteger, TypeNumber, TypeString, TypeArray, TypeBoolean, TypeObject,
+	TypeInteger, TypeNumber, TypeString, TypeArray, TypeBoolean, TypeObject, TypeNull,
 }
 
 func (d DataType) Validate() error {
