@@ -45,8 +45,9 @@ type Document struct {
 }
 
 // reOpenAPIVersion is a regular expression that matches the OpenAPI version.
-// Allowed are 3.0.x and 3.1.x.
-var reOpenAPIVersion = regexp.MustCompile(`^3\.(0|1)\.\d+(-.+)?$`)
+// Allowed are 3.0.x, 3.1.x and 3.2.x.
+// See: https://spec.openapis.org/oas/v3.2.0.html#versions-and-deprecation
+var reOpenAPIVersion = regexp.MustCompile(`^3\.(0|1|2)\.\d+(-.+)?$`)
 
 // Validate checks the OpenAPI document for correctness.
 func (d *Document) Validate() error {
@@ -59,7 +60,7 @@ func (d *Document) Validate() error {
 			Field: "openapi",
 			Err: &errpath.ErrInvalid[string]{
 				Value:   d.OpenAPI,
-				Message: "must be a valid version (3.0.x or 3.1.x)",
+				Message: "must be a valid version (3.0.x, 3.1.x or 3.2.x)",
 			},
 		}
 	}

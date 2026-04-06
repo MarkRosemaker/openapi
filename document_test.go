@@ -27,6 +27,16 @@ func TestDocument_JSON(t *testing.T) {
 func TestDocument_Validate(t *testing.T) {
 	t.Parallel()
 
+	// OAS 3.2.x documents must be accepted.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#versions-and-deprecation
+	if err := (&openapi.Document{
+		OpenAPI: "3.2.0",
+		Info:    &openapi.Info{Title: "Test", Version: "1.0"},
+		Paths:   openapi.Paths{"/": {}},
+	}).Validate(); err != nil {
+		t.Fatal(err)
+	}
+
 	doc := &openapi.Document{
 		OpenAPI: "3.1.0",
 		Info: &openapi.Info{
@@ -98,7 +108,7 @@ func TestDocumentValidate_Error(t *testing.T) {
 		{&openapi.Document{}, "openapi is required"},
 		{&openapi.Document{
 			OpenAPI: "foo",
-		}, `openapi ("foo") is invalid: must be a valid version (3.0.x or 3.1.x)`},
+		}, `openapi ("foo") is invalid: must be a valid version (3.0.x, 3.1.x or 3.2.x)`},
 		{&openapi.Document{
 			OpenAPI: "3.1.0",
 		}, `info is required`},
