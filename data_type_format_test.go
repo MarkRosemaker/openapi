@@ -3,26 +3,22 @@ package openapi_test
 import (
 	"testing"
 
-	"github.com/MarkRosemaker/errpath"
 	"github.com/MarkRosemaker/openapi"
 )
 
-const validFormats = `"int32", "int64", "uint", "uint32", "uint64", "float", "double", "byte", "binary", "date", "date-time", "duration", "email", "password", "uuid", "uri", "uriref", "zip-code", "ipv4", "ipv6"`
+func TestSchema_UnknownFormat(t *testing.T) {
+	t.Parallel()
 
-func TestFormat(t *testing.T) {
-	// test a valid data type format
-	if err := openapi.FormatDateTime.Validate(); err != nil {
-		t.Fatal(err)
-	}
-
-	// test an invalid data type format
-	err := openapi.Format("foo").Validate()
-	if err == nil {
-		t.Fatal("expected an error for an invalid data type")
-	}
-
-	err = &errpath.ErrField{Field: "format", Err: err}
-	if want := `format ("foo") is invalid, must be one of: ` + validFormats; want != err.Error() {
-		t.Fatalf("want: %s, got: %s", want, err)
+	// Unknown formats are accepted as annotations per spec — tools MUST NOT generate an error.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#data-types
+	for _, f := range []openapi.Format{
+		"hostname", "idn-email", "idn-hostname", "iri", "iri-reference",
+		"json-pointer", "relative-json-pointer", "regex", "uri-template",
+		openapi.Format("my-custom-format"),
+	} {
+		s := &openapi.Schema{Type: openapi.TypeString, Format: f}
+		if err := s.Validate(); err != nil {
+			t.Fatalf("format %q should be accepted: %s", f, err)
+		}
 	}
 }

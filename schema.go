@@ -103,13 +103,8 @@ func (s *Schema) Validate() error {
 		return &errpath.ErrField{Field: "type", Err: err}
 	}
 
-	if s.Format != "" {
-		if err := s.Format.Validate(); err != nil {
-			return &errpath.ErrField{Field: "format", Err: err}
-		}
-	}
-
-	// validate if format is valid for type
+	// validate if format is compatible with type (known formats only; unknown formats are accepted)
+	// See: https://spec.openapis.org/oas/v3.2.0.html#data-types
 	switch s.Format {
 	case "": // no format
 	case FormatInt32, FormatInt64, FormatUint, FormatUint32, FormatUint64:
@@ -154,7 +149,7 @@ func (s *Schema) Validate() error {
 			}}
 		}
 	default:
-		return fmt.Errorf("unimplemented format: %s", s.Format)
+		// unknown format — accepted as an annotation, not validated
 	}
 
 	for i, v := range s.AllOf {
