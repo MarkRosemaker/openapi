@@ -79,10 +79,8 @@ func (s *SecurityScheme) Validate() error {
 
 		if SecuritySchemeBearer == strings.ToLower(s.Scheme) {
 			s.Scheme = SecuritySchemeBearer // unify
-
-			if s.BearerFormat == "" {
-				return &errpath.ErrField{Field: "bearerFormat", Err: &errpath.ErrRequired{}}
-			}
+			// bearerFormat is OPTIONAL per spec — a hint to the client, primarily for documentation.
+			// See: https://spec.openapis.org/oas/v3.2.0.html#security-scheme-object
 		}
 	case SecuritySchemeTypeMutualTLS: // nothing to do
 	case SecuritySchemeTypeOAuth2:

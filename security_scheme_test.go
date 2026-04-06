@@ -49,6 +49,9 @@ func TestSecurityScheme_Validate(t *testing.T) {
 
 	for _, tc := range []openapi.SecurityScheme{
 		{Type: openapi.SecuritySchemeTypeMutualTLS},
+		// bearerFormat is OPTIONAL — bearer without it must be valid.
+		// See: https://spec.openapis.org/oas/v3.2.0.html#security-scheme-object
+		{Type: openapi.SecuritySchemeTypeHTTP, Scheme: "bearer"},
 	} {
 		if err := tc.Validate(); err != nil {
 			t.Fatalf("%#v got error: %s", tc, err)
@@ -89,20 +92,6 @@ func TestSecurityScheme_Validate_Error(t *testing.T) {
 		{
 			openapi.SecurityScheme{Type: openapi.SecuritySchemeTypeHTTP},
 			`scheme is required`,
-		},
-		{
-			openapi.SecurityScheme{
-				Type:   openapi.SecuritySchemeTypeHTTP,
-				Scheme: "BeAReR",
-			},
-			`bearerFormat is required`,
-		},
-		{
-			openapi.SecurityScheme{
-				Type:   openapi.SecuritySchemeTypeHTTP,
-				Scheme: "BeAReR",
-			},
-			`bearerFormat is required`,
 		},
 		{
 			openapi.SecurityScheme{Type: openapi.SecuritySchemeTypeOAuth2},
