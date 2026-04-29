@@ -7,7 +7,7 @@ github.com/MarkRosemaker/errpath
 # github.com/MarkRosemaker/json2yaml v0.0.0-20251208203737-0c5e035d8679
 ## explicit; go 1.23.4
 github.com/MarkRosemaker/json2yaml
-# github.com/MarkRosemaker/jsonutil v0.0.0-20260219021936-617938803dbc
+# github.com/MarkRosemaker/jsonutil v0.0.0-20260429012248-2d07c8d69e4a
 ## explicit; go 1.24.0
 github.com/MarkRosemaker/jsonutil
 # github.com/MarkRosemaker/ordmap v0.0.0-20260425170514-92d7b5a9ed20
