@@ -105,6 +105,11 @@ func (ps Paths) ByIndex() iter.Seq2[Path, *PathItem] {
 // Sort sorts the map by key and sets the indices accordingly.
 func (ps Paths) Sort() {
 	ordmap.Sort(ps, setIndexPathItem)
+	for _, path := range ps {
+		for _, op := range path.Operations {
+			op.Responses.Sort()
+		}
+	}
 }
 
 // Set sets a value in the map, adding it at the end of the order.
