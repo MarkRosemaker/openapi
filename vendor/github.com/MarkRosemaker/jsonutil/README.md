@@ -19,6 +19,8 @@ This package is particularly useful when you need to handle JSON encoding and de
 * Custom marshaler and unmarshaler for `time.Duration`:
   * `DurationMarshalIntSeconds` marshals `time.Duration` as an integer representing seconds.
   * `DurationUnmarshalIntSeconds` unmarshals `time.Duration` from an integer assuming it represents seconds.
+* Custom marshaler for maps with ordered keys:
+  * `OrderedMap[M ~map[K]V, K cmp.Ordered, V any]` marshals `M` so that the keys are sorted.
 
 ## Installation
 
@@ -47,8 +49,8 @@ import (
 )
 
 var jsonOpts = json.JoinOptions(
-	json.WithMarshalers(json.NewMarshalers(json.MarshalFuncV2(jsonutil.URLMarshal))),
-	json.WithUnmarshalers(json.NewUnmarshalers(json.UnmarshalFuncV2(jsonutil.URLUnmarshal))),
+	json.WithMarshalers(json.NewMarshalers(json.MarshalToFunc(jsonutil.URLMarshal))),
+	json.WithUnmarshalers(json.NewUnmarshalers(json.UnmarshalFromFunc(jsonutil.URLUnmarshal))),
 )
 
 type MyStruct struct {
@@ -95,8 +97,8 @@ import (
 )
 
 var jsonOpts = json.JoinOptions(
-	json.WithMarshalers(json.MarshalFuncV2(jsonutil.DurationMarshalIntSeconds)),
-	json.WithUnmarshalers(json.UnmarshalFuncV2(jsonutil.DurationUnmarshalIntSeconds)),
+	json.WithMarshalers(json.MarshalToFunc(jsonutil.DurationMarshalIntSeconds)),
+	json.WithUnmarshalers(json.UnmarshalFromFunc(jsonutil.DurationUnmarshalIntSeconds)),
 )
 
 type MyStruct struct {
@@ -124,6 +126,40 @@ func main() {
 
 	fmt.Println(string(res))
 	// Output: {"foo":"baz","duration":60}
+}
+```
+
+### Custom Marshaling for Maps with Ordered Keys
+
+To use the custom marshaler for `M` where `[M ~map[K]V, K cmp.Ordered, V any]`, you can import the package and use the provided functions:
+
+```go
+package main
+
+import (
+	"encoding/json/v2"
+	"fmt"
+
+	"github.com/MarkRosemaker/jsonutil"
+)
+
+type myMap map[string]int
+
+var jsonOpts = json.JoinOptions(
+	json.WithMarshalers(json.MarshalToFunc(jsonutil.OrderedMap[myMap])),
+)
+
+func main() {
+	res, err := json.Marshal(myMap{
+		"foo": 1,
+		"bar": 2,
+	}, jsonOpts)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(res))
+	// Output: {"bar":2,"bar":1}
 }
 ```
 
