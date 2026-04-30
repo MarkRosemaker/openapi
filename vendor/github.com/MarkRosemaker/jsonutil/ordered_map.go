@@ -8,8 +8,8 @@ import (
 	"slices"
 )
 
-// OrderedMap is a custom marshaler for maps with ordered keys, marshaling them in an ordered fashion.
-func OrderedMap[M ~map[K]V, K cmp.Ordered, V any](enc *jsontext.Encoder, m M) error {
+// OrderedMapMarshal is a custom marshaler for maps with ordered keys, marshaling them in an ordered fashion.
+func OrderedMapMarshal[M ~map[K]V, K cmp.Ordered, V any](enc *jsontext.Encoder, m M) error {
 	if m == nil {
 		return enc.WriteToken(jsontext.Null)
 	}

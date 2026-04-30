@@ -20,7 +20,10 @@ This package is particularly useful when you need to handle JSON encoding and de
   * `DurationMarshalIntSeconds` marshals `time.Duration` as an integer representing seconds.
   * `DurationUnmarshalIntSeconds` unmarshals `time.Duration` from an integer assuming it represents seconds.
 * Custom marshaler for maps with ordered keys:
-  * `OrderedMap[M ~map[K]V, K cmp.Ordered, V any]` marshals `M` so that the keys are sorted.
+  * `OrderedMapMarshal[M ~map[K]V, K cmp.Ordered, V any]` marshals `M` so that the keys are sorted.
+* Custom marshaler for `http.Header`:
+  * `HTTPHeaderMarshal` marshals the values of `http.Header` as single strings.
+  * `HTTPHeaderUnmarshal` unmarshals the values of `http.Header` from single strings.
 
 ## Installation
 
@@ -31,7 +34,6 @@ go get github.com/MarkRosemaker/jsonutil
 ```
 
 ## Usage
-
 
 ### Custom Marshaling and Unmarshaling for `url.URL`
 
@@ -146,7 +148,7 @@ import (
 type myMap map[string]int
 
 var jsonOpts = json.JoinOptions(
-	json.WithMarshalers(json.MarshalToFunc(jsonutil.OrderedMap[myMap])),
+	json.WithMarshalers(json.MarshalToFunc(jsonutil.OrderedMapMarshal[myMap])),
 )
 
 func main() {
@@ -160,6 +162,45 @@ func main() {
 
 	fmt.Println(string(res))
 	// Output: {"bar":2,"bar":1}
+}
+```
+
+### Custom Marshaling and Unmarshaling for `http.Header`
+
+To use the custom marshaler and unmarshaler for `http.Header`, you can import the package and use the provided functions:
+
+```go
+package main
+
+import (
+	"encoding/json/v2"
+	"fmt"
+	"net/http"
+
+	"github.com/MarkRosemaker/jsonutil"
+)
+
+var jsonOpts = json.JoinOptions(
+	json.WithMarshalers(json.MarshalToFunc(jsonutil.HTTPHeaderMarshal)),
+	json.WithUnmarshalers(json.UnmarshalFromFunc(jsonutil.HTTPHeaderUnmarshal)),
+)
+
+func main() {
+	out := &http.Header{}
+	if err := json.Unmarshal([]byte(`{"foo":"bar","baz":"quux"}`), out, jsonOpts); err != nil {
+		panic(err)
+	}
+
+	res, err := json.Marshal(http.Header{
+		"foo": []string{"bar"},
+		"baz": []string{"quux"},
+	}, jsonOpts)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(res))
+	// Output: {"Foo":"bar","Baz":"quux"}
 }
 ```
 
