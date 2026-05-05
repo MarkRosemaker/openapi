@@ -69,7 +69,8 @@ func TestExtensions_inline(t *testing.T) {
 		StringField:  "foo",
 		IntegerField: 42,
 		Extensions: Extensions([]byte(
-			`{"x-bar":true,"x-baz":42,"x-string":"mystring","x-array":["foo","bar"]}`)),
+			`{"x-bar":true,"x-baz":42,"x-string":"mystring","x-array":["foo","bar"]}`,
+		)),
 	}
 
 	if err := validateExtensions(ts.Extensions); err != nil {

@@ -141,7 +141,8 @@ func TestLoadFromReader_Error(t *testing.T) {
 
 		if _, err := openapi.LoadFromReader(strings.NewReader(
 			`openapi: 3.0.0
-			`)); err == nil {
+			`,
+		)); err == nil {
 			t.Fatal("expected error")
 		} else if want := "yaml: line 2: found a tab character that violates indentation"; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
@@ -220,7 +221,8 @@ func TestLoadFromData_Error(t *testing.T) {
 
 		if _, err := openapi.LoadFromData([]byte(
 			`openapi: 3.0.0
-			`)); err == nil {
+			`,
+		)); err == nil {
 			t.Fatal("expected error")
 		} else if want := "yaml: line 2: found a tab character that violates indentation"; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
