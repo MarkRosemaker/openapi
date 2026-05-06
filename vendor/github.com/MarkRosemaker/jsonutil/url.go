@@ -19,7 +19,7 @@ func URLUnmarshal(dec *jsontext.Decoder, u *url.URL) error {
 	}
 
 	switch tkn.Kind() {
-	case jsontext.KindString:
+	case '"':
 		parsed, err := url.Parse(tkn.String())
 		if err != nil {
 			return err
@@ -28,7 +28,7 @@ func URLUnmarshal(dec *jsontext.Decoder, u *url.URL) error {
 		*u = *parsed
 
 		return nil
-	case jsontext.KindNull:
+	case 'n':
 		return nil // no url given
 	default:
 		return fmt.Errorf("expected string, got %s", tkn)

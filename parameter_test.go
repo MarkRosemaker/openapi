@@ -117,12 +117,6 @@ func TestParameter_Validate_Error(t *testing.T) {
 			Required: true,
 		}, "schema or content is required"},
 		{openapi.Parameter{
-			Name:     "myname",
-			In:       openapi.ParameterLocationPath,
-			Required: true,
-			Schema:   &openapi.Schema{},
-		}, "schema.type is required"},
-		{openapi.Parameter{
 			Name:            "myname",
 			In:              openapi.ParameterLocationPath,
 			Required:        true,

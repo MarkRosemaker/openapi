@@ -26,6 +26,10 @@ func TestSchema_Validate(t *testing.T) {
 		{Type: openapi.TypeInteger, Default: 3.0},
 		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: 3}, // e.g. seconds
 		{Type: openapi.TypeString, Format: openapi.FormatByte},                  // base64-encoded data
+		// type is OPTIONAL — a schema without type accepts any value
+		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+		{Description: "no type"},
+		{},
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -42,7 +46,6 @@ func TestSchema_Validate_Error(t *testing.T) {
 		s   openapi.Schema
 		err string
 	}{
-		{openapi.Schema{}, "type is required"},
 		{openapi.Schema{
 			Type: "foo",
 		}, `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object", "null"`},
@@ -128,31 +131,9 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Items:    &openapi.SchemaRef{},
 		}, `minItems (5) is invalid: minItems is greater than maxItems (5 > 4)`},
 		{openapi.Schema{
-			AllOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
-			},
-		}, `allOf[0].type is required`},
-		{openapi.Schema{
-			AllOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
-			},
-		}, `allOf[0].type is required`},
-		{openapi.Schema{
-			Type: openapi.TypeObject,
-			Properties: openapi.SchemaRefs{
-				"foo": &openapi.SchemaRef{Value: &openapi.Schema{}},
-			},
-		}, `properties["foo"].type is required`},
-		{openapi.Schema{
 			Type:     openapi.TypeObject,
 			Required: []string{"foo"},
 		}, `required[0] ("foo") is invalid: property does not exist`},
-		{openapi.Schema{
-			Type: openapi.TypeObject,
-			AdditionalProperties: &openapi.SchemaRef{
-				Value: &openapi.Schema{},
-			},
-		}, `additionalProperties.type is required`},
 		{openapi.Schema{
 			Type:       openapi.TypeBoolean,
 			Properties: openapi.SchemaRefs{},

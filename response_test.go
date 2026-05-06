@@ -89,12 +89,6 @@ func TestResponse_Validate_Error(t *testing.T) {
 		}, `headers["foo"]: schema or content is required`},
 		{openapi.Response{
 			Description: "some description",
-			Content: openapi.Content{openapi.MediaRangeJSON: {
-				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
-			}},
-		}, `content["application/json"].schema.type is required`},
-		{openapi.Response{
-			Description: "some description",
 			Links:       openapi.Links{"address": {Value: &openapi.Link{}}},
 		}, `links.address: operationRef or operationId must be set`},
 	} {

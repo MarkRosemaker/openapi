@@ -77,27 +77,9 @@ func TestHeader_Validate_Error(t *testing.T) {
 		},
 		{
 			openapi.Header{
-				Schema: &openapi.Schema{},
-			},
-			"schema.type is required",
-		},
-		{
-			openapi.Header{
 				Content: openapi.Content{},
 			},
 			"content is invalid: must contain exactly one entry, got 0",
-		},
-		{
-			openapi.Header{
-				Content: openapi.Content{
-					openapi.MediaRangeJSON: {
-						Schema: &openapi.SchemaRef{
-							Value: &openapi.Schema{},
-						},
-					},
-				},
-			},
-			`content["application/json"].schema.type is required`,
 		},
 		{openapi.Header{
 			Content: openapi.Content{openapi.MediaRangeJSON: {}},

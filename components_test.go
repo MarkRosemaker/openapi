@@ -119,9 +119,6 @@ func TestComponents_Validate_Error(t *testing.T) {
 		err string
 	}{
 		{openapi.Components{
-			Schemas: openapi.Schemas{"Pet": &openapi.Schema{}},
-		}, `schemas["Pet"].type is required`},
-		{openapi.Components{
 			Schemas: openapi.Schemas{" ": &openapi.Schema{}},
 		}, `schemas[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
 		{openapi.Components{
