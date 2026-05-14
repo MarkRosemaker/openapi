@@ -70,6 +70,11 @@ func (p ParameterList) InQuery() ParameterList {
 	return p.In(ParameterLocationQuery)
 }
 
+// InHeader returns all header parameters from the list.
+func (p ParameterList) InHeader() ParameterList {
+	return p.In(ParameterLocationHeader)
+}
+
 func (l *loader) resolveParameterList(p ParameterList) error {
 	for i, param := range p {
 		if err := l.resolveParameterRef(param); err != nil {
