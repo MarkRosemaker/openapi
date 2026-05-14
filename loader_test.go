@@ -126,10 +126,15 @@ func TestLoadFromReader_Error(t *testing.T) {
 	t.Run("extra field", func(t *testing.T) {
 		t.Parallel()
 
-		if _, err := openapi.LoadFromReader(strings.NewReader(`   {
+		doc, err := openapi.LoadFromReader(strings.NewReader(`   {
 		"openapi":"3.1.0","info":{"title": "My Title","version":"1.2"},
 		"paths": {"/":{}},
-		"extra":"foo"}`)); err == nil {
+		"extra":"foo"}`))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if err := doc.Validate(); err == nil {
 			t.Fatal("expected error")
 		} else if want := `extra: unknown field or extension without "x-" prefix`; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
@@ -206,10 +211,15 @@ func TestLoadFromData_Error(t *testing.T) {
 	t.Run("extra field", func(t *testing.T) {
 		t.Parallel()
 
-		if _, err := openapi.LoadFromData([]byte(`   {
+		doc, err := openapi.LoadFromData([]byte(`   {
 		"openapi":"3.1.0","info":{"title": "My Title","version":"1.2"},
 		"paths": {"/":{}},
-		"extra":"foo"}`)); err == nil {
+		"extra":"foo"}`))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if err := doc.Validate(); err == nil {
 			t.Fatal("expected error")
 		} else if want := `extra: unknown field or extension without "x-" prefix`; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
