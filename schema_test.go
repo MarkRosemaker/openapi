@@ -21,11 +21,21 @@ func TestSchema_JSON(t *testing.T) {
 func TestSchema_Validate(t *testing.T) {
 	t.Parallel()
 
+	str := &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeString}}
+	num := &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeNumber}}
+
 	for i, tc := range []openapi.Schema{
 		{Type: openapi.TypeNumber, Default: 3.14},
 		{Type: openapi.TypeInteger, Default: 3.0},
 		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: 3}, // e.g. seconds
 		{Type: openapi.TypeString, Format: openapi.FormatByte},                  // base64-encoded data
+		// oneOf, anyOf, not allow type to be omitted
+		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+		{OneOf: openapi.SchemaRefList{str, num}},
+		{AnyOf: openapi.SchemaRefList{str, num}},
+		{Not: str},
+		// combining with a type is also valid
+		{Type: openapi.TypeString, OneOf: openapi.SchemaRefList{str}},
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -133,10 +143,18 @@ func TestSchema_Validate_Error(t *testing.T) {
 			},
 		}, `allOf[0].type is required`},
 		{openapi.Schema{
-			AllOf: openapi.SchemaRefList{
+			OneOf: openapi.SchemaRefList{
 				{Value: &openapi.Schema{}},
 			},
-		}, `allOf[0].type is required`},
+		}, `oneOf[0].type is required`},
+		{openapi.Schema{
+			AnyOf: openapi.SchemaRefList{
+				{Value: &openapi.Schema{}},
+			},
+		}, `anyOf[0].type is required`},
+		{openapi.Schema{
+			Not: &openapi.SchemaRef{Value: &openapi.Schema{}},
+		}, `not.type is required`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
 			Properties: openapi.SchemaRefs{

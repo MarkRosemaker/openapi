@@ -20,7 +20,7 @@ import (
 //
 // ([Specification])
 //
-// [Specification]: https://spec.openapis.org/oas/v3.1.0#schema-object
+// [Specification]: https://spec.openapis.org/oas/v3.2.0.html#schema-object
 type Schema struct {
 	// The name of the schema.
 	Title string `json:"title,omitempty" yaml:"title,omitempty"`
@@ -32,8 +32,18 @@ type Schema struct {
 	// Further refines the data type.
 	Format Format `json:"format,omitempty" yaml:"format,omitempty"`
 
-	// AllOf takes an array of object definitions that are validated independently but together compose a single object.
+	// AllOf validates the value against ALL of the given schemas.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
 	AllOf SchemaRefList `json:"allOf,omitempty" yaml:"allOf,omitempty"`
+	// OneOf validates the value against EXACTLY ONE of the given schemas.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+	OneOf SchemaRefList `json:"oneOf,omitempty" yaml:"oneOf,omitempty"`
+	// AnyOf validates the value against AT LEAST ONE of the given schemas.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+	AnyOf SchemaRefList `json:"anyOf,omitempty" yaml:"anyOf,omitempty"`
+	// Not validates the value against the negation of the given schema — the value must NOT validate against it.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+	Not *SchemaRef `json:"not,omitempty" yaml:"not,omitempty"`
 
 	// Integer / Number
 
@@ -96,7 +106,7 @@ func (s *Schema) Validate() error {
 	s.Description = strings.TrimSpace(s.Description)
 
 	if s.Type == "" {
-		if len(s.AllOf) == 0 {
+		if len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil {
 			return &errpath.ErrField{Field: "type", Err: &errpath.ErrRequired{}}
 		}
 	} else if err := s.Type.Validate(); err != nil {
@@ -163,6 +173,30 @@ func (s *Schema) Validate() error {
 				Field: "allOf",
 				Err:   &errpath.ErrIndex{Index: i, Err: err},
 			}
+		}
+	}
+
+	for i, v := range s.OneOf {
+		if err := v.Validate(); err != nil {
+			return &errpath.ErrField{
+				Field: "oneOf",
+				Err:   &errpath.ErrIndex{Index: i, Err: err},
+			}
+		}
+	}
+
+	for i, v := range s.AnyOf {
+		if err := v.Validate(); err != nil {
+			return &errpath.ErrField{
+				Field: "anyOf",
+				Err:   &errpath.ErrIndex{Index: i, Err: err},
+			}
+		}
+	}
+
+	if s.Not != nil {
+		if err := s.Not.Validate(); err != nil {
+			return &errpath.ErrField{Field: "not", Err: err}
 		}
 	}
 
@@ -363,6 +397,20 @@ func (l *loader) resolveSchema(s *Schema) error {
 		return &errpath.ErrField{Field: "allOf", Err: err}
 	}
 
+	if err := l.resolveSchemaRefList(s.OneOf); err != nil {
+		return &errpath.ErrField{Field: "oneOf", Err: err}
+	}
+
+	if err := l.resolveSchemaRefList(s.AnyOf); err != nil {
+		return &errpath.ErrField{Field: "anyOf", Err: err}
+	}
+
+	if s.Not != nil {
+		if err := l.resolveSchemaRef(s.Not); err != nil {
+			return &errpath.ErrField{Field: "not", Err: err}
+		}
+	}
+
 	if s.Items != nil {
 		if err := l.resolveSchemaRef(s.Items); err != nil {
 			return &errpath.ErrField{Field: "items", Err: err}
@@ -385,7 +433,7 @@ func (l *loader) resolveSchema(s *Schema) error {
 func (s *Schema) isEmpty() bool {
 	return s == nil ||
 		(s.Type == "" && s.Format == "" &&
-			len(s.AllOf) == 0 &&
+			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
 			s.Min == nil && s.Max == nil &&
 			s.Pattern == nil &&
 			s.MinItems == 0 && s.MaxItems == nil && s.Items == nil &&
