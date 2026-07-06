@@ -1,10 +1,10 @@
 module github.com/MarkRosemaker/openapi
 
-go 1.25.0
+go 1.26.3
 
 require (
 	github.com/MarkRosemaker/errpath v0.0.0-20260425165607-bbd4959d04d9
-	github.com/MarkRosemaker/jsonutil v0.0.0-20260504210623-75122b64cb24
+	github.com/MarkRosemaker/jsonutil v0.0.0-20260706231607-d613fb825b72
 	github.com/MarkRosemaker/ordmap v0.0.0-20260611220112-724580dd2bee
 	github.com/MarkRosemaker/yaml v0.0.0-20260508005758-fe21a538b084
 	github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d
