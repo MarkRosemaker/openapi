@@ -36,6 +36,14 @@ func TestSchema_Validate(t *testing.T) {
 		{Not: str},
 		// combining with a type is also valid
 		{Type: openapi.TypeString, OneOf: openapi.SchemaRefList{str}},
+		// exclusiveMinimum and exclusiveMaximum (numeric in JSON Schema 2020-12 / OAS 3.2.0)
+		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+		{Type: openapi.TypeNumber, ExclusiveMin: pointer(1.0)},
+		{Type: openapi.TypeNumber, ExclusiveMax: pointer(10.0)},
+		{Type: openapi.TypeNumber, ExclusiveMin: pointer(1.0), ExclusiveMax: pointer(10.0)},
+		{Type: openapi.TypeNumber, Min: pointer(1.0), ExclusiveMax: pointer(10.0)},
+		{Type: openapi.TypeNumber, ExclusiveMin: pointer(1.0), Max: pointer(10.0)},
+		{Type: openapi.TypeInteger, ExclusiveMin: pointer(1.0), ExclusiveMax: pointer(10.0)},
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -105,6 +113,14 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type: openapi.TypeBoolean,
 			Max:  pointer(4.0),
 		}, `maximum (4) is invalid: only valid for number type, got boolean`},
+		{openapi.Schema{
+			Type:         openapi.TypeBoolean,
+			ExclusiveMin: pointer(3.0),
+		}, `exclusiveMinimum (3) is invalid: only valid for number type, got boolean`},
+		{openapi.Schema{
+			Type:         openapi.TypeBoolean,
+			ExclusiveMax: pointer(4.0),
+		}, `exclusiveMaximum (4) is invalid: only valid for number type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeInteger,
 			Min:  pointer(5.3),

@@ -47,10 +47,18 @@ type Schema struct {
 
 	// Integer / Number
 
-	// The minimum value of the number.
+	// The minimum value of the number (inclusive).
 	Min *float64 `json:"minimum,omitempty" yaml:"minimum,omitempty"`
-	// The maximum value of the number.
+	// The maximum value of the number (inclusive).
 	Max *float64 `json:"maximum,omitempty" yaml:"maximum,omitempty"`
+	// ExclusiveMin is the exclusive lower bound: the value must be strictly greater than this.
+	// In JSON Schema 2020-12 (used by OAS 3.2.0), exclusiveMinimum is a number, not a boolean.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+	ExclusiveMin *float64 `json:"exclusiveMinimum,omitempty" yaml:"exclusiveMinimum,omitempty"`
+	// ExclusiveMax is the exclusive upper bound: the value must be strictly less than this.
+	// In JSON Schema 2020-12 (used by OAS 3.2.0), exclusiveMaximum is a number, not a boolean.
+	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
+	ExclusiveMax *float64 `json:"exclusiveMaximum,omitempty" yaml:"exclusiveMaximum,omitempty"`
 
 	// String
 
@@ -226,6 +234,43 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("minimum is greater than maximum (%v > %v)", *s.Min, *s.Max),
 			}}
 		}
+
+		if s.Type == TypeInteger {
+			if s.ExclusiveMin != nil && *s.ExclusiveMin != float64(int(*s.ExclusiveMin)) {
+				return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
+					Value:   *s.ExclusiveMin,
+					Message: "not an integer",
+				}}
+			}
+
+			if s.ExclusiveMax != nil && *s.ExclusiveMax != float64(int(*s.ExclusiveMax)) {
+				return &errpath.ErrField{Field: "exclusiveMaximum", Err: &errpath.ErrInvalid[float64]{
+					Value:   *s.ExclusiveMax,
+					Message: "not an integer",
+				}}
+			}
+		}
+
+		if s.ExclusiveMin != nil && s.ExclusiveMax != nil && *s.ExclusiveMin >= *s.ExclusiveMax {
+			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.ExclusiveMin,
+				Message: fmt.Sprintf("exclusiveMinimum is greater than or equal to exclusiveMaximum (%v >= %v)", *s.ExclusiveMin, *s.ExclusiveMax),
+			}}
+		}
+
+		if s.Min != nil && s.ExclusiveMax != nil && *s.Min >= *s.ExclusiveMax {
+			return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.Min,
+				Message: fmt.Sprintf("minimum is greater than or equal to exclusiveMaximum (%v >= %v)", *s.Min, *s.ExclusiveMax),
+			}}
+		}
+
+		if s.ExclusiveMin != nil && s.Max != nil && *s.ExclusiveMin >= *s.Max {
+			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.ExclusiveMin,
+				Message: fmt.Sprintf("exclusiveMinimum is greater than or equal to maximum (%v >= %v)", *s.ExclusiveMin, *s.Max),
+			}}
+		}
 	} else if s.Min != nil {
 		return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
 			Value:   *s.Min,
@@ -234,6 +279,16 @@ func (s *Schema) Validate() error {
 	} else if s.Max != nil {
 		return &errpath.ErrField{Field: "maximum", Err: &errpath.ErrInvalid[float64]{
 			Value:   *s.Max,
+			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+		}}
+	} else if s.ExclusiveMin != nil {
+		return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
+			Value:   *s.ExclusiveMin,
+			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+		}}
+	} else if s.ExclusiveMax != nil {
+		return &errpath.ErrField{Field: "exclusiveMaximum", Err: &errpath.ErrInvalid[float64]{
+			Value:   *s.ExclusiveMax,
 			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
 		}}
 	}
@@ -434,7 +489,7 @@ func (s *Schema) isEmpty() bool {
 	return s == nil ||
 		(s.Type == "" && s.Format == "" &&
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
-			s.Min == nil && s.Max == nil &&
+			s.Min == nil && s.Max == nil && s.ExclusiveMin == nil && s.ExclusiveMax == nil &&
 			s.Pattern == nil &&
 			s.MinItems == 0 && s.MaxItems == nil && s.Items == nil &&
 			s.Properties == nil && s.Required == nil &&
