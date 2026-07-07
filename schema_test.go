@@ -7,8 +7,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func pointer[T any](v T) *T { return &v }
-
 func TestSchema_JSON(t *testing.T) {
 	t.Parallel()
 
@@ -92,36 +90,36 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Items: &openapi.SchemaRef{
 				Value: &openapi.Schema{
 					Type: openapi.TypeNumber,
-					Min:  pointer(4.0),
-					Max:  pointer(3.0),
+					Min:  new(4.0),
+					Max:  new(3.0),
 				},
 			},
 		}, `items.minimum (4) is invalid: minimum is greater than maximum (4 > 3)`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
-			Min:  pointer(3.0),
+			Min:  new(3.0),
 		}, `minimum (3) is invalid: only valid for number type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
-			Max:  pointer(4.0),
+			Max:  new(4.0),
 		}, `maximum (4) is invalid: only valid for number type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeInteger,
-			Min:  pointer(5.3),
+			Min:  new(5.3),
 		}, `minimum (5.3) is invalid: not an integer`},
 		{openapi.Schema{
 			Type: openapi.TypeInteger,
-			Max:  pointer(4.2),
+			Max:  new(4.2),
 		}, `maximum (4.2) is invalid: not an integer`},
 		{openapi.Schema{
 			Type: openapi.TypeInteger,
-			Min:  pointer(5.0),
-			Max:  pointer(4.0),
+			Min:  new(5.0),
+			Max:  new(4.0),
 		}, `minimum (5) is invalid: minimum is greater than maximum (5 > 4)`},
 		{openapi.Schema{
 			Type: openapi.TypeNumber,
-			Min:  pointer(5.6),
-			Max:  pointer(4.2),
+			Min:  new(5.6),
+			Max:  new(4.2),
 		}, `minimum (5.6) is invalid: minimum is greater than maximum (5.6 > 4.2)`},
 		{openapi.Schema{
 			Type:     openapi.TypeNumber,
@@ -129,12 +127,12 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `minItems (3) is invalid: only valid for array type, got number`},
 		{openapi.Schema{
 			Type:     openapi.TypeNumber,
-			MaxItems: pointer[uint](4),
+			MaxItems: new(uint(4)),
 		}, `maxItems (4) is invalid: only valid for array type, got number`},
 		{openapi.Schema{
 			Type:     openapi.TypeArray,
 			MinItems: 5,
-			MaxItems: pointer[uint](4),
+			MaxItems: new(uint(4)),
 			Items:    &openapi.SchemaRef{},
 		}, `minItems (5) is invalid: minItems is greater than maxItems (5 > 4)`},
 		{openapi.Schema{
