@@ -3,6 +3,7 @@ package jsonutil
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"errors"
 	"fmt"
 	"time"
 )
@@ -48,7 +49,18 @@ func TimeUnmarshalStringOrIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 			*d = time.Unix(seconds, 0)
 		}
 	case jsontext.KindString:
-		return d.UnmarshalText([]byte(tkn.String()))
+		s := tkn.String()
+		if err := d.UnmarshalText([]byte(s)); err != nil {
+			const altLayout = "Mon Jan 2 2006 15:04:05 MST-0700"
+			ts, err2 := time.Parse(altLayout, s)
+			if err2 != nil {
+				return errors.Join(err, err2)
+			}
+
+			*d = ts
+		}
+
+		return nil
 	case jsontext.KindNull: // ok, nothing to do
 	default:
 		return fmt.Errorf("unknown token kind %s", tkn.Kind())
