@@ -16,7 +16,7 @@ func ReadFile[T any](name string, opts ...json.Options) (T, error) {
 	}
 
 	if err := json.UnmarshalRead(f, &v, opts...); err != nil {
-		if closeErr := f.Close(); err != nil {
+		if closeErr := f.Close(); closeErr != nil {
 			return v, errors.Join(err, closeErr)
 		}
 

@@ -51,8 +51,8 @@ import (
 )
 
 var jsonOpts = json.JoinOptions(
-	json.WithMarshalers(json.NewMarshalers(json.MarshalToFunc(jsonutil.URLMarshal))),
-	json.WithUnmarshalers(json.NewUnmarshalers(json.UnmarshalFromFunc(jsonutil.URLUnmarshal))),
+	json.WithMarshalers(json.MarshalToFunc(jsonutil.URLMarshal)),
+	json.WithUnmarshalers(json.UnmarshalFromFunc(jsonutil.URLUnmarshal)),
 )
 
 type MyStruct struct {
