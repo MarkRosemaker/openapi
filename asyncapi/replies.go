@@ -10,6 +10,9 @@ import (
 )
 
 // Replies is a map of Operation Reply Objects.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#componentsReplies
 type Replies map[string]*OperationReplyRef
 
 // Validate validates each reply.

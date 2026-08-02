@@ -12,6 +12,9 @@ import (
 // Parameters describes a map of parameters included in a channel address.
 //
 // This map MUST contain all the parameters used in the parent channel address.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#parametersObject
 type Parameters map[string]*ParameterRef
 
 // Validate validates each parameter.

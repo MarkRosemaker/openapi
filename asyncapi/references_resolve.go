@@ -7,6 +7,12 @@ import (
 )
 
 // ref is the path to an object within the document, i.e. a JSON pointer split into its tokens.
+//
+// "The Reference Object is defined by JSON Reference and follows the same structure, behavior
+// and rules. [...] For this specification, reference resolution is done as defined by the JSON
+// Reference specification and not by the JSON Schema specification." ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#referenceObject
 type ref []string
 
 func (r ref) String() string {

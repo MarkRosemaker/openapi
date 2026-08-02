@@ -11,6 +11,9 @@ import (
 
 // Schemas is a map of schema definitions, each of which is either a schema object,
 // a multi format schema object or a reference to one of them.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#componentsSchemas
 type Schemas map[string]*AnySchemaRef
 
 // Validate validates each schema.

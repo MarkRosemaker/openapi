@@ -280,15 +280,58 @@ func TestWriteToFile(t *testing.T) {
 		}
 	})
 
+	t.Run("yaml", func(t *testing.T) {
+		t.Parallel()
+
+		path := filepath.Join(t.TempDir(), "asyncapi.yaml")
+		if err := doc.WriteToFile(path); err != nil {
+			t.Fatal(err)
+		}
+
+		got, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		want, err := doc.ToYAML()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !bytes.Equal(got, want) {
+			t.Fatalf("got:\n%s\nwant:\n%s", got, want)
+		}
+
+		// the document that was written can be read again
+		again, err := asyncapi.LoadFromFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		gotJSON, err := again.ToJSON()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		wantJSON, err := doc.ToJSON()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !bytes.Equal(gotJSON, wantJSON) {
+			t.Fatalf("got:\n%s\nwant:\n%s", gotJSON, wantJSON)
+		}
+	})
+
 	t.Run("unsupported file extension", func(t *testing.T) {
 		t.Parallel()
 
-		err := doc.WriteToFile(filepath.Join(t.TempDir(), "asyncapi.yaml"))
+		err := doc.WriteToFile(filepath.Join(t.TempDir(), "asyncapi.txt"))
 		if err == nil {
 			t.Fatal("expected error")
 		}
 
-		if want := "unsupported file extension: .yaml"; err.Error() != want {
+		if want := "unsupported file extension: .txt"; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)
 		}
 	})

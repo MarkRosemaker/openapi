@@ -10,6 +10,9 @@ import (
 )
 
 // OperationTraits is a map of Operation Trait Objects.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#componentsOperationTraits
 type OperationTraits map[string]*OperationTraitRef
 
 // Validate validates each operation trait.

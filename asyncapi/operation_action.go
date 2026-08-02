@@ -6,7 +6,11 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// OperationAction describes whether the application sends messages to a channel or receives messages from it.
+// OperationAction describes whether the application sends messages to a channel
+// or receives messages from it.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#operationObject
 type OperationAction string
 
 const (

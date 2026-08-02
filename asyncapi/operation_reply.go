@@ -53,6 +53,14 @@ func (r *OperationReply) Validate() error {
 		return &errpath.ErrField{Field: "messages", Err: err}
 	}
 
+	// "It MUST contain a subset of the messages defined in the channel
+	// referenced in this operation reply."
+	if r.Channel != nil {
+		if err := r.Messages.mustBeOfChannel(r.Channel.Value); err != nil {
+			return &errpath.ErrField{Field: "messages", Err: err}
+		}
+	}
+
 	return validateExtensions(r.Extensions)
 }
 

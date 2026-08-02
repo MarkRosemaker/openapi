@@ -115,7 +115,9 @@ func (s *SecurityScheme) Validate() error {
 			return &errpath.ErrField{Field: "openIdConnectUrl", Err: &errpath.ErrRequired{}}
 		}
 
-		fixScheme(s.OpenIDConnectURL)
+		if err := validateURL(s.OpenIDConnectURL); err != nil {
+			return &errpath.ErrField{Field: "openIdConnectUrl", Err: err}
+		}
 	default: // no additional fields are required
 	}
 

@@ -10,6 +10,9 @@ import (
 )
 
 // CorrelationIDs is a map of Correlation ID Objects.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#componentsCorrelationIDs
 type CorrelationIDs map[string]*CorrelationIDRef
 
 // Validate validates each correlation ID.

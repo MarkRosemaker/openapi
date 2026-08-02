@@ -47,8 +47,9 @@ func (i *Info) Validate() error {
 
 	i.Description = strings.TrimSpace(i.Description)
 
-	// assume that the scheme is https and add it if it is missing
-	fixScheme(i.TermsOfService)
+	if err := validateURL(i.TermsOfService); err != nil {
+		return &errpath.ErrField{Field: "termsOfService", Err: err}
+	}
 
 	if i.Contact != nil {
 		if err := i.Contact.Validate(); err != nil {
@@ -85,6 +86,50 @@ func fixScheme(u *url.URL) {
 	if u.Scheme == "" {
 		u.Scheme = "https"
 	}
+}
+
+// validateURL checks that the URL is an absolute URL, as the specification demands
+// of every URL it defines, e.g. "This MUST be in the form of an absolute URL."
+//
+// Since a missing scheme is a common mistake that is easy to correct,
+// the scheme is assumed to be https and added if it is missing.
+// If the URL is nil, it is a no-op.
+func validateURL(u *url.URL) error {
+	if u == nil {
+		return nil
+	}
+
+	fixScheme(u)
+
+	// an absolute URL addresses a host, unless it is an opaque URI such as a URN
+	if u.Host == "" && u.Opaque == "" {
+		return &errpath.ErrInvalid[string]{
+			Value:   u.String(),
+			Message: "must be an absolute URL",
+		}
+	}
+
+	return nil
+}
+
+// validateURI checks that the URI conforms to the URI format, according to [RFC3986],
+// i.e. that it is absolute. Unlike [validateURL], no scheme is added.
+// If the URI is nil, it is a no-op.
+//
+// [RFC3986]: https://tools.ietf.org/html/rfc3986
+func validateURI(u *url.URL) error {
+	if u == nil {
+		return nil
+	}
+
+	if !u.IsAbs() {
+		return &errpath.ErrInvalid[string]{
+			Value:   u.String(),
+			Message: "must conform to the URI format",
+		}
+	}
+
+	return nil
 }
 
 func (l *loader) collectInfo(i *Info, ref ref) {

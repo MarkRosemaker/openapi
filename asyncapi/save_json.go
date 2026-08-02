@@ -10,6 +10,10 @@ import (
 )
 
 // WriteJSON writes the document in JSON format to the given writer.
+//
+// "An AsyncAPI document can be JSON or YAML format." ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#format
 func (d Document) WriteJSON(w io.Writer) error {
 	return json.MarshalWrite(w, d, jsonOpts)
 }
@@ -19,12 +23,19 @@ func (d *Document) ToJSON() ([]byte, error) {
 	return json.Marshal(d, jsonOpts)
 }
 
-// WriteToFile writes the document to a file in JSON format.
+// WriteToFile writes the document to a file, in JSON or in YAML format,
+// depending on the extension of the given path.
 func (d *Document) WriteToFile(path string) error {
-	switch filepath.Ext(path) {
-	case ".json": // ok
+	// determine the file type and write accordingly
+	var write func(io.Writer) error
+
+	switch ext := filepath.Ext(path); ext {
+	case ".json":
+		write = d.WriteJSON
+	case ".yaml", ".yml":
+		write = d.WriteYAML
 	default:
-		return fmt.Errorf("unsupported file extension: %s", filepath.Ext(path))
+		return fmt.Errorf("unsupported file extension: %s", ext)
 	}
 
 	// create the underlying directories if they don't exist
@@ -37,7 +48,7 @@ func (d *Document) WriteToFile(path string) error {
 		return err
 	}
 
-	return errorsJoin(d.WriteJSON(f), f.Close())
+	return errorsJoin(write(f), f.Close())
 }
 
 func errorsJoin(err1, err2 error) error {

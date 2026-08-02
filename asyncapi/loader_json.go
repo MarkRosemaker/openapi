@@ -6,7 +6,12 @@ import (
 	"unicode"
 )
 
-// LoadFromReaderJSON reads an AsyncAPI specification in JSON format from an io.Reader and parses it into a structured format.
+// LoadFromReaderJSON reads an AsyncAPI specification in JSON format from an io.Reader and
+// parses it into a structured format.
+//
+// "An AsyncAPI document can be JSON or YAML format." ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#format
 func (l *loader) LoadFromReaderJSON(r io.Reader) (*Document, error) {
 	l.reset()
 

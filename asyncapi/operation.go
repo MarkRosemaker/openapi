@@ -101,6 +101,12 @@ func (o *Operation) Validate() error {
 		return &errpath.ErrField{Field: "messages", Err: err}
 	}
 
+	// "It MUST contain a subset of the messages defined in the channel
+	// referenced in this operation."
+	if err := o.Messages.mustBeOfChannel(o.Channel.Value); err != nil {
+		return &errpath.ErrField{Field: "messages", Err: err}
+	}
+
 	if o.Reply != nil {
 		if err := o.Reply.Validate(); err != nil {
 			return &errpath.ErrField{Field: "reply", Err: err}

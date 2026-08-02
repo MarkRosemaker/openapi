@@ -13,6 +13,9 @@ import (
 //
 // The key of each entry MUST be a string used to identify the operation in the document where it is defined, and its value is case-sensitive.
 // Tools and libraries MAY use it to uniquely identify an operation, therefore, it is RECOMMENDED to follow common programming naming conventions.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#operationsObject
 type Operations map[string]*OperationRef
 
 // Validate validates each operation.

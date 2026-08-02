@@ -2,8 +2,11 @@ package asyncapi
 
 import "mime"
 
-// MediaType is the content type to use when encoding/decoding a message's payload,
-// e.g. `application/json`.
+// MediaType is "the content type to use when encoding/decoding a message's payload.
+// The value MUST be a specific media type (e.g. `application/json`)."
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#defaultContentTypeString
 type MediaType string
 
 const (

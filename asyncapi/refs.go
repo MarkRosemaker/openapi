@@ -6,8 +6,17 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// ErrMustBeReference is returned when the specification demands a reference object but the object itself was given.
+// ErrMustBeReference is returned when the specification demands a reference object
+// but the object itself was given, e.g. for the channel of an operation:
+// "Please note the `channel` property value MUST be a Reference Object and, therefore,
+// MUST NOT contain a Channel Object." ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#operationObject
 var ErrMustBeReference = errors.New("must be a reference object")
+
+// ErrMessageNotOfChannel is returned when an operation or an operation reply refers to a message
+// that is not one of the messages of the channel it operates on.
+var ErrMessageNotOfChannel = errors.New("must be a message of the channel of this operation")
 
 type (
 	// AnySchemaRef is a reference to a schema or an actual schema.
@@ -65,6 +74,22 @@ func setIndexRef[T any, O referencable[T]](
 	return ref
 }
 
+// contains reports whether the map holds the given object, no matter whether it was
+// defined there or whether the entry is a reference that was resolved to it.
+func contains[T any, O referencable[T]](m map[string]*refOrValue[T, O], v O) bool {
+	if v == nil {
+		return false
+	}
+
+	for _, r := range m {
+		if r.Value == v {
+			return true
+		}
+	}
+
+	return false
+}
+
 // validateRefList validates every entry of a list of references or values.
 func validateRefList[T any, O referencable[T]](rs []*refOrValue[T, O]) error {
 	for i, r := range rs {
@@ -109,6 +134,26 @@ func (ms MessageRefList) Validate() error {
 	}
 
 	return validateRefList(ms)
+}
+
+// mustBeOfChannel makes sure that every message of the list is a message of the given channel,
+// as the specification demands of the messages of an operation and of an operation reply.
+//
+// If the channel is not known, e.g. because it wasn't given, there is nothing to check.
+func (ms MessageRefList) mustBeOfChannel(c *Channel) error {
+	if c == nil {
+		return nil
+	}
+
+	for i, m := range ms {
+		if contains(c.Messages, m.Value) {
+			continue
+		}
+
+		return &errpath.ErrIndex{Index: i, Err: ErrMessageNotOfChannel}
+	}
+
+	return nil
 }
 
 // Validate validates each security scheme of the list.

@@ -26,8 +26,9 @@ func (ed *ExternalDocs) Validate() error {
 		return &errpath.ErrField{Field: "url", Err: &errpath.ErrRequired{}}
 	}
 
-	// assume that the scheme is https and add it if it is missing
-	fixScheme(ed.URL)
+	if err := validateURL(ed.URL); err != nil {
+		return &errpath.ErrField{Field: "url", Err: err}
+	}
 
 	ed.Description = strings.TrimSpace(ed.Description)
 

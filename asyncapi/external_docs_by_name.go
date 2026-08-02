@@ -10,6 +10,9 @@ import (
 )
 
 // ExternalDocsByName is a map of External Documentation Objects.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#componentsExternalDocs
 type ExternalDocsByName map[string]*ExternalDocsRef
 
 // Validate validates each external documentation object.

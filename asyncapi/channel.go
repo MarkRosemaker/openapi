@@ -13,6 +13,12 @@ import (
 // [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#channelAddressExpressions
 var reChannelAddressExpression = regexp.MustCompile(`\{([^{}]+)\}`)
 
+// reParameterKey is the regular expression the keys of the parameters of a channel must match.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#parametersObject
+var reParameterKey = regexp.MustCompile(`^[A-Za-z0-9_\-]+$`)
+
 // Channel describes a shared communication channel.
 // ([Specification])
 //
@@ -63,11 +69,34 @@ func (c *Channel) Validate() error {
 		return &errpath.ErrField{Field: "servers", Err: err}
 	}
 
+	// "Query parameters and fragments SHALL NOT be used,
+	// instead use bindings to define them."
+	if i := strings.IndexAny(c.Address, "?#"); i >= 0 {
+		return &errpath.ErrField{Field: "address", Err: &errpath.ErrInvalid[string]{
+			Value:   c.Address,
+			Message: "query parameters and fragments must not be used, use bindings instead",
+		}}
+	}
+
+	// "The key represents the name of the parameter.
+	// It MUST match the parameter name used in the parent channel address."
+	for name := range c.Parameters {
+		if !reParameterKey.MatchString(name) {
+			return &errpath.ErrField{Field: "parameters", Err: &errpath.ErrKey{
+				Key: name,
+				Err: &errpath.ErrInvalid[string]{
+					Value:   name,
+					Message: `must match the regular expression "` + reParameterKey.String() + `"`,
+				},
+			}}
+		}
+	}
+
 	if err := c.Parameters.Validate(); err != nil {
 		return &errpath.ErrField{Field: "parameters", Err: err}
 	}
 
-	// the parameters map MUST contain all the parameters used in the channel address
+	// "This map MUST contain all the parameters used in the parent channel address."
 	for _, name := range c.AddressExpressions() {
 		if _, ok := c.Parameters[name]; !ok {
 			return &errpath.ErrField{Field: "parameters", Err: &errpath.ErrKey{

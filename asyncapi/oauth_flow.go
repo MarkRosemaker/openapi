@@ -28,6 +28,14 @@ func (f *OAuthFlowImplicit) Validate() error {
 		return &errpath.ErrField{Field: "authorizationUrl", Err: &errpath.ErrRequired{}}
 	}
 
+	if err := validateURL(f.AuthorizationURL); err != nil {
+		return &errpath.ErrField{Field: "authorizationUrl", Err: err}
+	}
+
+	if err := validateURL(f.RefreshURL); err != nil {
+		return &errpath.ErrField{Field: "refreshUrl", Err: err}
+	}
+
 	if f.AvailableScopes == nil {
 		return &errpath.ErrField{Field: "availableScopes", Err: &errpath.ErrRequired{}}
 	}
@@ -55,6 +63,14 @@ type OAuthFlowPassword struct {
 func (f *OAuthFlowPassword) Validate() error {
 	if f.TokenURL == nil {
 		return &errpath.ErrField{Field: "tokenUrl", Err: &errpath.ErrRequired{}}
+	}
+
+	if err := validateURL(f.TokenURL); err != nil {
+		return &errpath.ErrField{Field: "tokenUrl", Err: err}
+	}
+
+	if err := validateURL(f.RefreshURL); err != nil {
+		return &errpath.ErrField{Field: "refreshUrl", Err: err}
 	}
 
 	if f.AvailableScopes == nil {
@@ -93,6 +109,18 @@ func (f *OAuthFlowAuthorizationCode) Validate() error {
 
 	if f.TokenURL == nil {
 		return &errpath.ErrField{Field: "tokenUrl", Err: &errpath.ErrRequired{}}
+	}
+
+	if err := validateURL(f.AuthorizationURL); err != nil {
+		return &errpath.ErrField{Field: "authorizationUrl", Err: err}
+	}
+
+	if err := validateURL(f.TokenURL); err != nil {
+		return &errpath.ErrField{Field: "tokenUrl", Err: err}
+	}
+
+	if err := validateURL(f.RefreshURL); err != nil {
+		return &errpath.ErrField{Field: "refreshUrl", Err: err}
 	}
 
 	if f.AvailableScopes == nil {

@@ -11,6 +11,9 @@ import (
 
 // ServerVariables is a map between a variable name and its value.
 // The value is used for substitution in the server's host and pathname template.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#serverObjectVariables
 type ServerVariables map[string]*ServerVariableRef
 
 // Validate validates each server variable.

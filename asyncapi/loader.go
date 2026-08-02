@@ -10,6 +10,12 @@ import (
 )
 
 // loader helps deserialize an AsyncAPI v3 document.
+//
+// It remembers where every object that can be referenced is defined,
+// so that the references of the document can be resolved once it was read.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#referenceObject
 type loader struct {
 	schemas         map[string]*AnySchema
 	servers         map[string]*Server

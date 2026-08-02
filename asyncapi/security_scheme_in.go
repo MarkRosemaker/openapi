@@ -6,7 +6,11 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// SecuritySchemeIn is the location of an API key.
+// SecuritySchemeIn is "the location of the API key. Valid values are `user` and `password`
+// for `apiKey` and `query`, `header` or `cookie` for `httpApiKey`."
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#securitySchemeObject
 type SecuritySchemeIn string
 
 const (

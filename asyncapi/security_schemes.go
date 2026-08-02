@@ -10,6 +10,9 @@ import (
 )
 
 // SecuritySchemes is a map of Security Scheme Objects.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#componentsSecuritySchemes
 type SecuritySchemes map[string]*SecuritySchemeRef
 
 // Validate validates each security scheme.

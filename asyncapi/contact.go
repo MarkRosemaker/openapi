@@ -24,8 +24,9 @@ type Contact struct {
 
 // Validate checks the contact for consistency.
 func (c *Contact) Validate() error {
-	// assume that the scheme is https and add it if it is missing
-	fixScheme(c.URL)
+	if err := validateURL(c.URL); err != nil {
+		return &errpath.ErrField{Field: "url", Err: err}
+	}
 
 	if c.Email != "" {
 		if err := c.Email.Validate(); err != nil {

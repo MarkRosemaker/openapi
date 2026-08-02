@@ -11,6 +11,15 @@ import (
 // ErrEmptyDocument is thrown if the AsyncAPI document neither defines channels nor operations nor components.
 var ErrEmptyDocument = errors.New("document must contain at least a channels field, an operations field or a components field")
 
+var (
+	// ErrServerNotInRoot is returned when a channel of the root Channels Object refers to a
+	// server that is not defined in the root Servers Object.
+	ErrServerNotInRoot = errors.New("must point to a server of the root servers object")
+	// ErrChannelNotInRoot is returned when an operation of the root Operations Object refers to
+	// a channel that is not defined in the root Channels Object.
+	ErrChannelNotInRoot = errors.New("must point to a channel of the root channels object")
+)
+
 // reServerKey is the regular expression the keys of the servers object must match.
 var reServerKey = regexp.MustCompile(`^[A-Za-z0-9_\-]+$`)
 
@@ -51,9 +60,13 @@ type Document struct {
 }
 
 // reAsyncAPIVersion is a regular expression that matches the AsyncAPI version.
-// Only version 3.x.y is supported.
-// See: https://www.asyncapi.com/docs/reference/specification/v3.1.0#A2SVersionString
-var reAsyncAPIVersion = regexp.MustCompile(`^3\.\d+\.\d+(-.+)?$`)
+//
+// "The format for this string must be `major`.`minor`.`patch`. The `patch` may be suffixed by a
+// hyphen and extra alphanumeric characters." Only major version 3 is supported.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#A2SVersionString
+var reAsyncAPIVersion = regexp.MustCompile(`^3\.\d+\.\d+(-[A-Za-z0-9]+)?$`)
 
 // Validate checks the AsyncAPI document for correctness.
 func (d *Document) Validate() error {
@@ -69,6 +82,11 @@ func (d *Document) Validate() error {
 				Message: "must be a valid version (3.x.y)",
 			},
 		}
+	}
+
+	// the identifier "must conform to the URI format, according to RFC3986"
+	if err := validateURI(d.ID); err != nil {
+		return &errpath.ErrField{Field: "id", Err: err}
 	}
 
 	if d.Info == nil {
@@ -120,7 +138,61 @@ func (d *Document) Validate() error {
 		return &errpath.ErrField{Field: "components", Err: err}
 	}
 
+	if err := d.validateLocations(); err != nil {
+		return err
+	}
+
 	return validateExtensions(d.Extensions)
+}
+
+// validateLocations checks the rules that the specification puts on objects
+// that are defined in the root of the document, as opposed to the components object:
+//
+//   - The servers of a channel of the root Channels Object "MUST point to a subset of server
+//     definitions located in the root Servers Object, and MUST NOT point to a subset of server
+//     definitions located in the Components Object or anywhere else."
+//   - The channel of an operation of the root Operations Object "MUST point to a channel
+//     definition located in the root Channels Object, and MUST NOT point to a channel definition
+//     located in the Components Object or anywhere else."
+//
+// A channel or an operation that is given as a reference is defined somewhere else,
+// where these rules don't apply, so it is skipped here.
+func (d *Document) validateLocations() error {
+	for name, c := range d.Channels.ByIndex() {
+		if c.isRef() {
+			continue
+		}
+
+		for i, s := range c.Value.Servers {
+			if contains(d.Servers, s.Value) {
+				continue
+			}
+
+			return &errpath.ErrField{Field: "channels", Err: &errpath.ErrKey{
+				Key: name,
+				Err: &errpath.ErrField{Field: "servers", Err: &errpath.ErrIndex{
+					Index: i, Err: ErrServerNotInRoot,
+				}},
+			}}
+		}
+	}
+
+	for name, o := range d.Operations.ByIndex() {
+		if o.isRef() || o.Value.Channel == nil {
+			continue
+		}
+
+		if contains(d.Channels, o.Value.Channel.Value) {
+			continue
+		}
+
+		return &errpath.ErrField{Field: "operations", Err: &errpath.ErrKey{
+			Key: name,
+			Err: &errpath.ErrField{Field: "channel", Err: ErrChannelNotInRoot},
+		}}
+	}
+
+	return nil
 }
 
 // SortMaps sorts the servers, channels, operations and the fields of the components that are maps by key.

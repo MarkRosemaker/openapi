@@ -9,11 +9,20 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// Reference is a simple object to allow referencing other components in the specification, internally and externally.
+// Reference is "a simple object to allow referencing other components in the specification,
+// internally and externally."
 //
-// The Reference Object is defined by [JSON Reference] and follows the same structure, behavior and rules.
+// "The Reference Object is defined by [JSON Reference] and follows the same structure,
+// behavior and rules. A JSON Reference SHALL only be used to refer to a schema that is
+// formatted in either JSON or YAML. In the case of a YAML-formatted Schema, the JSON Reference
+// SHALL be applied to the JSON representation of that schema."
 //
-// This object cannot be extended with additional properties and any properties added SHALL be ignored.
+// "For this specification, reference resolution is done as defined by the JSON Reference
+// specification and not by the JSON Schema specification."
+//
+// "This object cannot be extended with additional properties and any properties added SHALL be
+// ignored." Additional properties are therefore dropped when a document is read, they are not
+// written back.
 // ([Specification])
 //
 // [JSON Reference]: https://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03
@@ -74,9 +83,12 @@ func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 
 	// try to unmarshal as a reference
+	// NOTE: A reference object cannot be extended with additional properties
+	// and any properties added SHALL be ignored, so we don't reject them here.
 	ref := &Reference{}
 	if err := json.UnmarshalDecode(
 		jsontext.NewDecoder(bytes.NewBuffer(val), dec.Options()), ref,
+		json.RejectUnknownMembers(false),
 	); err == nil && ref.Identifier != "" {
 		// we successfully unmarshalled as a reference
 		r.Ref = ref // set the reference

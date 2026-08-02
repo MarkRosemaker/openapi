@@ -10,6 +10,9 @@ import (
 )
 
 // TagsByName is a map of Tag Objects.
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#componentsTags
 type TagsByName map[string]*TagRef
 
 // Validate validates each tag.

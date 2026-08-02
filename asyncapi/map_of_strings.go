@@ -8,7 +8,11 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
-// MapOfStrings is an ordered map of strings, e.g. a map between a scope name and a short description for it.
+// MapOfStrings is an ordered map of strings, e.g. the available scopes of an OAuth flow,
+// which are "a map between the scope name and a short description for it".
+// ([Specification])
+//
+// [Specification]: https://www.asyncapi.com/docs/reference/specification/v3.1.0#oauthFlowObject
 type MapOfStrings map[string]String
 
 // ByIndex returns a sequence of key-value pairs ordered by index.
