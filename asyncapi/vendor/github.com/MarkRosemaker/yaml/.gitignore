@@ -1,0 +1,28 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with 'go test -c'
+*.test
+
+# Output files, e.g. from the go coverage tool
+*.out
+
+# IDE directories
+.idea
+.vscode
+.schemas
+.history
+
+# Build and Environment
+cmd/app/app
+dist/
+
+# Log Files
+*.log
+
+# macOS files
+*.DS_Store

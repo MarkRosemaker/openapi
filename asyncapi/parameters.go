@@ -1,0 +1,71 @@
+package asyncapi
+
+import (
+	"encoding/json/jsontext"
+	"encoding/json/v2"
+	"iter"
+
+	"github.com/MarkRosemaker/errpath"
+	"github.com/MarkRosemaker/ordmap"
+)
+
+// Parameters describes a map of parameters included in a channel address.
+//
+// This map MUST contain all the parameters used in the parent channel address.
+type Parameters map[string]*ParameterRef
+
+// Validate validates each parameter.
+func (ps Parameters) Validate() error {
+	for name, p := range ps.ByIndex() {
+		if err := p.Validate(); err != nil {
+			return &errpath.ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
+// ByIndex returns a sequence of key-value pairs ordered by index.
+func (ps Parameters) ByIndex() iter.Seq2[string, *ParameterRef] {
+	return ordmap.ByIndex(ps, getIndexRef[Parameter, *Parameter])
+}
+
+// Sort sorts the map by key and sets the indices accordingly.
+func (ps Parameters) Sort() {
+	ordmap.Sort(ps, setIndexRef[Parameter, *Parameter])
+}
+
+// Set sets a value in the map, adding it at the end of the order.
+func (ps *Parameters) Set(key string, p *ParameterRef) {
+	ordmap.Set(ps, key, p, getIndexRef[Parameter, *Parameter], setIndexRef[Parameter, *Parameter])
+}
+
+var _ json.MarshalerTo = (*Parameters)(nil)
+
+// MarshalJSONTo marshals the key-value pairs in order.
+func (ps *Parameters) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return ordmap.MarshalJSONTo(ps, enc)
+}
+
+var _ json.UnmarshalerFrom = (*Parameters)(nil)
+
+// UnmarshalJSONFrom unmarshals the key-value pairs in order and sets the indices.
+func (ps *Parameters) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	return ordmap.UnmarshalJSONFrom(ps, dec, setIndexRef[Parameter, *Parameter])
+}
+
+func (l *loader) collectParameters(ps Parameters, ref ref) {
+	for name, p := range ps.ByIndex() {
+		l.collectParameterRef(p, append(ref, name))
+	}
+}
+
+func (l *loader) resolveParameters(ps Parameters) error {
+	for name, p := range ps.ByIndex() {
+		if err := l.resolveParameterRef(p); err != nil {
+			return &errpath.ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
