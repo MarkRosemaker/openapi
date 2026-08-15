@@ -24,7 +24,12 @@ func (sc StatusCode) StatusText() string {
 		return ""
 	default:
 		code, _ := strconv.Atoi(string(sc))
-		return http.StatusText(code)
+		switch code {
+		case 529:
+			return "The Service Is Overloaded"
+		default:
+			return http.StatusText(code)
+		}
 	}
 }
 
@@ -42,8 +47,7 @@ func (sc StatusCode) Validate() error {
 		}
 	}
 
-	code, err := strconv.Atoi(string(sc))
-	if err != nil || http.StatusText(code) == "" {
+	if sc.StatusText() == "" {
 		return fmt.Errorf("invalid status code %q", sc)
 	}
 

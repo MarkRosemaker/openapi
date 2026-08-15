@@ -58,7 +58,7 @@ type Schema struct {
 	// This string SHOULD be a valid regular expression, according to the Ecma-262 Edition 5.1 regular expression dialect.
 	// NOTE: We simply use text unmarshalling for this field. This guarantees that the regular expression is valid or we can't unmarshal.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
-	// A list of possible values.
+	// A list of possible values. Per JSON Schema 2020-12, enum may contain any JSON type.
 	Enum []any `json:"enum,omitempty" yaml:"enum,omitempty"`
 
 	// Array
@@ -238,6 +238,20 @@ func (s *Schema) Validate() error {
 		}}
 	}
 
+	// String / Enum
+
+	// Per JSON Schema 2020-12, enum can hold any JSON type; validate each value matches the schema type.
+	if s.Type != "" {
+		for i, ev := range s.Enum {
+			if !enumValueMatchesType(ev, s.Type) {
+				return &errpath.ErrField{Field: "enum", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
+					Value:   ev,
+					Message: fmt.Sprintf("must be a %s value", s.Type),
+				}}}
+			}
+		}
+	}
+
 	// Array
 
 	// validate min and max items
@@ -322,7 +336,7 @@ func (s *Schema) Validate() error {
 			}}
 		}
 
-		if len(s.Enum) > 0 {
+		if s.Enum != nil {
 			if !slices.Contains(s.Enum, any(dflt)) {
 				return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[string]{
 					Value:   dflt,
@@ -374,6 +388,35 @@ func (s *Schema) Validate() error {
 	}
 
 	return nil
+}
+
+// enumValueMatchesType reports whether a JSON-decoded value is compatible with the given DataType.
+// JSON numbers unmarshal to float64, integers must additionally be whole numbers.
+func enumValueMatchesType(v any, t DataType) bool {
+	switch t {
+	case TypeString:
+		_, ok := v.(string)
+		return ok
+	case TypeInteger:
+		f, ok := v.(float64)
+		return ok && f == float64(int64(f))
+	case TypeNumber:
+		_, ok := v.(float64)
+		return ok
+	case TypeBoolean:
+		_, ok := v.(bool)
+		return ok
+	case TypeNull:
+		return v == nil
+	case TypeArray:
+		_, ok := v.([]any)
+		return ok
+	case TypeObject:
+		_, ok := v.(map[string]any)
+		return ok
+	default:
+		return true
+	}
 }
 
 func (l *loader) collectSchema(s *Schema, ref ref) {
