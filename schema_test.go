@@ -35,6 +35,9 @@ func TestSchema_Validate(t *testing.T) {
 		{Not: str},
 		// combining with a type is also valid
 		{Type: openapi.TypeString, OneOf: openapi.SchemaRefList{str}},
+		// enum accepts any JSON type per JSON Schema 2020-12
+		{Type: openapi.TypeInteger, Enum: []any{float64(4), float64(6), float64(8)}},
+		{Type: openapi.TypeString, Enum: []any{"foo", "bar"}},
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -182,8 +185,12 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `additionalProperties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
-			Enum: []string{},
-		}, `enum is invalid: only valid for string type, got boolean`},
+			Enum: []any{"not-a-bool"},
+		}, `enum[0] ("not-a-bool") is invalid: must be a boolean value`},
+		{openapi.Schema{
+			Type: openapi.TypeInteger,
+			Enum: []any{float64(3.14)},
+		}, `enum[0] (3.14) is invalid: must be a integer value`},
 		{openapi.Schema{
 			Type:    openapi.TypeBoolean,
 			Default: "foo",
@@ -191,7 +198,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type:    openapi.TypeString,
 			Default: "foo",
-			Enum:    []string{"bar", "buz"},
+			Enum:    []any{"bar", "buz"},
 		}, `default ("foo") is invalid: is not one of the enums (["bar" "buz"])`},
 		{openapi.Schema{
 			Type:    openapi.TypeInteger,
