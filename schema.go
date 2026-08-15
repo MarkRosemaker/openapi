@@ -380,6 +380,16 @@ func (s *Schema) Validate() error {
 				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
 			}}
 		}
+	case []any:
+		switch s.Type {
+		case TypeArray: // fits
+		// TODO: check each element
+		default:
+			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[[]any]{
+				Value:   dflt,
+				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+			}}
+		}
 	default:
 		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
 			Value:   s.Default,
