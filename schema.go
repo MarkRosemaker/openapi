@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"bytes"
 	"encoding/json/jsontext"
 	"fmt"
 	"regexp"
@@ -432,12 +433,60 @@ func (l *loader) resolveSchemaRef(s *SchemaRef) error {
 			return fmt.Errorf("couldn't resolve %q", s.Ref.Identifier)
 		}
 		mergeSchemaFrom(s.Value, ref)
-		// Clear the Ref so this is treated as a resolved inline schema.
-		// Validate() can then check the merged result directly.
+		// Remove the now-redundant "$ref" key from Extensions so the marshaled
+		// output is clean (fully inlined, no dangling $ref alongside the merged fields).
+		s.Value.Extensions = removeFromExtensions(s.Value.Extensions, "$ref")
+		// Clear Ref so this is treated as a resolved inline schema by Validate().
 		s.Ref = nil
 		return l.resolveSchema(s.Value)
 	}
 	return resolveRef(s, l.schemas, l.resolveSchema)
+}
+
+// removeFromExtensions returns a copy of ext with the named key removed.
+// Returns nil if the result is an empty object.
+func removeFromExtensions(ext Extensions, key string) Extensions {
+	if ext == nil {
+		return nil
+	}
+
+	dec := jsontext.NewDecoder(bytes.NewReader(ext))
+	if dec.PeekKind() != '{' {
+		return ext
+	}
+	dec.ReadToken() // consume '{'
+
+	var buf bytes.Buffer
+	enc := jsontext.NewEncoder(&buf)
+	enc.WriteToken(jsontext.BeginObject)
+
+	wrote := false
+	for dec.PeekKind() != '}' {
+		keyTkn, err := dec.ReadToken()
+		if err != nil {
+			return ext
+		}
+		// Save string before ReadValue voids the token.
+		keyStr := keyTkn.String()
+
+		val, err := dec.ReadValue()
+		if err != nil {
+			return ext
+		}
+		if keyStr == key {
+			continue
+		}
+		enc.WriteToken(jsontext.String(keyStr))
+		enc.WriteValue(val)
+		wrote = true
+	}
+
+	enc.WriteToken(jsontext.EndObject)
+
+	if !wrote {
+		return nil
+	}
+	return Extensions(buf.Bytes())
 }
 
 func (l *loader) resolveSchema(s *Schema) error {

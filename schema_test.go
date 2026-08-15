@@ -324,4 +324,27 @@ func TestSchema_RefWithSiblings(t *testing.T) {
 	if err := doc.Validate(); err != nil {
 		t.Fatalf("doc.Validate(): %v", err)
 	}
+
+	// Marshal the merged view schema and verify it is fully inlined (no dangling $ref).
+	viewJSON, err := json.Marshal(viewRef, jsonOpts)
+	if err != nil {
+		t.Fatalf("marshal view: %v", err)
+	}
+
+	var viewMap map[string]any
+	if err := json.Unmarshal(viewJSON, &viewMap); err != nil {
+		t.Fatalf("unmarshal marshaled view: %v", err)
+	}
+	if got := viewMap["type"]; got != "string" {
+		t.Errorf("marshaled type = %v, want \"string\"", got)
+	}
+	if got := viewMap["description"]; got != "Camera view angle" {
+		t.Errorf("marshaled description = %v, want \"Camera view angle\"", got)
+	}
+	if got := viewMap["default"]; got != "side" {
+		t.Errorf("marshaled default = %v, want \"side\"", got)
+	}
+	if _, hasRef := viewMap["$ref"]; hasRef {
+		t.Error("marshaled view should not contain $ref after sibling merge")
+	}
 }
