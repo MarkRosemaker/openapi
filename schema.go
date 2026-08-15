@@ -59,7 +59,7 @@ type Schema struct {
 	// NOTE: We simply use text unmarshalling for this field. This guarantees that the regular expression is valid or we can't unmarshal.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
 	// A list of possible values.
-	Enum []jsontext.Value `json:"enum,omitempty" yaml:"enum,omitempty"`
+	Enum []any `json:"enum,omitempty" yaml:"enum,omitempty"`
 
 	// Array
 
@@ -238,14 +238,6 @@ func (s *Schema) Validate() error {
 		}}
 	}
 
-	// String
-
-	if s.Type != TypeString && s.Enum != nil {
-		return &errpath.ErrField{Field: "enum", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
-		}}
-	}
-
 	// Array
 
 	// validate min and max items
@@ -330,8 +322,8 @@ func (s *Schema) Validate() error {
 			}}
 		}
 
-		if s.Enum != nil {
-			if !slices.Contains(s.Enum, dflt) {
+		if len(s.Enum) > 0 {
+			if !slices.Contains(s.Enum, any(dflt)) {
 				return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[string]{
 					Value:   dflt,
 					Message: fmt.Sprintf("is not one of the enums (%q)", s.Enum),
@@ -389,6 +381,16 @@ func (l *loader) collectSchema(s *Schema, ref ref) {
 }
 
 func (l *loader) resolveSchemaRef(s *SchemaRef) error {
+	if s.Ref != nil && s.Value != nil {
+		// $ref with sibling fields: merge the referenced schema into the sibling schema.
+		// Sibling values take priority; the ref fills in anything not already set.
+		ref, ok := l.schemas[s.Ref.Identifier]
+		if !ok {
+			return fmt.Errorf("couldn't resolve %q", s.Ref.Identifier)
+		}
+		mergeSchemaFrom(s.Value, ref)
+		return l.resolveSchema(s.Value)
+	}
 	return resolveRef(s, l.schemas, l.resolveSchema)
 }
 
@@ -432,13 +434,86 @@ func (l *loader) resolveSchema(s *Schema) error {
 
 func (s *Schema) isEmpty() bool {
 	return s == nil ||
-		(s.Type == "" && s.Format == "" &&
+		(s.Title == "" && s.Description == "" &&
+			s.Type == "" && s.Format == "" &&
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
 			s.Min == nil && s.Max == nil &&
 			s.Pattern == nil &&
+			len(s.Enum) == 0 &&
 			s.MinItems == 0 && s.MaxItems == nil && s.Items == nil &&
 			s.Properties == nil && s.Required == nil &&
 			s.AdditionalProperties == nil &&
 			s.ContentMediaType == "" && s.ContentEncoding == "" &&
-			s.Example == nil)
+			s.Default == nil && len(s.Example) == 0)
+}
+
+// mergeSchemaFrom copies non-zero fields from src to dst, giving precedence to dst's existing values.
+// Used when a $ref has sibling keywords: the sibling values take priority, the ref fills the rest.
+func mergeSchemaFrom(dst, src *Schema) {
+	if dst.Title == "" {
+		dst.Title = src.Title
+	}
+	if dst.Description == "" {
+		dst.Description = src.Description
+	}
+	if dst.Type == "" {
+		dst.Type = src.Type
+	}
+	if dst.Format == "" {
+		dst.Format = src.Format
+	}
+	if len(dst.AllOf) == 0 {
+		dst.AllOf = src.AllOf
+	}
+	if len(dst.OneOf) == 0 {
+		dst.OneOf = src.OneOf
+	}
+	if len(dst.AnyOf) == 0 {
+		dst.AnyOf = src.AnyOf
+	}
+	if dst.Not == nil {
+		dst.Not = src.Not
+	}
+	if dst.Min == nil {
+		dst.Min = src.Min
+	}
+	if dst.Max == nil {
+		dst.Max = src.Max
+	}
+	if dst.Pattern == nil {
+		dst.Pattern = src.Pattern
+	}
+	if len(dst.Enum) == 0 {
+		dst.Enum = src.Enum
+	}
+	if dst.MinItems == 0 {
+		dst.MinItems = src.MinItems
+	}
+	if dst.MaxItems == nil {
+		dst.MaxItems = src.MaxItems
+	}
+	if dst.Items == nil {
+		dst.Items = src.Items
+	}
+	if dst.Properties == nil {
+		dst.Properties = src.Properties
+	}
+	if len(dst.Required) == 0 {
+		dst.Required = src.Required
+	}
+	if dst.AdditionalProperties == nil {
+		dst.AdditionalProperties = src.AdditionalProperties
+	}
+	if dst.ContentMediaType == "" {
+		dst.ContentMediaType = src.ContentMediaType
+	}
+	if dst.ContentEncoding == "" {
+		dst.ContentEncoding = src.ContentEncoding
+	}
+	if dst.Default == nil {
+		dst.Default = src.Default
+	}
+	if len(dst.Example) == 0 {
+		dst.Example = src.Example
+	}
 }

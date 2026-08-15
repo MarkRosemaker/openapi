@@ -43,6 +43,12 @@ type referencable[T any] interface {
 	*T
 }
 
+// emptier is implemented by types that can report whether they have no meaningful fields set.
+// Used to detect sibling keywords alongside a $ref during JSON unmarshaling.
+type emptier interface {
+	isEmpty() bool
+}
+
 // refOrValue is a reference to a component or the component itself.
 type refOrValue[T any, O referencable[T]] struct {
 	// The referenced object.
@@ -76,12 +82,26 @@ func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 
 	// try to unmarshal as a reference
+	// Allow unknown members so sibling keywords (e.g. description, default) don't cause failure.
 	ref := &Reference{}
 	if err := json.UnmarshalDecode(
 		jsontext.NewDecoder(bytes.NewBuffer(val), dec.Options()), ref,
+		json.RejectUnknownMembers(false),
 	); err == nil && ref.Identifier != "" {
 		// we successfully unmarshalled as a reference
 		r.Ref = ref // set the reference
+
+		// Also decode any sibling fields (JSON Schema 2020-12 allows keywords alongside $ref).
+		// Only set r.Value when the type reports non-empty siblings via the emptier interface.
+		var v O
+		if err := json.UnmarshalDecode(
+			jsontext.NewDecoder(bytes.NewBuffer(val), dec.Options()), &v,
+		); err == nil {
+			if e, ok := any(v).(emptier); ok && !e.isEmpty() {
+				r.Value = v
+			}
+		}
+
 		return nil
 	}
 

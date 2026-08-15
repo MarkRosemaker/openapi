@@ -181,17 +181,13 @@ func TestSchema_Validate_Error(t *testing.T) {
 			},
 		}, `additionalProperties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
-			Type: openapi.TypeBoolean,
-			Enum: []string{},
-		}, `enum is invalid: only valid for string type, got boolean`},
-		{openapi.Schema{
 			Type:    openapi.TypeBoolean,
 			Default: "foo",
 		}, `default ("foo") is invalid: does not match schema type, got boolean`},
 		{openapi.Schema{
 			Type:    openapi.TypeString,
 			Default: "foo",
-			Enum:    []string{"bar", "buz"},
+			Enum:    []any{"bar", "buz"},
 		}, `default ("foo") is invalid: is not one of the enums (["bar" "buz"])`},
 		{openapi.Schema{
 			Type:    openapi.TypeInteger,
@@ -243,6 +239,73 @@ func TestSchema_UnmarshalNumericEnum(t *testing.T) {
 	for i, v := range s.Enum {
 		if v != want[i] {
 			t.Errorf("Enum[%d] = %v (%T), want %v", i, v, v, want[i])
+		}
+	}
+}
+
+func TestSchema_RefWithSiblings(t *testing.T) {
+	t.Parallel()
+
+	// A property that has both a $ref and sibling keywords (description, default).
+	// After loading, the resolved schema should have the referenced schema's type/enum
+	// merged in, with the sibling keywords taking precedence.
+	const src = `{
+		"openapi": "3.1.0",
+		"info": {"title": "Test", "version": "0.0.1"},
+		"paths": {},
+		"components": {
+			"schemas": {
+				"CameraView": {
+					"title": "CameraView",
+					"type": "string",
+					"enum": ["side", "low top-down", "high top-down"]
+				},
+				"CameraConfig": {
+					"type": "object",
+					"properties": {
+						"view": {
+							"description": "Camera view angle",
+							"default": "side",
+							"$ref": "#/components/schemas/CameraView"
+						}
+					}
+				}
+			}
+		}
+	}`
+
+	doc, err := openapi.LoadFromDataJSON([]byte(src))
+	if err != nil {
+		t.Fatalf("LoadFromDataJSON: %v", err)
+	}
+
+	cameraConfig := doc.Components.Schemas["CameraConfig"]
+	if cameraConfig == nil {
+		t.Fatal("CameraConfig schema not found")
+	}
+
+	viewRef, ok := cameraConfig.Properties["view"]
+	if !ok || viewRef == nil || viewRef.Value == nil {
+		t.Fatal("CameraConfig.Properties[\"view\"] not found or not resolved")
+	}
+
+	view := viewRef.Value
+	if view.Type != openapi.TypeString {
+		t.Errorf("view.Type = %q, want %q", view.Type, openapi.TypeString)
+	}
+	if view.Description != "Camera view angle" {
+		t.Errorf("view.Description = %q, want %q", view.Description, "Camera view angle")
+	}
+	if view.Default != "side" {
+		t.Errorf("view.Default = %v, want %q", view.Default, "side")
+	}
+	wantEnum := []any{"side", "low top-down", "high top-down"}
+	if len(view.Enum) != len(wantEnum) {
+		t.Fatalf("len(view.Enum) = %d, want %d", len(view.Enum), len(wantEnum))
+	}
+	for i, v := range view.Enum {
+		if v != wantEnum[i] {
+			t.Errorf("view.Enum[%d] = %v, want %v", i, v, wantEnum[i])
 		}
 	}
 }
