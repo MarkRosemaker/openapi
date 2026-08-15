@@ -76,12 +76,9 @@ func (r *refOrValue[T, O]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 
 	// try to unmarshal as a reference
-	// Use RejectUnknownMembers(false) so that extra properties alongside $ref
-	// (which the spec says SHALL be ignored) do not prevent Reference detection.
 	ref := &Reference{}
 	if err := json.UnmarshalDecode(
 		jsontext.NewDecoder(bytes.NewBuffer(val), dec.Options()), ref,
-		json.RejectUnknownMembers(false),
 	); err == nil && ref.Identifier != "" {
 		// we successfully unmarshalled as a reference
 		r.Ref = ref // set the reference
