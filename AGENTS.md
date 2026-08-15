@@ -26,5 +26,4 @@ All CI and local testing uses `GOEXPERIMENT=jsonv2`. Never run `go test` without
 
 ## OAS 3.1 / JSON Schema 2020-12 Notes
 
-- **Reference Object**: OAS 3.1.0 defines a Reference Object with exactly three fields: `$ref`, `summary`, `description`. The spec states "This object cannot be extended with additional properties and any properties added SHALL be ignored." Our `UnmarshalJSONFrom` passes `json.RejectUnknownMembers(false)` when probing for a reference so that extra properties (e.g. `default`) do not prevent `$ref` from being detected — they are silently discarded. Note: this means `default` alongside `$ref` is lost on parse, which is correct per spec.
-- **Enum type validation**: Each enum value must match the schema's declared type (`enumValueMatchesType` in `schema.go`).
+- Any implementation needs to be justified by the [official OpenAPI Specification](https://spec.openapis.org/oas/v3.1.0), reference links to it in relevant comments
