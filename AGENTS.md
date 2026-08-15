@@ -20,13 +20,11 @@ All CI and local testing uses `GOEXPERIMENT=jsonv2`. Never run `go test` without
 ## Key Architecture
 
 - **`encoding/json/v2`** (`encoding/json/jsontext`) — not stable stdlib yet; gated behind `GOEXPERIMENT=jsonv2`. Vendor dir at `vendor/`.
-- **`refOrValue[T, O]`** (`ref.go`) — generic type backing all `*Ref` aliases (SchemaRef, HeaderRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`.
+- **`refOrValue[T, O]`** (`ref.go`) — generic type backing all `*Ref` aliases (SchemaRef, HeaderRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`. Uses `json.RejectUnknownMembers(false)` when probing for a `$ref` so that extra properties alongside `$ref` are silently discarded (as required by the Reference Object spec) rather than causing a parse error.
 - **`loader`** (`loader.go`) — two-pass load: unmarshal → `collectResolveRefs` (collect component schemas, then resolve all `$ref`s).
-- **`emptier` interface** (`ref.go`) — implemented by `*Schema` to detect sibling keywords alongside `$ref` during unmarshal.
 - **`Schema.Enum`** is `[]any` — JSON numbers decode to `float64`, so integer enum values arrive as `float64` and are validated by `enumValueMatchesType`.
 
 ## OAS 3.1 / JSON Schema 2020-12 Notes
 
-- **`$ref` + sibling keywords**: In OAS 3.1+ (which uses JSON Schema 2020-12), a `$ref` in a Schema Object may carry sibling keywords (`description`, `default`, etc.). These apply alongside the referenced schema. Our implementation merges the referenced schema's fields into the sibling schema (sibling values win), then clears `s.Ref` so the result validates as a plain schema.
-- **Reference Object vs Schema `$ref`**: The Reference Object (used for parameters, responses, headers) allows only `$ref`, `summary`, `description` as siblings. Schema `$ref` (JSON Schema context) allows any keyword. Our `emptier` interface ensures sibling capture only happens for `*Schema`, not other ref types.
+- **Reference Object**: OAS 3.1.0 defines a Reference Object with exactly three fields: `$ref`, `summary`, `description`. The spec states "This object cannot be extended with additional properties and any properties added SHALL be ignored." Our `UnmarshalJSONFrom` passes `json.RejectUnknownMembers(false)` when probing for a reference so that extra properties (e.g. `default`) do not prevent `$ref` from being detected — they are silently discarded. Note: this means `default` alongside `$ref` is lost on parse, which is correct per spec.
 - **Enum type validation**: Each enum value must match the schema's declared type (`enumValueMatchesType` in `schema.go`).

@@ -1,7 +1,6 @@
 package openapi
 
 import (
-	"bytes"
 	"encoding/json/jsontext"
 	"fmt"
 	"regexp"
@@ -425,68 +424,7 @@ func (l *loader) collectSchema(s *Schema, ref ref) {
 }
 
 func (l *loader) resolveSchemaRef(s *SchemaRef) error {
-	if s.Ref != nil && s.Value != nil {
-		// $ref with sibling fields (JSON Schema 2020-12 / OAS 3.1+).
-		// Sibling values take priority; the ref fills in anything not already set.
-		ref, ok := l.schemas[s.Ref.Identifier]
-		if !ok {
-			return fmt.Errorf("couldn't resolve %q", s.Ref.Identifier)
-		}
-		mergeSchemaFrom(s.Value, ref)
-		// Remove the now-redundant "$ref" key from Extensions so the marshaled
-		// output is clean (fully inlined, no dangling $ref alongside the merged fields).
-		s.Value.Extensions = removeFromExtensions(s.Value.Extensions, "$ref")
-		// Clear Ref so this is treated as a resolved inline schema by Validate().
-		s.Ref = nil
-		return l.resolveSchema(s.Value)
-	}
 	return resolveRef(s, l.schemas, l.resolveSchema)
-}
-
-// removeFromExtensions returns a copy of ext with the named key removed.
-// Returns nil if the result is an empty object.
-func removeFromExtensions(ext Extensions, key string) Extensions {
-	if ext == nil {
-		return nil
-	}
-
-	dec := jsontext.NewDecoder(bytes.NewReader(ext))
-	if dec.PeekKind() != '{' {
-		return ext
-	}
-	dec.ReadToken() // consume '{'
-
-	var buf bytes.Buffer
-	enc := jsontext.NewEncoder(&buf)
-	enc.WriteToken(jsontext.BeginObject)
-
-	wrote := false
-	for dec.PeekKind() != '}' {
-		keyTkn, err := dec.ReadToken()
-		if err != nil {
-			return ext
-		}
-		// Save string before ReadValue voids the token.
-		keyStr := keyTkn.String()
-
-		val, err := dec.ReadValue()
-		if err != nil {
-			return ext
-		}
-		if keyStr == key {
-			continue
-		}
-		enc.WriteToken(jsontext.String(keyStr))
-		enc.WriteValue(val)
-		wrote = true
-	}
-
-	enc.WriteToken(jsontext.EndObject)
-
-	if !wrote {
-		return nil
-	}
-	return Extensions(buf.Bytes())
 }
 
 func (l *loader) resolveSchema(s *Schema) error {
@@ -529,86 +467,13 @@ func (l *loader) resolveSchema(s *Schema) error {
 
 func (s *Schema) isEmpty() bool {
 	return s == nil ||
-		(s.Title == "" && s.Description == "" &&
-			s.Type == "" && s.Format == "" &&
+		(s.Type == "" && s.Format == "" &&
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
 			s.Min == nil && s.Max == nil &&
 			s.Pattern == nil &&
-			len(s.Enum) == 0 &&
 			s.MinItems == 0 && s.MaxItems == nil && s.Items == nil &&
 			s.Properties == nil && s.Required == nil &&
 			s.AdditionalProperties == nil &&
 			s.ContentMediaType == "" && s.ContentEncoding == "" &&
-			s.Default == nil && len(s.Example) == 0)
-}
-
-// mergeSchemaFrom copies non-zero fields from src to dst, giving precedence to dst's existing values.
-// Used when a $ref has sibling keywords: the sibling values take priority, the ref fills the rest.
-func mergeSchemaFrom(dst, src *Schema) {
-	if dst.Title == "" {
-		dst.Title = src.Title
-	}
-	if dst.Description == "" {
-		dst.Description = src.Description
-	}
-	if dst.Type == "" {
-		dst.Type = src.Type
-	}
-	if dst.Format == "" {
-		dst.Format = src.Format
-	}
-	if len(dst.AllOf) == 0 {
-		dst.AllOf = src.AllOf
-	}
-	if len(dst.OneOf) == 0 {
-		dst.OneOf = src.OneOf
-	}
-	if len(dst.AnyOf) == 0 {
-		dst.AnyOf = src.AnyOf
-	}
-	if dst.Not == nil {
-		dst.Not = src.Not
-	}
-	if dst.Min == nil {
-		dst.Min = src.Min
-	}
-	if dst.Max == nil {
-		dst.Max = src.Max
-	}
-	if dst.Pattern == nil {
-		dst.Pattern = src.Pattern
-	}
-	if len(dst.Enum) == 0 {
-		dst.Enum = src.Enum
-	}
-	if dst.MinItems == 0 {
-		dst.MinItems = src.MinItems
-	}
-	if dst.MaxItems == nil {
-		dst.MaxItems = src.MaxItems
-	}
-	if dst.Items == nil {
-		dst.Items = src.Items
-	}
-	if dst.Properties == nil {
-		dst.Properties = src.Properties
-	}
-	if len(dst.Required) == 0 {
-		dst.Required = src.Required
-	}
-	if dst.AdditionalProperties == nil {
-		dst.AdditionalProperties = src.AdditionalProperties
-	}
-	if dst.ContentMediaType == "" {
-		dst.ContentMediaType = src.ContentMediaType
-	}
-	if dst.ContentEncoding == "" {
-		dst.ContentEncoding = src.ContentEncoding
-	}
-	if dst.Default == nil {
-		dst.Default = src.Default
-	}
-	if len(dst.Example) == 0 {
-		dst.Example = src.Example
-	}
+			s.Example == nil)
 }

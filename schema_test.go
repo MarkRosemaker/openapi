@@ -257,9 +257,15 @@ func TestSchema_UnmarshalNumericEnum(t *testing.T) {
 func TestSchema_RefWithSiblings(t *testing.T) {
 	t.Parallel()
 
-	// A property that has both a $ref and sibling keywords (description, default).
-	// After loading, the resolved schema should have the referenced schema's type/enum
-	// merged in, with the sibling keywords taking precedence.
+	// Per OAS 3.1.0, a Reference Object allows only $ref, summary, and description.
+	// "This object cannot be extended with additional properties and any properties
+	// added SHALL be ignored." (https://spec.openapis.org/oas/v3.1.0#reference-object)
+	//
+	// A schema property with $ref + description (allowed) + default (extra, ignored):
+	// - is parsed as a Reference Object, not an inlined schema
+	// - description is captured on the Reference; default is silently discarded
+	// - after loading the reference is resolved to the referenced schema
+	// - marshaling produces a Reference Object (with $ref), not the inlined schema
 	const src = `{
 		"openapi": "3.1.0",
 		"info": {"title": "Test", "version": "0.0.1"},
@@ -296,19 +302,29 @@ func TestSchema_RefWithSiblings(t *testing.T) {
 	}
 
 	viewRef, ok := cameraConfig.Properties["view"]
-	if !ok || viewRef == nil || viewRef.Value == nil {
-		t.Fatal("CameraConfig.Properties[\"view\"] not found or not resolved")
+	if !ok || viewRef == nil {
+		t.Fatal("CameraConfig.Properties[\"view\"] not found")
 	}
 
+	// Must be parsed as a Reference Object.
+	if viewRef.Ref == nil {
+		t.Fatal("viewRef.Ref is nil; expected a Reference Object")
+	}
+	if viewRef.Ref.Identifier != "#/components/schemas/CameraView" {
+		t.Errorf("Ref.Identifier = %q, want %q", viewRef.Ref.Identifier, "#/components/schemas/CameraView")
+	}
+	// description is an allowed field on the Reference Object.
+	if viewRef.Ref.Description != "Camera view angle" {
+		t.Errorf("Ref.Description = %q, want %q", viewRef.Ref.Description, "Camera view angle")
+	}
+
+	// After loading, the reference must be resolved to the CameraView schema.
+	if viewRef.Value == nil {
+		t.Fatal("viewRef.Value is nil; reference was not resolved")
+	}
 	view := viewRef.Value
 	if view.Type != openapi.TypeString {
 		t.Errorf("view.Type = %q, want %q", view.Type, openapi.TypeString)
-	}
-	if view.Description != "Camera view angle" {
-		t.Errorf("view.Description = %q, want %q", view.Description, "Camera view angle")
-	}
-	if view.Default != "side" {
-		t.Errorf("view.Default = %v, want %q", view.Default, "side")
 	}
 	wantEnum := []any{"side", "low top-down", "high top-down"}
 	if len(view.Enum) != len(wantEnum) {
@@ -319,13 +335,16 @@ func TestSchema_RefWithSiblings(t *testing.T) {
 			t.Errorf("view.Enum[%d] = %v, want %v", i, v, wantEnum[i])
 		}
 	}
+	// default alongside $ref is an extra property that SHALL be ignored per OAS 3.1.0.
+	if view.Default != nil {
+		t.Errorf("view.Default = %v; extra properties alongside $ref must be ignored", view.Default)
+	}
 
-	// The merged schema must also pass validation (default must be in the merged enum).
 	if err := doc.Validate(); err != nil {
 		t.Fatalf("doc.Validate(): %v", err)
 	}
 
-	// Marshal the merged view schema and verify it is fully inlined (no dangling $ref).
+	// Marshaling must produce a Reference Object (with $ref), not the inlined schema.
 	viewJSON, err := json.Marshal(viewRef, jsonOpts)
 	if err != nil {
 		t.Fatalf("marshal view: %v", err)
@@ -335,16 +354,17 @@ func TestSchema_RefWithSiblings(t *testing.T) {
 	if err := json.Unmarshal(viewJSON, &viewMap); err != nil {
 		t.Fatalf("unmarshal marshaled view: %v", err)
 	}
-	if got := viewMap["type"]; got != "string" {
-		t.Errorf("marshaled type = %v, want \"string\"", got)
+	if got := viewMap["$ref"]; got != "#/components/schemas/CameraView" {
+		t.Errorf("marshaled $ref = %v, want %q", got, "#/components/schemas/CameraView")
 	}
 	if got := viewMap["description"]; got != "Camera view angle" {
-		t.Errorf("marshaled description = %v, want \"Camera view angle\"", got)
+		t.Errorf("marshaled description = %v, want %q", got, "Camera view angle")
 	}
-	if got := viewMap["default"]; got != "side" {
-		t.Errorf("marshaled default = %v, want \"side\"", got)
+	// type and default must not appear — they are not part of the Reference Object.
+	if _, hasType := viewMap["type"]; hasType {
+		t.Error("marshaled view must not contain type (belongs to the referenced schema, not the Reference Object)")
 	}
-	if _, hasRef := viewMap["$ref"]; hasRef {
-		t.Error("marshaled view should not contain $ref after sibling merge")
+	if _, hasDefault := viewMap["default"]; hasDefault {
+		t.Error("marshaled view must not contain default (extra properties alongside $ref are ignored)")
 	}
 }
