@@ -425,13 +425,16 @@ func (l *loader) collectSchema(s *Schema, ref ref) {
 
 func (l *loader) resolveSchemaRef(s *SchemaRef) error {
 	if s.Ref != nil && s.Value != nil {
-		// $ref with sibling fields: merge the referenced schema into the sibling schema.
+		// $ref with sibling fields (JSON Schema 2020-12 / OAS 3.1+).
 		// Sibling values take priority; the ref fills in anything not already set.
 		ref, ok := l.schemas[s.Ref.Identifier]
 		if !ok {
 			return fmt.Errorf("couldn't resolve %q", s.Ref.Identifier)
 		}
 		mergeSchemaFrom(s.Value, ref)
+		// Clear the Ref so this is treated as a resolved inline schema.
+		// Validate() can then check the merged result directly.
+		s.Ref = nil
 		return l.resolveSchema(s.Value)
 	}
 	return resolveRef(s, l.schemas, l.resolveSchema)

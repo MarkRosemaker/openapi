@@ -319,4 +319,9 @@ func TestSchema_RefWithSiblings(t *testing.T) {
 			t.Errorf("view.Enum[%d] = %v, want %v", i, v, wantEnum[i])
 		}
 	}
+
+	// The merged schema must also pass validation (default must be in the merged enum).
+	if err := doc.Validate(); err != nil {
+		t.Fatalf("doc.Validate(): %v", err)
+	}
 }
