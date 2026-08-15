@@ -26,6 +26,10 @@ type Reference struct {
 	Summary string `json:"summary,omitempty" yaml:"summary,omitempty"`
 	// A description which by default SHOULD override that of the referenced component. CommonMark syntax MAY be used for rich text representation. If the referenced object-type does not allow a `description` field, then this field has no effect.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
+	// Extra fields alongside $ref are ignored semantically per OAS 3.1.0 ("any
+	// properties added SHALL be ignored"), but stored here verbatim so that
+	// marshal → unmarshal round-trips preserve the original document.
+	Extensions Extensions `json:",inline" yaml:"-"`
 }
 
 func (r *Reference) Validate() error {

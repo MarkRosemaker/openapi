@@ -335,9 +335,9 @@ func TestSchema_RefWithSiblings(t *testing.T) {
 			t.Errorf("view.Enum[%d] = %v, want %v", i, v, wantEnum[i])
 		}
 	}
-	// default alongside $ref is an extra property that SHALL be ignored per OAS 3.1.0.
+	// default alongside $ref is semantically ignored per OAS 3.1.0 (not applied to the resolved schema).
 	if view.Default != nil {
-		t.Errorf("view.Default = %v; extra properties alongside $ref must be ignored", view.Default)
+		t.Errorf("view.Default = %v; extra properties alongside $ref must not be applied to the resolved schema", view.Default)
 	}
 
 	if err := doc.Validate(); err != nil {
@@ -360,11 +360,13 @@ func TestSchema_RefWithSiblings(t *testing.T) {
 	if got := viewMap["description"]; got != "Camera view angle" {
 		t.Errorf("marshaled description = %v, want %q", got, "Camera view angle")
 	}
-	// type and default must not appear — they are not part of the Reference Object.
+	// type must not appear — it belongs to the referenced schema, not the Reference Object.
 	if _, hasType := viewMap["type"]; hasType {
 		t.Error("marshaled view must not contain type (belongs to the referenced schema, not the Reference Object)")
 	}
-	if _, hasDefault := viewMap["default"]; hasDefault {
-		t.Error("marshaled view must not contain default (extra properties alongside $ref are ignored)")
+	// default is an extra field alongside $ref: ignored semantically per spec, but preserved
+	// verbatim in Reference.Extensions so the document round-trips without data loss.
+	if got := viewMap["default"]; got != "side" {
+		t.Errorf("marshaled default = %v, want %q (extra fields alongside $ref must round-trip)", got, "side")
 	}
 }
