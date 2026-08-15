@@ -59,7 +59,7 @@ type Schema struct {
 	// NOTE: We simply use text unmarshalling for this field. This guarantees that the regular expression is valid or we can't unmarshal.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
 	// A list of possible values.
-	Enum []string `json:"enum,omitempty" yaml:"enum,omitempty"`
+	Enum []jsontext.Value `json:"enum,omitempty" yaml:"enum,omitempty"`
 
 	// Array
 

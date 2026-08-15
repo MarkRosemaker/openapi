@@ -1,6 +1,7 @@
 package openapi_test
 
 import (
+	"encoding/json/v2"
 	"fmt"
 	"testing"
 
@@ -214,5 +215,34 @@ func TestSchema_Validate_Error(t *testing.T) {
 				t.Fatalf("want: %s, got: %s", tc.err, err)
 			}
 		})
+	}
+}
+
+func TestSchema_UnmarshalNumericEnum(t *testing.T) {
+	const src = `{
+		"type": "integer",
+		"enum": [4, 6, 8, 10, 12, 16]
+	}`
+
+	s := &openapi.Schema{}
+	if err := json.Unmarshal([]byte(src), s); err != nil {
+		t.Fatalf("unmarshal failed: %v", err)
+	}
+
+	if s.Type != openapi.TypeInteger {
+		t.Errorf("Type = %q, want integer", s.Type)
+	}
+
+	want := []any{float64(4), float64(6), float64(8), float64(10), float64(12), float64(16)}
+	// (json numbers become float64 by default)
+
+	if len(s.Enum) != len(want) {
+		t.Fatalf("len(Enum) = %d, want %d", len(s.Enum), len(want))
+	}
+
+	for i, v := range s.Enum {
+		if v != want[i] {
+			t.Errorf("Enum[%d] = %v (%T), want %v", i, v, v, want[i])
+		}
 	}
 }
