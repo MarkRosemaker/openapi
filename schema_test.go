@@ -1,6 +1,7 @@
 package openapi_test
 
 import (
+	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"fmt"
 	"testing"
@@ -24,10 +25,10 @@ func TestSchema_Validate(t *testing.T) {
 	num := &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeNumber}}
 
 	for i, tc := range []openapi.Schema{
-		{Type: openapi.TypeNumber, Default: 3.14},
-		{Type: openapi.TypeInteger, Default: 3.0},
-		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: 3}, // e.g. seconds
-		{Type: openapi.TypeString, Format: openapi.FormatByte},                  // base64-encoded data
+		{Type: openapi.TypeNumber, Default: jsontext.Value("3.14")},
+		{Type: openapi.TypeInteger, Default: jsontext.Value("3")},
+		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: jsontext.Value("3")}, // e.g. seconds
+		{Type: openapi.TypeString, Format: openapi.FormatByte},                                    // base64-encoded data
 		// oneOf, anyOf, not allow type to be omitted
 		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
 		{OneOf: openapi.SchemaRefList{str, num}},
@@ -36,8 +37,8 @@ func TestSchema_Validate(t *testing.T) {
 		// combining with a type is also valid
 		{Type: openapi.TypeString, OneOf: openapi.SchemaRefList{str}},
 		// enum accepts any JSON type per JSON Schema 2020-12
-		{Type: openapi.TypeInteger, Enum: []any{float64(4), float64(6), float64(8)}},
-		{Type: openapi.TypeString, Enum: []any{"foo", "bar"}},
+		{Type: openapi.TypeInteger, Enum: []jsontext.Value{jsontext.Value("4"), jsontext.Value("6"), jsontext.Value("8")}},
+		{Type: openapi.TypeString, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value(`"bar"`)}},
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -185,37 +186,33 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `additionalProperties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
-			Enum: []any{"not-a-bool"},
+			Enum: []jsontext.Value{jsontext.Value(`"not-a-bool"`)},
 		}, `enum[0] ("not-a-bool") is invalid: must be a boolean value`},
 		{openapi.Schema{
 			Type: openapi.TypeInteger,
-			Enum: []any{float64(3.14)},
+			Enum: []jsontext.Value{jsontext.Value("3.14")},
 		}, `enum[0] (3.14) is invalid: must be a integer value`},
 		{openapi.Schema{
 			Type:    openapi.TypeBoolean,
-			Default: "foo",
+			Default: jsontext.Value(`"foo"`),
 		}, `default ("foo") is invalid: does not match schema type, got boolean`},
 		{openapi.Schema{
 			Type:    openapi.TypeString,
-			Default: "foo",
-			Enum:    []any{"bar", "buz"},
+			Default: jsontext.Value(`"foo"`),
+			Enum:    []jsontext.Value{jsontext.Value(`"bar"`), jsontext.Value(`"buz"`)},
 		}, `default ("foo") is invalid: is not one of the enums (["bar" "buz"])`},
 		{openapi.Schema{
 			Type:    openapi.TypeInteger,
-			Default: 3.14,
+			Default: jsontext.Value("3.14"),
 		}, `default (3.14) is invalid: does not match schema type, got integer`},
 		{openapi.Schema{
 			Type:    openapi.TypeString,
-			Default: 3.14,
+			Default: jsontext.Value("3.14"),
 		}, `default (3.14) is invalid: does not match schema type, got string`},
 		{openapi.Schema{
 			Type:    openapi.TypeString,
-			Default: 3,
+			Default: jsontext.Value("3"),
 		}, `default (3) is invalid: does not match schema type, got string`},
-		{openapi.Schema{
-			Type:    openapi.TypeString,
-			Default: struct{}{},
-		}, `default is invalid: unknown type struct {}`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
@@ -240,16 +237,18 @@ func TestSchema_UnmarshalNumericEnum(t *testing.T) {
 		t.Errorf("Type = %q, want integer", s.Type)
 	}
 
-	want := []any{float64(4), float64(6), float64(8), float64(10), float64(12), float64(16)}
-	// (json numbers become float64 by default)
+	want := []string{"4", "6", "8", "10", "12", "16"}
 
 	if len(s.Enum) != len(want) {
 		t.Fatalf("len(Enum) = %d, want %d", len(s.Enum), len(want))
 	}
 
 	for i, v := range s.Enum {
-		if v != want[i] {
-			t.Errorf("Enum[%d] = %v (%T), want %v", i, v, v, want[i])
+		if v.Kind() != jsontext.KindNumber {
+			t.Errorf("Enum[%d].Kind() = %v, want number", i, v.Kind())
+		}
+		if v.String() != want[i] {
+			t.Errorf("Enum[%d] = %s, want %s", i, v.String(), want[i])
 		}
 	}
 }

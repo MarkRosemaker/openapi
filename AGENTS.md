@@ -20,9 +20,9 @@ All CI and local testing uses `GOEXPERIMENT=jsonv2`. Never run `go test` without
 ## Key Architecture
 
 - **`encoding/json/v2`** (`encoding/json/jsontext`) — not stable stdlib yet; gated behind `GOEXPERIMENT=jsonv2`. Vendor dir at `vendor/`.
-- **`refOrValue[T, O]`** (`ref.go`) — generic type backing all `*Ref` aliases (SchemaRef, HeaderRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`. Uses `json.RejectUnknownMembers(false)` when probing for a `$ref` so that extra properties alongside `$ref` are silently discarded (as required by the Reference Object spec) rather than causing a parse error.
+- **`refOrValue[T, O]`** (`ref.go`) — generic type backing all `*Ref` aliases (SchemaRef, HeaderRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`. Probes for `$ref` by attempting to unmarshal as `Reference`; falls back to the value type if `$ref` is absent.
 - **`loader`** (`loader.go`) — two-pass load: unmarshal → `collectResolveRefs` (collect component schemas, then resolve all `$ref`s).
-- **`Schema.Enum`** is `[]any` — JSON numbers decode to `float64`, so integer enum values arrive as `float64` and are validated by `enumValueMatchesType`.
+- **`Schema.Enum`** is `[]jsontext.Value` and **`Schema.Default`** is `jsontext.Value` — raw JSON is preserved exactly as written. Kind-based validation (`enumKindMatchesType`, `isJSONInteger`) checks types without decoding to Go values.
 
 ## OAS 3.1 / JSON Schema 2020-12 Notes
 
