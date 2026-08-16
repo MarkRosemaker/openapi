@@ -78,12 +78,12 @@ type Schema struct {
 	// For object types, defines the properties of the object
 	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
 	// Which properties are required.
-	Required             []string   `json:"required,omitempty" yaml:"required,omitempty"`
+	Required             []string   `json:"required,omitempty"             yaml:"required,omitempty"`
 	AdditionalProperties *SchemaRef `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
 
 	// special encoding for binary data
 	ContentMediaType string `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
-	ContentEncoding  string `json:"contentEncoding,omitempty" yaml:"contentEncoding,omitempty"`
+	ContentEncoding  string `json:"contentEncoding,omitempty"  yaml:"contentEncoding,omitempty"`
 
 	// Specifies the default value of the property if no value is provided.
 	Default jsontext.Value `json:"default,omitempty" yaml:"default,omitempty"`
