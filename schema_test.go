@@ -16,6 +16,16 @@ func TestSchema_JSON(t *testing.T) {
 		"type": "object",
 		"example": null
 	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "string",
+		"enum": [
+			"side",
+			"low top-down",
+			"high top-down"
+		],
+		"default": "side"
+	}`), &openapi.Schema{})
 }
 
 func TestSchema_Validate(t *testing.T) {
