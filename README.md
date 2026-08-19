@@ -2,7 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/MarkRosemaker/openapi.svg)](https://pkg.go.dev/github.com/MarkRosemaker/openapi)
 [![Go Report Card](https://goreportcard.com/badge/github.com/MarkRosemaker/openapi)](https://goreportcard.com/report/github.com/MarkRosemaker/openapi)
-![Code Coverage](https://img.shields.io/badge/coverage-96.4%25-brightgreen)
+![Code Coverage](https://img.shields.io/badge/coverage-94.5%25-brightgreen)
 [![License: Apache](https://img.shields.io/badge/License-Apache-yellow.svg)](./LICENSE)
 
 </div>
@@ -15,7 +15,7 @@
   Transform and master your API specs with ease.
 </h3>
 
-Package openapi provides a suite of tools for working with OpenAPI specifications, making it easier to parse, format, manipulate, and generate code from these specs. 
+Package openapi provides a suite of tools for working with OpenAPI specifications, making it easier to parse, format, manipulate, and generate code from these specs.
 
 Whether you're looking to clean up existing API documentation or integrate API design into your development pipeline, this package is built to streamline your workflow.
 
@@ -30,6 +30,11 @@ The primary goals of this package are:
 - **Adding information programmatically** to the specifications.
 - **Marshalling** the modified specifications back into their original format.
 - **Utilizing** the parsed specification for code generation.
+
+This module is deliberately kept focused on representing and validating a
+specification. Transformations that not everyone needs — flattening, deduplicating,
+enriching, generating code — live in [separate modules](#the-openapi-family) so that
+users who only want to parse, validate, and prettify a spec don't pay for them.
 
 ## Features
 
@@ -73,9 +78,29 @@ func main() {
 }
 ```
 
+## The openapi family
+
+This module is the foundation of a family of composable tools. Every one of them
+operates on the `*openapi.Document` defined here, so they can be combined freely.
+
+| Module | Purpose |
+|---|---|
+| **openapi** (this module) | Parse, validate, and write OpenAPI 3.x specifications |
+| [openapi-compare](https://github.com/MarkRosemaker/openapi-compare) | Compare specification objects — exact equality and shape equivalence |
+| [openapi-edit](https://github.com/MarkRosemaker/openapi-edit) | Safe structural edits, such as renaming a schema and rewriting every `$ref` to it |
+| [openapi-flatten](https://github.com/MarkRosemaker/openapi-flatten) | Promote inline definitions into named `components` entries |
+| [openapi-compress](https://github.com/MarkRosemaker/openapi-compress) | Deduplicate and merge equivalent component schemas |
+| [openapi-merge](https://github.com/MarkRosemaker/openapi-merge) | Merge schemas that were inferred independently from different samples |
+| [openapi-enrich](https://github.com/MarkRosemaker/openapi-enrich) | Infer specification content from observed HTTP traffic |
+| [openapi-codegen](https://github.com/MarkRosemaker/openapi-codegen) | Generate Go types, clients, and servers from a specification |
+
+A typical pipeline records traffic with `openapi-enrich`, normalizes structure with
+`openapi-flatten` and `openapi-compress`, and finally generates code with
+`openapi-codegen`.
+
 ## Additional Information
 
-- [**Go Reference**](https://pkg.go.dev/github.com/MarkRosemaker/openapi): The Go reference documentation for the errpath package.
+- [**Go Reference**](https://pkg.go.dev/github.com/MarkRosemaker/openapi): The Go reference documentation for the openapi package.
 - [**Go Report Card**](https://goreportcard.com/report/github.com/MarkRosemaker/openapi): Check the code quality report.
 
 ## Contributing
