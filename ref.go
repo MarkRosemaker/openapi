@@ -46,9 +46,9 @@ type referencable[T any] interface {
 // refOrValue is a reference to a component or the component itself.
 type refOrValue[T any, O referencable[T]] struct {
 	// The referenced object.
-	Value O `json:",inline" yaml:",inline"`
+	Value O `json:",embed" yaml:",embed"`
 	// The reference.
-	Ref *Reference `json:",inline" yaml:",inline"`
+	Ref *Reference `json:",embed" yaml:",embed"`
 
 	// an index to the original location of this object
 	idx int

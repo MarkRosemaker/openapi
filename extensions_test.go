@@ -12,7 +12,7 @@ type testStruct struct {
 	// An integer field
 	IntegerField int `json:"integerField,omitempty" yaml:"integerField,omitempty"`
 	// An Extensions field
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 func TestExtensions_valid(t *testing.T) {

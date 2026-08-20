@@ -21,7 +21,7 @@ type RequestBody struct {
 	Content Content `json:"content" yaml:"content"`
 
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
 func (r *RequestBody) Validate() error {

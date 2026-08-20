@@ -26,7 +26,7 @@ type Info struct {
 	// REQUIRED. The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
 	Version string `json:"version" yaml:"version"`
 	// The object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 func (i *Info) Validate() error {

@@ -43,7 +43,12 @@ func TimeUnmarshalStringOrIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 
 	switch tkn.Kind() {
 	case jsontext.KindNumber:
-		if seconds := tkn.Int(); seconds == 0 {
+		seconds, err := tkn.Int()
+		if err != nil {
+			return err
+		}
+
+		if seconds == 0 {
 			*d = time.Time{}
 		} else {
 			*d = time.Unix(seconds, 0)

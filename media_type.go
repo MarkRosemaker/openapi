@@ -26,7 +26,7 @@ type MediaType struct {
 	// A map between a property name and its encoding information. The key, being the property name, MUST exist in the schema as a property. The encoding object SHALL only apply to `requestBody` objects when the media type is `multipart` or `application/x-www-form-urlencoded`.
 	Encoding Encodings `json:"encoding,omitempty" yaml:"encoding,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 
 	// an index to the original location of this object
 	idx int

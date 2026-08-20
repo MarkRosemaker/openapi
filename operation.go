@@ -37,7 +37,7 @@ type Operation struct {
 	// An alternative `server` array to service this operation. If an alternative `server` object is specified at the Path Item Object or Root level, it will be overridden by this value.
 	Servers Servers `json:"servers,omitempty" yaml:"servers,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 // Validate validates the operation.

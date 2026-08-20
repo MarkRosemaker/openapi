@@ -39,7 +39,7 @@ type PathItem struct {
 	// A definition of a TRACE operation on this path.
 	Trace *Operation `json:"trace,omitempty" yaml:"trace,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 
 	// an index to the original location of this object
 	idx int

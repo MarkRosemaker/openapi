@@ -19,7 +19,7 @@ type Contact struct {
 	// The email address of the contact person/organization. This MUST be in the form of an email address.
 	Email types.Email `json:"email,omitempty" yaml:"email,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 // Validate checks the contact for consistency.

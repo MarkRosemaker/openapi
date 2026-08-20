@@ -48,7 +48,7 @@ type Components struct {
 	// An object to hold reusable Path Item Object.
 	PathItems PathItems `json:"pathItems,omitempty" yaml:"pathItems,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 func validateKey(key string) error {

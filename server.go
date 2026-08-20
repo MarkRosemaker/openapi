@@ -16,7 +16,7 @@ type Server struct {
 	// A map between a variable name and its value. The value is used for substitution in the server's URL template.
 	Variables ServerVariables `json:"variables,omitempty" yaml:"variables,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 func (s *Server) Validate() error {

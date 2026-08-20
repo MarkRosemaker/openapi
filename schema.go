@@ -91,7 +91,7 @@ type Schema struct {
 	Example jsontext.Value `json:"example,omitzero" yaml:"example,omitzero"`
 
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 
 	// an index to the original location of this object
 	idx int

@@ -20,7 +20,7 @@ type License struct {
 	// A URL to the license used for the API. This MUST be in the form of a URL. The url field is mutually exclusive of the identifier field.
 	URL *url.URL `json:"url,omitempty" yaml:"url,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 func (l *License) Validate() error {

@@ -37,7 +37,7 @@ type SecurityScheme struct {
 	OpenIdConnectURL *url.URL `json:"openIdConnectUrl,omitempty" yaml:"openIdConnectUrl,omitempty"`
 
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
 const (

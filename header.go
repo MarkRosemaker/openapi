@@ -30,7 +30,7 @@ type Header struct {
 	// A map containing the representations for the parameter. The key is the media type and the value describes it. The map MUST only contain one entry.
 	Content Content `json:"content,omitempty" yaml:"content,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
 func (h *Header) Validate() error {

@@ -37,7 +37,7 @@ type Link struct {
 	// A server object to be used by the target operation.
 	Server *Server `json:"server,omitempty" yaml:"server,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
 func (l *Link) Validate() error {

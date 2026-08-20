@@ -18,7 +18,7 @@ type OAuthFlows struct {
 	// Previously called `accessCode` in OpenAPI 2.0.
 	AuthorizationCode *OAuthFlowAuthorizationCode `json:"authorizationCode,omitempty" yaml:"authorizationCode,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:",inline"`
+	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
 func (f *OAuthFlows) Validate() error {

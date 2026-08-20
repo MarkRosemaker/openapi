@@ -21,7 +21,7 @@ type Example struct {
 	// The `value` field and `externalValue` field are mutually exclusive. See the rules for resolving [Relative References](#relative-references-in-uris).
 	ExternalValue *url.URL `json:"externalValue,omitempty" yaml:"externalValue,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
 func (ex *Example) Validate() error {

@@ -21,7 +21,7 @@ type Response struct {
 	// A map of operations links that can be followed from the response. The key of the map is a short name for the link, following the naming constraints of the names for Component Objects.
 	Links Links `json:"links,omitempty" yaml:"links,omitempty"`
 	// This object MAY be extended with Specification Extensions.
-	Extensions Extensions `json:",inline" yaml:"-"`
+	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
 func (r *Response) Validate() error {
