@@ -1,0 +1,30 @@
+# cloud.google.com/go v0.123.0
+## explicit; go 1.24.0
+cloud.google.com/go/civil
+# github.com/MarkRosemaker/errpath v0.0.0-20260425165607-bbd4959d04d9
+## explicit; go 1.23.2
+github.com/MarkRosemaker/errpath
+# github.com/MarkRosemaker/json2yaml v0.0.0-20260507220148-d6cc0d01bff0
+## explicit; go 1.23.4
+github.com/MarkRosemaker/json2yaml
+# github.com/MarkRosemaker/jsonutil v0.0.0-20260718153618-78b5039427a4
+## explicit; go 1.26.3
+github.com/MarkRosemaker/jsonutil
+# github.com/MarkRosemaker/ordmap v0.0.0-20260727220052-3181ae3b2977
+## explicit; go 1.25.0
+github.com/MarkRosemaker/ordmap
+# github.com/MarkRosemaker/yaml v0.0.0-20260508005758-fe21a538b084
+## explicit; go 1.23.4
+github.com/MarkRosemaker/yaml
+# github.com/MarkRosemaker/yaml2json v0.0.0-20260507220136-7748efc522b2
+## explicit; go 1.23.4
+github.com/MarkRosemaker/yaml2json
+# github.com/go-api-libs/types v0.0.0-20251210072721-82754f56609d
+## explicit; go 1.23.2
+github.com/go-api-libs/types
+# golang.org/x/exp v0.0.0-20260727155853-b88d891fe743
+## explicit; go 1.25.0
+golang.org/x/exp/maps
+# gopkg.in/yaml.v3 v3.0.1
+## explicit
+gopkg.in/yaml.v3

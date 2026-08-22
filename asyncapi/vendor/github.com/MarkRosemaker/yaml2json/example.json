@@ -1,0 +1,55 @@
+{
+    "string": "Hello, World!",
+    "int": 42,
+    "float": 3.14,
+    "bool": true,
+    "bool2": false,
+    "null_value": null,
+    "list": [
+        "item1",
+        "item2",
+        "item3"
+    ],
+    "dictionary": {
+        "key1": "value1",
+        "key2": "value2"
+    },
+    "nested": {
+        "list_of_dicts": [
+            {
+                "name": "item1",
+                "value": 1
+            },
+            {
+                "name": "item2",
+                "value": 2
+            }
+        ],
+        "dict_of_lists": {
+            "key1": [
+                "item1",
+                "item2"
+            ],
+            "key2": [
+                "item3",
+                "item4"
+            ]
+        }
+    },
+    "block": "This is a block\nstyle multiline string.\n",
+    "folded": "This is a folded style multiline string.\n",
+    "quoted": "This string contains: special characters, colons: and dashes -",
+    "foo": {
+        "bar": {
+            "qux": "quxqux",
+            "baz": "bazbaz"
+        }
+    },
+    "greeting": {
+        "audience": "world",
+        "bar": {
+            "qux": "quxqux",
+            "baz": "bazbaz"
+        }
+    }
+}
