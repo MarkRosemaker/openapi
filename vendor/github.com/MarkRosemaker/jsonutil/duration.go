@@ -22,3 +22,26 @@ func DurationUnmarshalIntSeconds(dec *jsontext.Decoder, d *time.Duration) error 
 
 	return nil
 }
+
+// DurationMarshalString encodes a time.Duration as a JSON string
+// using the canonical units format (e.g. "1h30m", "500ms").
+func DurationMarshalString(enc *jsontext.Encoder, d time.Duration) error {
+	return enc.WriteToken(jsontext.String(d.String()))
+}
+
+// DurationUnmarshalString decodes a JSON string into a time.Duration
+// by parsing it with time.ParseDuration.
+func DurationUnmarshalString(dec *jsontext.Decoder, d *time.Duration) error {
+	var s string
+	if err := json.UnmarshalDecode(dec, &s); err != nil {
+		return err
+	}
+
+	parsed, err := time.ParseDuration(s)
+	if err != nil {
+		return err
+	}
+
+	*d = parsed
+	return nil
+}
