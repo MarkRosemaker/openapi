@@ -12,12 +12,12 @@ func TestParameterList_Validate_Error(t *testing.T) {
 	err := openapi.ParameterList{{
 		Value: &openapi.Parameter{
 			Name: "foo", In: openapi.ParameterLocationQuery,
-			Schema: &openapi.Schema{Type: openapi.TypeString},
+			Schema: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeString}},
 		},
 	}, {
 		Value: &openapi.Parameter{
 			Name: "foo", In: openapi.ParameterLocationQuery,
-			Schema: &openapi.Schema{Type: openapi.TypeString},
+			Schema: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeString}},
 		},
 	}}.Validate()
 	if err == nil {
@@ -44,12 +44,12 @@ func TestParameterList_In(t *testing.T) {
 	list = append(list, &openapi.ParameterRef{
 		Value: &openapi.Parameter{
 			Name: "foo", In: openapi.ParameterLocationQuery,
-			Schema: &openapi.Schema{Type: openapi.TypeString},
+			Schema: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeString}},
 		},
 	}, &openapi.ParameterRef{
 		Value: &openapi.Parameter{
 			Name: "bar", In: openapi.ParameterLocationPath,
-			Schema: &openapi.Schema{Type: openapi.TypeString},
+			Schema: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeString}},
 		},
 	})
 

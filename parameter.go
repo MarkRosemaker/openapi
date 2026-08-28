@@ -128,15 +128,15 @@ func (p *Parameter) Validate() error {
 		if err := p.Style.Validate(); err != nil {
 			return &errpath.ErrField{Field: "style", Err: err}
 		}
-	} else if p.In == ParameterLocationQuery && p.Schema != nil &&
-		(p.Schema.Type == TypeArray || p.Schema.Type == TypeObject) {
+	} else if p.In == ParameterLocationQuery && p.Schema != nil && p.Schema.Value != nil &&
+		(p.Schema.Value.Type == TypeArray || p.Schema.Value.Type == TypeObject) {
 		// Form style is the default for query parameters in OpenAPI 3.0+, regardless of whether the parameter is a primitive, array, or object (when style is omitted).
 		// We set the default explicitly, but just for array and object (to not clutter the specification) to make things clearer.
 		p.Style = ParameterStyleForm
 	}
 
-	arrayOrObject := p.Schema != nil &&
-		(p.Schema.Type == TypeArray || p.Schema.Type == TypeObject)
+	arrayOrObject := p.Schema != nil && p.Schema.Value != nil &&
+		(p.Schema.Value.Type == TypeArray || p.Schema.Value.Type == TypeObject)
 	if p.Explode != nil {
 		if p.Schema == nil {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
@@ -148,7 +148,7 @@ func (p *Parameter) Validate() error {
 		if !arrayOrObject {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
-				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", p.Schema.Type),
+				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", p.Schema.Value.Type),
 			}}
 		}
 	} else if arrayOrObject && p.Style == ParameterStyleForm {
@@ -184,7 +184,7 @@ func (l *loader) resolveParameterRef(p *ParameterRef) error {
 
 func (l *loader) resolveParameter(p *Parameter) error {
 	if p.Schema != nil {
-		if err := l.resolveSchema(p.Schema); err != nil {
+		if err := l.resolveSchemaRef(p.Schema); err != nil {
 			return &errpath.ErrField{Field: "schema", Err: err}
 		}
 	}
