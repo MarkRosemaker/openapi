@@ -49,7 +49,7 @@ type Parameter struct {
 	// Determines whether the parameter value SHOULD allow reserved characters, as defined by RFC3986 `:/?#[]@!$&'()*+,;=` to be included without percent-encoding. This property only applies to parameters with an `in` value of `query`. The default value is `false`.
 	AllowReserved bool `json:"allowReserved,omitempty,omitzero" yaml:"allowReserved,omitempty"`
 	// The schema defining the type used for the parameter.
-	Schema *Schema `json:"schema,omitempty" yaml:"schema,omitempty"`
+	Schema *SchemaRef `json:"schema,omitempty" yaml:"schema,omitempty"`
 	// Example of the parameter's potential value. The example SHOULD match the specified schema and encoding properties if present. The `example` field is mutually exclusive of the `examples` field. Furthermore, if referencing a `schema` that contains an example, the `example` value SHALL _override_ the example provided by the schema. To represent examples of media types that cannot naturally be represented in JSON or YAML, a string value can contain the example with escaping where necessary.
 	Example jsontext.Value `json:"example,omitempty" yaml:"example,omitempty"`
 	// Examples of the parameter's potential value. Each example SHOULD contain a value in the correct format as specified in the parameter encoding. The `examples` field is mutually exclusive of the `example` field. Furthermore, if referencing a `schema` that contains an example, the `examples` value SHALL _override_ the example provided by the schema.
