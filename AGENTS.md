@@ -10,16 +10,13 @@
 ## Building and Testing
 
 ```bash
-# This repo requires Go 1.26.3 with the jsonv2 experiment flag
-GOEXPERIMENT=jsonv2 go build ./...
-GOEXPERIMENT=jsonv2 go test ./...
+go build ./...
+go test ./...
 ```
-
-All CI and local testing uses `GOEXPERIMENT=jsonv2`. Never run `go test` without it — the build will fail.
 
 ## Key Architecture
 
-- **`encoding/json/v2`** (`encoding/json/jsontext`) — not stable stdlib yet; gated behind `GOEXPERIMENT=jsonv2`. Vendor dir at `vendor/`.
+- **`encoding/json/v2`** (`encoding/json/jsontext`) — stable in Go 1.27 standard library.
 - **`refOrValue[T, O]`** (`ref.go`) — generic type backing all `*Ref` aliases (SchemaRef, HeaderRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`. Probes for `$ref` by attempting to unmarshal as `Reference`; falls back to the value type if `$ref` is absent.
 - **`loader`** (`loader.go`) — two-pass load: unmarshal → `collectResolveRefs` (collect component schemas, then resolve all `$ref`s).
 - **`Schema.Enum`** is `[]jsontext.Value` and **`Schema.Default`** is `jsontext.Value` — raw JSON is preserved exactly as written. Kind-based validation (`enumKindMatchesType`, `isJSONInteger`) checks types without decoding to Go values.
