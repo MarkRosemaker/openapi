@@ -16,7 +16,7 @@ go test ./...
 
 ## Key Architecture
 
-- **`encoding/json/v2`** (`encoding/json/jsontext`) — stable in Go 1.27. Vendor dir at `vendor/`.
+- **`encoding/json/v2`** (`encoding/json/jsontext`) — stable in Go 1.27 standard library.
 - **`refOrValue[T, O]`** (`ref.go`) — generic type backing all `*Ref` aliases (SchemaRef, HeaderRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`. Probes for `$ref` by attempting to unmarshal as `Reference`; falls back to the value type if `$ref` is absent.
 - **`loader`** (`loader.go`) — two-pass load: unmarshal → `collectResolveRefs` (collect component schemas, then resolve all `$ref`s).
 - **`Schema.Enum`** is `[]jsontext.Value` and **`Schema.Default`** is `jsontext.Value` — raw JSON is preserved exactly as written. Kind-based validation (`enumKindMatchesType`, `isJSONInteger`) checks types without decoding to Go values.
