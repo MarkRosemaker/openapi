@@ -1,0 +1,623 @@
+InternalCmdTest: false
+InternalTest: false
+formatters:
+    enable:
+        - gci
+        - gofumpt
+        - goimports
+    exclusions:
+        generated: strict
+        paths: []
+        warn-unused: false
+    settings:
+        gci:
+            custom-order: false
+            no-inline-comments: false
+            no-lex-order: false
+            no-prefix-comments: false
+            sections: []
+        gofmt:
+            rewrite-rules: []
+            simplify: false
+        gofumpt:
+            extra:
+                balance-calls: true
+                clothe-returns: true
+                group-params: true
+            extra-rules: false
+            module-path: ""
+        goimports:
+            local-prefixes: []
+        golines:
+            chain-split-dots: false
+            max-len: 0
+            reformat-tags: false
+            shorten-comments: false
+            tab-len: 0
+issues:
+    fix: false
+    max-issues-per-linter: 0
+    max-same-issues: 0
+    new: false
+    new-from-merge-base: ""
+    new-from-patch: ""
+    new-from-rev: ""
+    uniq-by-line: false
+    whole-files: false
+linters:
+    default: none
+    disable: []
+    enable:
+        - usetesting
+        - tagalign
+        - testifylint
+    exclusions:
+        generated: ""
+        paths: []
+        paths-except: []
+        presets: []
+        rules: []
+        warn-unused: false
+    fast-only: false
+    settings:
+        asasalint:
+            exclude: []
+            use-builtin-exclusions: false
+        bidichk:
+            first-strong-isolate: false
+            left-to-right-embedding: false
+            left-to-right-isolate: false
+            left-to-right-override: false
+            pop-directional-formatting: false
+            pop-directional-isolate: false
+            right-to-left-embedding: false
+            right-to-left-isolate: false
+            right-to-left-override: false
+        bodyclose:
+            check-consumption: false
+        canonicalheader:
+            exclusions: []
+            use-default-exclusions: false
+        copyloopvar:
+            check-alias: false
+        custom: {}
+        cyclop:
+            max-complexity: 0
+            package-average: 0
+        decorder:
+            dec-order: []
+            disable-const-dec-num-check: false
+            disable-dec-num-check: false
+            disable-dec-order-check: false
+            disable-init-func-first-check: false
+            disable-type-dec-num-check: false
+            disable-var-dec-num-check: false
+            ignore-underscore-vars: false
+        depguard:
+            rules: {}
+        dogsled:
+            max-blank-identifiers: 0
+        dupl:
+            threshold: 0
+        dupword:
+            comments-only: false
+            ignore: []
+            keywords: []
+            skip-raw-strings: false
+        embeddedstructfieldcheck:
+            empty-line: false
+            forbid-mutex: false
+        errcheck:
+            check-blank: false
+            check-type-assertions: false
+            disable-default-exclusions: false
+            exclude-functions: []
+            verbose: false
+        errchkjson:
+            check-error-free-encoding: false
+            report-no-exported: false
+        errorlint:
+            allowed-errors: []
+            allowed-errors-wildcard: []
+            asserts: false
+            comparison: false
+            errorf: false
+            errorf-multi: false
+        exhaustive:
+            check: []
+            default-case-required: false
+            default-signifies-exhaustive: false
+            explicit-exhaustive-map: false
+            explicit-exhaustive-switch: false
+            ignore-enum-members: ""
+            ignore-enum-types: ""
+            package-scope-only: false
+        exhaustruct:
+            allow-empty: false
+            allow-empty-declarations: false
+            allow-empty-returns: false
+            allow-empty-rx: []
+            exclude: []
+            include: []
+        exhaustruct_v5:
+            allow-empty: false
+            allow-empty-declarations: false
+            allow-empty-patterns: []
+            allow-empty-returns: false
+            enforce-patterns: []
+            explicit-mode: false
+            ignore-patterns: []
+            optional-patterns: []
+        fatcontext:
+            check-function-literals: false
+            check-loops: false
+            check-struct-pointers: false
+        forbidigo:
+            analyze-types: false
+            exclude-godoc-examples: false
+            forbid: []
+        funcorder: {}
+        funlen:
+            ignore-comments: false
+            lines: 0
+            statements: 0
+        ginkgolinter:
+            allow-havelen-zero: false
+            forbid-focus-container: false
+            forbid-spec-pollution: false
+            force-assertion-description: false
+            force-expect-to: false
+            force-succeed: false
+            force-tonot: false
+            suppress-async-assertion: false
+            suppress-compare-assertion: false
+            suppress-err-assertion: false
+            suppress-len-assertion: false
+            suppress-nil-assertion: false
+            suppress-type-compare-assertion: false
+            validate-async-intervals: false
+        gochecksumtype:
+            default-signifies-exhaustive: false
+            include-shared-interfaces: false
+        gocognit:
+            min-complexity: 0
+        goconst:
+            eval-const-expressions: false
+            exclude-types: []
+            find-duplicates: false
+            ignore-calls: false
+            ignore-functions: []
+            ignore-map-keys: false
+            ignore-string-values: []
+            ignore-strings: ""
+            ignore-tests: false
+            match-constant: false
+            max: 0
+            min: 0
+            min-len: 0
+            min-occurrences: 0
+            numbers: false
+        gocritic:
+            disable-all: false
+            disabled-checks: []
+            disabled-tags: []
+            enable-all: false
+            enabled-checks: []
+            enabled-tags: []
+            settings: {}
+        gocyclo:
+            min-complexity: 0
+        godoclint:
+            default: null
+            disable: []
+            enable: []
+            options:
+                max-len:
+                    length: null
+                require-doc:
+                    ignore-exported: null
+                    ignore-unexported: null
+                start-with-name:
+                    include-unexported: null
+        godot:
+            capital: false
+            exclude: []
+            period: false
+            scope: ""
+        godox:
+            keywords: []
+        goheader:
+            template: ""
+            template-path: ""
+            values: {}
+        gomoddirectives:
+            check-module-path: false
+            exclude-forbidden: false
+            go-debug-forbidden: false
+            go-version-pattern: ""
+            ignore-forbidden: false
+            replace-allow-all: false
+            replace-allow-list: []
+            replace-local: false
+            retract-allow-no-explanation: false
+            tool-forbidden: false
+            toolchain-forbidden: false
+            toolchain-pattern: ""
+        gomodguard:
+            allowed:
+                domains: []
+                modules: []
+            blocked:
+                local-replace-directives: false
+                modules: []
+                versions: []
+        gomodguard_v2:
+            allowed: []
+            blocked: []
+            local-replace-directives: false
+        gosec:
+            concurrency: 0
+            confidence: ""
+            config: {}
+            excludes: []
+            includes: []
+            severity: ""
+        gosmopolitan:
+            allow-time-local: false
+            escape-hatches: []
+            watch-for-scripts: []
+        govet:
+            disable: []
+            disable-all: false
+            enable: []
+            enable-all: false
+            settings: {}
+        grouper:
+            const-require-grouping: false
+            const-require-single-const: false
+            import-require-grouping: false
+            import-require-single-import: false
+            type-require-grouping: false
+            type-require-single-type: false
+            var-require-grouping: false
+            var-require-single-var: false
+        iface:
+            enable: []
+            settings: {}
+        importas:
+            alias: []
+            no-extra-aliases: false
+            no-unaliased: false
+        inamedparam:
+            skip-single-param: false
+        ineffassign:
+            check-escaping-errors: false
+        interfacebloat:
+            max: 0
+        iotamixing:
+            report-individual: false
+        ireturn:
+            allow: []
+            reject: []
+        lll:
+            line-length: 0
+            tab-width: 0
+        loggercheck:
+            kitlog: false
+            klog: false
+            logr: false
+            no-printf-like: false
+            require-string-key: false
+            rules: []
+            slog: false
+            zap: false
+        maintidx:
+            under: 0
+        makezero:
+            always: false
+        misspell:
+            extra-words: []
+            ignore-rules: []
+            locale: ""
+            mode: ""
+        mnd:
+            checks: []
+            ignored-files: []
+            ignored-functions: []
+            ignored-numbers: []
+        modernize:
+            disable: []
+        musttag:
+            functions: []
+        nakedret:
+            max-func-lines: 0
+        nestif:
+            min-complexity: 0
+        nilnil:
+            checked-types: []
+            detect-opposite: false
+            only-two: null
+        nlreturn:
+            block-size: 0
+        nolintlint:
+            allow-no-explanation: []
+            allow-unused: false
+            require-explanation: false
+            require-specific: false
+        nonamedreturns:
+            allow-unused-named-returns: false
+            report-error-in-defer: false
+        paralleltest:
+            check-cleanup: false
+            ignore-missing: false
+            ignore-missing-subtests: false
+        perfsprint:
+            bool-format: false
+            concat-loop: false
+            err-error: false
+            error-format: false
+            errorf: false
+            hex-format: false
+            int-conversion: false
+            integer-format: false
+            loop-other-ops: false
+            sprintf1: false
+            strconcat: false
+            string-format: false
+        prealloc:
+            for-loops: false
+            range-loops: false
+            simple: false
+        predeclared:
+            ignore: []
+            qualified-name: false
+        promlinter:
+            disabled-linters: []
+            strict: false
+        protogetter:
+            replace-first-arg-in-append: false
+            skip-any-generated: false
+            skip-files: []
+            skip-generated-by: []
+        reassign:
+            patterns: []
+        recvcheck:
+            disable-builtin: false
+            exclusions: []
+        revive:
+            confidence: 0
+            directives: []
+            enable-all-rules: false
+            enable-default-rules: false
+            error-code: 0
+            max-open-files: 0
+            rules: []
+            severity: ""
+            warning-code: 0
+        rowserrcheck:
+            packages: []
+        sloglint:
+            allowed-keys: []
+            args-on-sep-lines: false
+            attr-only: false
+            context: ""
+            custom-funcs: []
+            forbidden-keys: []
+            key-naming-case: ""
+            kv-only: false
+            msg-style: ""
+            no-global: ""
+            no-mixed-args: false
+            no-raw-keys: false
+            static-msg: false
+        spancheck:
+            checks: []
+            extra-start-span-signatures: []
+            ignore-check-signatures: []
+        staticcheck:
+            checks: []
+            dot-import-whitelist: []
+            http-status-code-whitelist: []
+            initialisms: []
+        tagalign:
+            align: true
+            order:
+                - json
+                - required
+                - description
+            sort: true
+            strict: true
+        tagliatelle:
+            case:
+                extended-rules: {}
+                ignored-fields: []
+                overrides: []
+                rules: {}
+                use-field-name: false
+        testifylint:
+            bool-compare:
+                ignore-custom-types: false
+            disable:
+                - require-error
+                - float-compare
+            disable-all: false
+            enable: []
+            enable-all: true
+            expected-actual:
+                pattern: ""
+            formatter:
+                check-format-string: null
+                require-f-funcs: false
+                require-string-msg: false
+            go-require:
+                ignore-http-handlers: false
+            require-error:
+                fn-pattern: ""
+            suite-extra-assert-call:
+                mode: ""
+        testpackage:
+            allow-packages: []
+            skip-regexp: ""
+        thelper:
+            benchmark:
+                begin: null
+                first: null
+                name: null
+            fuzz:
+                begin: null
+                first: null
+                name: null
+            tb:
+                begin: null
+                first: null
+                name: null
+            test:
+                begin: null
+                first: null
+                name: null
+        unconvert:
+            fast-math: false
+            safe: false
+        unparam:
+            check-exported: false
+        unqueryvet:
+            allow: []
+            allowed-patterns: []
+            check-aliased-wildcard: false
+            check-format-strings: false
+            check-n1: false
+            check-sql-builders: false
+            check-sql-injection: false
+            check-string-builder: false
+            check-string-concat: false
+            check-subqueries: false
+            check-tx-leaks: false
+            custom-rules: []
+            ignored-functions: []
+            sql-builders:
+                bun: false
+                ent: false
+                gorm: false
+                jet: false
+                pgx: false
+                sqlboiler: false
+                sqlx: false
+                squirrel: false
+        unused:
+            exported-fields-are-used: false
+            field-writes-are-uses: false
+            generated-is-used: false
+            local-variables-are-used: false
+            parameters-are-used: false
+            post-statements-are-reads: false
+        usestdlibvars:
+            constant-kind: false
+            crypto-hash: false
+            default-rpc-path: false
+            http-method: false
+            http-status-code: false
+            sql-isolation-level: false
+            time-date-month: false
+            time-layout: false
+            time-month: false
+            time-weekday: false
+            tls-signature-scheme: false
+        usetesting:
+            context-background: true
+            context-todo: false
+            os-chdir: true
+            os-create-temp: true
+            os-mkdir-temp: true
+            os-setenv: true
+            os-temp-dir: true
+        varnamelen:
+            check-receiver: false
+            check-return: false
+            check-type-param: false
+            ignore-chan-recv-ok: false
+            ignore-decls: []
+            ignore-map-index-ok: false
+            ignore-names: []
+            ignore-type-assert-ok: false
+            max-distance: 0
+            min-name-length: 0
+        whitespace:
+            multi-func: false
+            multi-if: false
+        wrapcheck:
+            extra-ignore-sigs: []
+            ignore-interface-regexps: []
+            ignore-package-globs: []
+            ignore-sig-regexps: []
+            ignore-sigs: []
+            report-internal-errors: false
+        wsl:
+            allow-assign-and-anything: false
+            allow-assign-and-call: false
+            allow-cuddle-declarations: false
+            allow-cuddle-used-in-block: false
+            allow-cuddle-with-calls: []
+            allow-cuddle-with-rhs: []
+            allow-multiline-assign: false
+            allow-separated-leading-comment: false
+            allow-trailing-comment: false
+            error-variable-names: []
+            force-case-trailing-whitespace: 0
+            force-err-cuddling: false
+            force-short-decl-cuddling: false
+            strict-append: false
+        wsl_v5:
+            allow-first-in-block: false
+            allow-whole-block: false
+            branch-max-lines: 0
+            case-max-lines: 0
+            cuddle-max-statements: 0
+            default: ""
+            disable: []
+            enable: []
+output:
+    formats:
+        checkstyle:
+            path: ""
+        code-climate:
+            path: ""
+        html:
+            path: ""
+        json:
+            path: ""
+        junit-xml:
+            extended: false
+            path: ""
+        sarif:
+            path: ""
+        tab:
+            colors: false
+            path: ""
+            print-linter-name: false
+        teamcity:
+            path: ""
+        text:
+            colors: false
+            path: ""
+            print-issued-lines: false
+            print-linter-name: false
+    path-mode: ""
+    path-prefix: ""
+    show-stats: false
+    sort-order: []
+run:
+    allow-parallel-runners: false
+    allow-serial-runners: false
+    build-tags: []
+    concurrency: 0
+    enable-build-vcs: false
+    go: ""
+    issues-exit-code: 0
+    modules-download-mode: ""
+    relative-path-mode: ""
+    tests: false
+    timeout: 0s
+severity:
+    default: ""
+    rules: []
+version: "2"
