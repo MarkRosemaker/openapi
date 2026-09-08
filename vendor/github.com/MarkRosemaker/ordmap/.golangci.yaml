@@ -5,6 +5,7 @@ linters:
         - usetesting
         - tagalign
         - testifylint
+        - dupword
     settings:
         tagalign:
             align: true
