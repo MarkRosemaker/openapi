@@ -10,7 +10,7 @@ github.com/MarkRosemaker/json2yaml
 # github.com/MarkRosemaker/jsonutil v0.0.0-20260908160045-7e280e06ea7c
 ## explicit; go 1.27
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/ordmap v0.0.0-20260908160056-ecd5c9eeefde
+# github.com/MarkRosemaker/ordmap v0.0.0-20260908220128-3774a569a402
 ## explicit; go 1.27
 github.com/MarkRosemaker/ordmap
 # github.com/MarkRosemaker/yaml v0.0.0-20260908160059-d407f389fd7b
@@ -22,7 +22,7 @@ github.com/MarkRosemaker/yaml2json
 # github.com/go-api-libs/types v0.0.0-20260821232109-0cf45378823e
 ## explicit; go 1.27
 github.com/go-api-libs/types
-# golang.org/x/exp v0.0.0-20260824195058-e88cd73687aa
+# golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba
 ## explicit; go 1.26.0
 golang.org/x/exp/maps
 # gopkg.in/yaml.v3 v3.0.1
