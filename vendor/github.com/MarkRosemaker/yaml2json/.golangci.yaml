@@ -6,6 +6,7 @@ linters:
         - tagalign
         - testifylint
         - dupword
+        - noctx
     settings:
         tagalign:
             align: true
