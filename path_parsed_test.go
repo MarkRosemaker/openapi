@@ -8,6 +8,7 @@ import (
 
 func TestParsedPath(t *testing.T) {
 	t.Parallel()
+
 	for _, path := range []openapi.Path{
 		"foo/bar/baz",
 		"/users/{userid}/address",

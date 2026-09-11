@@ -55,36 +55,43 @@ func (p *PathItem) Operations(yield func(string, *Operation) bool) {
 			return
 		}
 	}
+
 	if op := p.Put; op != nil {
 		if !yield(http.MethodPut, op) {
 			return
 		}
 	}
+
 	if op := p.Post; op != nil {
 		if !yield(http.MethodPost, op) {
 			return
 		}
 	}
+
 	if op := p.Delete; op != nil {
 		if !yield(http.MethodDelete, op) {
 			return
 		}
 	}
+
 	if op := p.Options; op != nil {
 		if !yield(http.MethodOptions, op) {
 			return
 		}
 	}
+
 	if op := p.Head; op != nil {
 		if !yield(http.MethodHead, op) {
 			return
 		}
 	}
+
 	if op := p.Patch; op != nil {
 		if !yield(http.MethodPatch, op) {
 			return
 		}
 	}
+
 	if op := p.Trace; op != nil {
 		if !yield(http.MethodTrace, op) {
 			return

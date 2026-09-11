@@ -54,6 +54,7 @@ func TestExtensions_invalid(t *testing.T) {
 
 	t.Run("invalid JSON", func(t *testing.T) {
 		ext := Extensions([]byte(`{"x-bar":true,"x-baz":42`))
+
 		synErr := errAs[jsontext.SyntacticError](t, validateExtensions(ext))
 		if synErr.JSONPointer != "" || synErr.ByteOffset != 24 ||
 			synErr.Err.Error() != "unexpected EOF" {

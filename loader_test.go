@@ -116,6 +116,7 @@ func TestLoadFromReader_Error(t *testing.T) {
 		t.Parallel()
 
 		_, err := openapi.LoadFromReader(strings.NewReader(`{"openapi":"3.0.`))
+
 		synErr := errAs[jsontext.SyntacticError](t, err)
 		if synErr.JSONPointer != "/openapi" || synErr.ByteOffset != 16 ||
 			synErr.Err.Error() != "unexpected EOF" {

@@ -28,6 +28,7 @@ func errAs[T any, E interface {
 	t.Helper()
 
 	var zero T
+
 	target := E(&zero)
 	if !errors.As(err, &target) {
 		t.Fatalf("want: %T, got: %T", target, err)
@@ -42,6 +43,7 @@ func TestRef_UnmarshalJSONV2(t *testing.T) {
 	t.Run("reference", func(t *testing.T) {
 		err := json.Unmarshal([]byte(`{"$ref":"#/components/schemas/Pet"`),
 			&refEmptyStruct{}, jsonOpts)
+
 		synErr := errAs[jsontext.SyntacticError](t, err)
 		if synErr.JSONPointer != "" || synErr.ByteOffset != 34 ||
 			synErr.Err.Error() != "unexpected EOF" {
@@ -52,6 +54,7 @@ func TestRef_UnmarshalJSONV2(t *testing.T) {
 	t.Run("object", func(t *testing.T) {
 		err := json.Unmarshal([]byte([]byte(`{"foo":"bar"}`)),
 			&refEmptyStruct{}, jsonOpts)
+
 		semErr := errAs[json.SemanticError](t, err)
 		if semErr.GoType != typeRefEmptyStruct {
 			t.Fatalf("want: %s, got: %s", typeRefEmptyStruct, semErr.GoType)

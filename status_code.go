@@ -62,5 +62,6 @@ func (sc StatusCode) IsSuccess() bool {
 	}
 
 	code, _ := strconv.Atoi(string(sc))
+
 	return 200 <= code && code < 300
 }

@@ -21,6 +21,7 @@ func TestServerVariables_ByIndex(t *testing.T) {
 		if want[i] != k {
 			t.Fatalf("got: %v, want: %v", k, want[i])
 		}
+
 		i++
 	}
 
@@ -46,6 +47,7 @@ func TestServerVariables_ByIndex(t *testing.T) {
 				t.Fatalf("unexpected key: %v", k)
 			}
 		}
+
 		i++
 	}
 }

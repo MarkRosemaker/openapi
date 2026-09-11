@@ -13,6 +13,7 @@ func errAs[T any, E interface {
 	t.Helper()
 
 	var zero T
+
 	target := E(&zero)
 	if !errors.As(err, &target) {
 		t.Fatalf("want: %T, got: %T", target, err)

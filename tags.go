@@ -32,7 +32,6 @@ func (tags Tags) Validate() error {
 		if err := t.Validate(); err != nil {
 			return &errpath.ErrIndex{Index: i, Err: err}
 		}
-
 	}
 
 	return nil

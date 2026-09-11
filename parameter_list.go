@@ -38,6 +38,7 @@ func (p ParameterList) Validate() error {
 			// output both instances of the parameter
 			return errors.Join(prevInstance, errNotUnique)
 		}
+
 		params[id] = errNotUnique
 
 		if err := param.Validate(); err != nil {

@@ -91,7 +91,6 @@ func (ps Paths) Validate() error {
 			// output both instances of the operation ID
 			return errors.Join(prevInstance, errNotUnique)
 		}
-
 	}
 
 	return nil
@@ -105,6 +104,7 @@ func (ps Paths) ByIndex() iter.Seq2[Path, *PathItem] {
 // Sort sorts the map by key and sets the indices accordingly.
 func (ps Paths) Sort() {
 	ordmap.Sort(ps, setIndexPathItem)
+
 	for _, path := range ps {
 		for _, op := range path.Operations {
 			op.Responses.Sort()

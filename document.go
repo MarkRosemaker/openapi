@@ -140,7 +140,6 @@ func (l *loader) resolveDocument(doc *Document) error {
 	// - Security
 	// - Tags
 	// - ExternalDocs
-
 	if err := l.resolvePaths(doc.Paths); err != nil {
 		return &errpath.ErrField{Field: "paths", Err: err}
 	}

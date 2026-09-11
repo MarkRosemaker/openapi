@@ -257,6 +257,7 @@ func TestSchema_UnmarshalNumericEnum(t *testing.T) {
 		if v.Kind() != jsontext.KindNumber {
 			t.Errorf("Enum[%d].Kind() = %v, want number", i, v.Kind())
 		}
+
 		if v.String() != want[i] {
 			t.Errorf("Enum[%d] = %s, want %s", i, v.String(), want[i])
 		}

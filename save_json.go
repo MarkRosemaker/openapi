@@ -41,6 +41,7 @@ func errorsJoin(err1, err2 error) error {
 	if err1 == nil {
 		return err2
 	}
+
 	if err2 == nil {
 		return err1
 	}

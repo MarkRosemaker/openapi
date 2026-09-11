@@ -375,11 +375,13 @@ func (s *Schema) Validate() error {
 					break
 				}
 			}
+
 			if !found {
 				parts := make([]string, len(s.Enum))
 				for i, ev := range s.Enum {
 					parts[i] = ev.String()
 				}
+
 				return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
 					Value:   jsonDisplayValue(s.Default),
 					Message: fmt.Sprintf("is not one of the enums ([%s])", strings.Join(parts, " ")),
@@ -439,6 +441,7 @@ func jsonDisplayValue(v jsontext.Value) any {
 	case jsontext.KindFalse:
 		return false
 	}
+
 	return string(v)
 }
 
