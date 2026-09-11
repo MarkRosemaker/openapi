@@ -7,6 +7,7 @@ linters:
         - testifylint
         - dupword
         - noctx
+        - wsl_v5
     settings:
         tagalign:
             align: true
@@ -23,12 +24,16 @@ linters:
                 - float-compare
         usetesting:
             context-background: true
-            context-todo: false
             os-chdir: true
             os-mkdir-temp: true
             os-setenv: true
             os-temp-dir: true
             os-create-temp: true
+        wsl_v5:
+            allow-first-in-block: true
+            allow-whole-block: true
+            branch-max-lines: 4
+            cuddle-max-statements: 2
 formatters:
     enable:
         - gci

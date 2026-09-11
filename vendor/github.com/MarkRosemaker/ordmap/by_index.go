@@ -20,6 +20,7 @@ func ByIndex[M ~map[K]V, K comparable, V any](m M, getIndex func(V) int) iter.Se
 	sort.Slice(keys, func(i, j int) bool {
 		idxI := getIndex(m[keys[i]])
 		idxJ := getIndex(m[keys[j]])
+
 		return idxI != 0 && // if i is not initialized, it should be at the end
 			(idxJ == 0 || // if j is not initialized, it should be at the end
 				idxI < idxJ) // otherwise, sort by index

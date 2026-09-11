@@ -35,6 +35,7 @@ func (e *ErrInvalid[T]) writePath(b *strings.Builder) {
 	}
 
 	b.WriteString(" is invalid")
+
 	if e.Message != "" {
 		b.WriteString(": ")
 		b.WriteString(e.Message)
@@ -45,6 +46,7 @@ func (e *ErrInvalid[T]) writePath(b *strings.Builder) {
 	}
 
 	b.WriteString(", must be one of: ")
+
 	enums := make([]string, len(e.Enum))
 	for i, v := range e.Enum {
 		enums[i] = stringify(v)

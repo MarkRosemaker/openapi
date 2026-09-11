@@ -43,5 +43,6 @@ func DurationUnmarshalString(dec *jsontext.Decoder, d *time.Duration) error {
 	}
 
 	*d = parsed
+
 	return nil
 }

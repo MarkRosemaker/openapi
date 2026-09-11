@@ -81,5 +81,6 @@ func HTTPHeaderUnmarshal(dec *jsontext.Decoder, h *http.Header) error {
 	}
 
 	_, err = dec.ReadToken() // consume jsontext.KindEndObject
+
 	return err
 }

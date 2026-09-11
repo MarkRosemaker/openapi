@@ -57,6 +57,7 @@ func TimeUnmarshalStringOrIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 		s := tkn.String()
 		if err := d.UnmarshalText([]byte(s)); err != nil {
 			const altLayout = "Mon Jan 2 2006 15:04:05 MST-0700"
+
 			ts, err2 := time.Parse(altLayout, s)
 			if err2 != nil {
 				return errors.Join(err, err2)
