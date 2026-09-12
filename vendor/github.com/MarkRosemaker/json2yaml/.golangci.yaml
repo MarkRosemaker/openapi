@@ -2,13 +2,13 @@ version: 2
 linters:
     default: none
     enable:
-        - usetesting
+        - dupword
+        - exhaustive
+        - noctx
         - tagalign
         - testifylint
-        - dupword
-        - noctx
+        - usetesting
         - wsl_v5
-        - exhaustive
     settings:
         exhaustive:
             check:
