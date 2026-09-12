@@ -440,6 +440,7 @@ func jsonDisplayValue(v jsontext.Value) any {
 		return true
 	case jsontext.KindFalse:
 		return false
+	default:
 	}
 
 	return string(v)

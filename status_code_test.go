@@ -40,15 +40,15 @@ func TestStatusCode_Validate_Error(t *testing.T) {
 
 func TestStatusCode_IsSuccess(t *testing.T) {
 	for sc, success := range map[openapi.StatusCode]bool{
-		"200":     true,
-		"2XX":     true,
-		"300":     false,
-		"3XX":     false,
-		"400":     false,
-		"404":     false,
-		"4XX":     false,
-		"default": false, // default does not count as success
-		"foo":     false, // invalid status code
+		"200":                     true,
+		"2XX":                     true,
+		"300":                     false,
+		"3XX":                     false,
+		"400":                     false,
+		"404":                     false,
+		"4XX":                     false,
+		openapi.StatusCodeDefault: false, // default does not count as success
+		"foo":                     false, // invalid status code
 	} {
 		t.Run(string(sc), func(t *testing.T) {
 			if got := sc.IsSuccess(); got != success {
