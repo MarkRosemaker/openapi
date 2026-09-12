@@ -8,7 +8,13 @@ linters:
         - dupword
         - noctx
         - wsl_v5
+        - exhaustive
     settings:
+        exhaustive:
+            check:
+                - switch
+                - map
+            default-signifies-exhaustive: true
         tagalign:
             align: true
             sort: true

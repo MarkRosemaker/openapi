@@ -33,44 +33,57 @@ func TimeUnmarshalIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 	return nil
 }
 
-// TimeUnmarshalStringOrIntUnix unmarshals a time.Time from either an RFC3339
-// string or an integer representing unix seconds. Nulls decode as the zero time.
-func TimeUnmarshalStringOrIntUnix(dec *jsontext.Decoder, d *time.Time) error {
-	tkn, err := dec.ReadToken()
-	if err != nil {
-		return err
-	}
+// timeAltLayout is a fallback layout for time strings that don't conform to RFC3339.
+const timeAltLayout = "Mon Jan 2 2006 15:04:05 MST-0700"
 
-	switch tkn.Kind() {
-	case jsontext.KindNumber:
-		seconds, err := tkn.Int()
+// TimeUnmarshalStringOrIntUnix unmarshals a time.Time from either an RFC3339 or
+// timeAltLayout string, or an integer representing unix seconds. Nulls decode as the zero time.
+func TimeUnmarshalStringOrIntUnix(dec *jsontext.Decoder, d *time.Time) error {
+	return timeUnmarshalStringOrIntUnix([]string{time.RFC3339, timeAltLayout})(dec, d)
+}
+
+// timeUnmarshalStringOrIntUnix returns a custom unmarshaler for time.Time that unmarshals
+// from either an integer representing unix seconds or a string, tried against each of the
+// given layouts (see time.Parse) in order until one succeeds. Nulls decode as the zero time.
+func timeUnmarshalStringOrIntUnix(layouts []string) func(dec *jsontext.Decoder, d *time.Time) error {
+	return func(dec *jsontext.Decoder, d *time.Time) error {
+		tkn, err := dec.ReadToken()
 		if err != nil {
 			return err
 		}
 
-		if seconds == 0 {
-			*d = time.Time{}
-		} else {
-			*d = time.Unix(seconds, 0)
-		}
-	case jsontext.KindString:
-		s := tkn.String()
-		if err := d.UnmarshalText([]byte(s)); err != nil {
-			const altLayout = "Mon Jan 2 2006 15:04:05 MST-0700"
-
-			ts, err2 := time.Parse(altLayout, s)
-			if err2 != nil {
-				return errors.Join(err, err2)
+		switch tkn.Kind() {
+		case jsontext.KindNumber:
+			seconds, err := tkn.Int()
+			if err != nil {
+				return err
 			}
 
-			*d = ts
+			if seconds == 0 {
+				*d = time.Time{}
+			} else {
+				*d = time.Unix(seconds, 0)
+			}
+		case jsontext.KindString:
+			s := tkn.String()
+
+			var errs error
+			for _, layout := range layouts {
+				t, err := time.Parse(layout, s)
+				if err == nil {
+					*d = t
+					return nil
+				}
+
+				errs = errors.Join(errs, err)
+			}
+
+			return fmt.Errorf("could not parse %q using any of the given layouts: %w", s, errs)
+		case jsontext.KindNull: // ok, nothing to do
+		default:
+			return fmt.Errorf("unknown token kind %s", tkn.Kind())
 		}
 
 		return nil
-	case jsontext.KindNull: // ok, nothing to do
-	default:
-		return fmt.Errorf("unknown token kind %s", tkn.Kind())
 	}
-
-	return nil
 }
