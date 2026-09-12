@@ -1,0 +1,5 @@
+- **Comprehensive parsing** of OpenAPI specifications.
+- **Flexible formatting** options to improve readability and consistency.
+- **Ability to merge and deduplicate** content within specifications.
+- **Programmatic modification** of specifications before marshalling.
+- **Code generation capabilities** based on parsed specifications.
