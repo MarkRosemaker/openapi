@@ -6,12 +6,16 @@
 - Pull `main` and branch from it. Name the branch after the work.
 - One branch and one pull request at a time. Keep working on that branch
   until it is merged, then start again from `main`.
+- Once you have branched, leave `main` alone. Do not go looking for what
+  has changed on it, and do not merge it in. Reconciling is its own
+  instruction, and you will be given it when it is wanted.
 
 ## Committing
 
 - `make ci` passes before every commit. It needs no network beyond the
   module cache, so it runs in a sandbox. `make tools` installs what it
-  shells out to, into `$(go env GOPATH)/bin` — have that on your `PATH`.
+  shells out to, and the Makefile puts that directory on its own `PATH`, so
+  you do not have to.
 - `make` runs `ci` plus the checks that need the network. Prefer it where
   you have one; say which step you could not run where you do not.
 - One commit per piece of work, not one per session.
@@ -26,6 +30,10 @@ Edit the directory, never the file:
 - `AGENTS.md` → `AGENTS/`
 - `README.md` → `README/`
 - `Makefile` → `mk/`
+
+`.gitignore` is the exception: only the marked block at its head is
+generated. Your own rules go below that block, where they win — in a
+`.gitignore` the last matching pattern decides.
 
 ## Keeping the documents true
 
@@ -53,3 +61,5 @@ Edit the directory, never the file:
 - Reply to review feedback in the conversation with whoever raised it, not as
   a comment on the pull request.
 - Resolve a thread once you have acted on it.
+- Do not watch a pull request for activity unless you are asked to. You will
+  be told when there is a review to act on.

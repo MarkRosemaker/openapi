@@ -10,6 +10,14 @@ CLEAN_FILES := cover.out
 # A tool built with an older Go than this module targets refuses to analyse it.
 TOOL_GO := $(shell go env GOVERSION)
 
+# Where make tools installs, which is GOBIN when that is set. Put on the PATH
+# below so an older copy earlier on yours cannot be the one that runs.
+TOOL_BIN := $(shell go env GOBIN)
+ifeq ($(TOOL_BIN),)
+TOOL_BIN := $(shell go env GOPATH)/bin
+endif
+export PATH := $(TOOL_BIN):$(PATH)
+
 .PHONY: all ci lint vet vuln test test-race cover format fix tidy deps generate verify doc tools clean
 
 # ci, plus the checks that need the network.
