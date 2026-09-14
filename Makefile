@@ -7,11 +7,15 @@ MAKEFLAGS += --no-print-directory
 
 CLEAN_FILES := cover.out
 
-.PHONY: all ci lint vet test test-race cover format fix tidy deps generate verify doc tools clean
+# A tool built with an older Go than this module targets refuses to analyse it.
+TOOL_GO := $(shell go env GOVERSION)
 
-all: lint vet test-race
+.PHONY: all ci lint vet vuln test test-race cover format fix tidy deps generate verify doc tools clean
 
-# Everything that has to hold before a commit goes out.
+# ci, plus the checks that need the network.
+all: ci vuln
+
+# Before every commit. Needs no network beyond the module cache.
 ci: fix verify vet test-race
 
 lint:
@@ -19,6 +23,9 @@ lint:
 
 vet:
 	go vet ./...
+
+# Reads the vulnerability database, so it needs the network.
+vuln:
 	govulncheck ./...
 
 test:
@@ -51,18 +58,18 @@ generate:
 	go generate ./...
 
 # Run on a commit: it reports through git, so your own edits look like drift.
-verify: generate tidy
+verify: generate
 	git diff --exit-code
 
 # Serves this module's documentation on :8080, as pkg.go.dev will show it.
 doc:
 	pkgsite .
 
-# Installs what the targets above shell out to, latest of each.
+# Installs what the targets above shell out to, into $(go env GOPATH)/bin.
 tools:
-	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
-	go install golang.org/x/vuln/cmd/govulncheck@latest
-	go install golang.org/x/pkgsite/cmd/pkgsite@latest
+	GOTOOLCHAIN=$(TOOL_GO) go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+	GOTOOLCHAIN=$(TOOL_GO) go install golang.org/x/vuln/cmd/govulncheck@latest
+	GOTOOLCHAIN=$(TOOL_GO) go install golang.org/x/pkgsite/cmd/pkgsite@latest
 
 # A fragment adds its own with CLEAN_FILES += dist.
 clean:
