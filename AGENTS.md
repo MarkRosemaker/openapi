@@ -14,8 +14,8 @@
 
 - `make ci` passes before every commit. It needs no network beyond the
   module cache, so it runs in a sandbox. `make tools` installs what it
-  shells out to, into `$(go env GOPATH)/bin` — have that ahead of the rest
-  of your `PATH`, or an older copy installed elsewhere is the one that runs.
+  shells out to, and the Makefile puts that directory on its own `PATH`, so
+  you do not have to.
 - `make` runs `ci` plus the checks that need the network. Prefer it where
   you have one; say which step you could not run where you do not.
 - One commit per piece of work, not one per session.
