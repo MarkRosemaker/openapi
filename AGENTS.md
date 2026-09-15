@@ -9,13 +9,6 @@
 - Once you have branched, leave `main` alone. Do not go looking for what
   has changed on it, and do not merge it in. Reconciling is its own
   instruction, and you will be given it when it is wanted.
-- Every repository here works this way, not just the one you started in. A
-  change lands through a pull request even when you can push to `main`, and
-  a change spanning two repositories is two pull requests. The exceptions
-  are named where they apply, and there are two: `devtool-legacy`, which is
-  a reference carcass that shrinks as features are replaced, and `patchpal`
-  until it is first deployed. Both take commits straight to their default
-  branch.
 
 ## Committing
 
