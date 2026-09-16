@@ -62,10 +62,8 @@ deps:
 	go get -u ./...
 	$(MAKE) tidy
 
-# Everything a tool writes: the go:generate directives, then the files devtool owns.
 generate:
 	go generate ./...
-	devtool update
 
 # Run on a commit: it reports through git, so your own edits look like drift.
 verify: generate
@@ -80,7 +78,6 @@ tools:
 	GOTOOLCHAIN=$(TOOL_GO) go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 	GOTOOLCHAIN=$(TOOL_GO) go install golang.org/x/vuln/cmd/govulncheck@latest
 	GOTOOLCHAIN=$(TOOL_GO) go install golang.org/x/pkgsite/cmd/pkgsite@latest
-	GOTOOLCHAIN=$(TOOL_GO) go install github.com/MarkRosemaker/devtool@latest
 
 # A fragment adds its own with CLEAN_FILES += dist.
 clean:
