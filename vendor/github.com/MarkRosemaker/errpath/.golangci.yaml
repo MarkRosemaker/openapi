@@ -3,6 +3,7 @@ linters:
     default: none
     enable:
         - dupword
+        - errcheck
         - exhaustive
         - noctx
         - tagalign
