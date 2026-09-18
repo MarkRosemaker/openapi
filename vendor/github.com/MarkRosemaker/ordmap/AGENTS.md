@@ -37,15 +37,17 @@ cost you something.
 
 ## Committing
 
-- `make ci` passes before every commit. It needs no network beyond the
-  module cache, so it runs in a sandbox. `make tools` installs what it
-  shells out to, and the Makefile puts that directory on its own `PATH`, so
-  you do not have to.
-- Stage before running it. `verify` reports through `git diff --exit-code`,
-  so work you have not staged reads as drift and fails a run that was
-  otherwise clean.
-- `make` runs `ci` plus the checks that need the network. Prefer it where
-  you have one; say which step you could not run where you do not.
+- `make ready` passes before every commit. It regenerates what the
+  generators own, fixes and formats what it can, then vets and runs the
+  tests. It needs no network beyond the module cache, so it runs in a
+  sandbox. `make tools` installs what it shells out to, and the Makefile
+  puts that directory on its own `PATH`, so you do not have to.
+- Because it regenerates, it may leave changes of its own. Those are its
+  output, not a failure: read them, and commit them with the work where they
+  follow from it, or on their own where they are drift an earlier run left
+  behind.
+- `make all` adds `govulncheck`, which reads the vulnerability database over
+  the network. Run it where you have one; say so where you do not.
 - One commit per piece of work, not one per session.
 - Push each commit as soon as it is made.
 - Open the pull request yourself once there is something to review. Do not
