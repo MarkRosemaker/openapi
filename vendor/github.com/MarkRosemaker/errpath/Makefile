@@ -27,7 +27,7 @@ all: ci vuln
 ci: ready verify
 
 # After any code change. Needs no network beyond the module cache.
-ready: fix generate vet test-race
+ready: generate fix vet test-race
 
 lint:
 	golangci-lint run

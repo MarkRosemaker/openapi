@@ -11,6 +11,12 @@ linters:
         - usetesting
         - wsl_v5
     settings:
+        errcheck:
+            exclude-functions:
+                - (*os.File).Close
+                - (io.Closer).Close
+                - (io.ReadCloser).Close
+                - (github.com/spf13/afero.File).Close
         exhaustive:
             check:
                 - switch
