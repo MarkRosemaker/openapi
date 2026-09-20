@@ -9,10 +9,10 @@ var _ pathWriter = (*ErrKey)(nil)
 
 // ErrKey is an error that occurred in a map. It contains the key of the element.
 type ErrKey struct {
-	// The key of the map where the error occurred.
-	Key string
 	// The underlying error.
 	Err error
+	// The key of the map where the error occurred.
+	Key string
 }
 
 // Error returns the key and the error message.
