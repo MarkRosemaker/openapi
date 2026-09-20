@@ -16,8 +16,7 @@ cost you something.
 ## Starting work
 
 - Pull `main` and branch from it. Name the branch after the work, prefixed
-  `feat/`, `fix/` or `chore/` if possible — some agents are handed a branch
-  name they cannot change, and that is not worth a fight.
+  `feat/`, `fix/` or `chore/` if possible.
 - Merging deletes the branch. The next piece of work is a new branch off
   `main` with a name of its own — never the same one again, and never more
   commits on the one that merged.
