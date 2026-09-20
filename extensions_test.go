@@ -3,6 +3,7 @@ package openapi
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"errors"
 	"testing"
 )
 
@@ -53,10 +54,11 @@ func TestExtensions_invalid(t *testing.T) {
 	})
 
 	t.Run("invalid JSON", func(t *testing.T) {
-		ext := Extensions([]byte(`{"x-bar":true,"x-baz":42`))
-
-		synErr := errAs[jsontext.SyntacticError](t, validateExtensions(ext))
-		if synErr.JSONPointer != "" || synErr.ByteOffset != 24 ||
+		if err := validateExtensions(Extensions([]byte(`{"x-bar":true,"x-baz":42`))); err == nil {
+			t.Fatal("expected error, got nil")
+		} else if synErr, ok := errors.AsType[*jsontext.SyntacticError](err); !ok {
+			t.Fatalf("want: *jsontext.SyntacticError, got: %T", err)
+		} else if synErr.JSONPointer != "" || synErr.ByteOffset != 24 ||
 			synErr.Err.Error() != "unexpected EOF" {
 			t.Fatalf("got: %#v", synErr.Err)
 		}
