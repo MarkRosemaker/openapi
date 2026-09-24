@@ -160,12 +160,12 @@ func TestOperation_Validate_Error(t *testing.T) {
 			},
 		}, `requestBody.content is required`},
 		{openapi.Operation{
-			Responses: openapi.OperationResponses{
+			Responses: openapi.OperationResponses{ //nolint:exhaustive
 				"foo": {},
 			},
 		}, `responses["foo"]: invalid status code "foo"`},
 		{openapi.Operation{
-			Responses: openapi.OperationResponses{
+			Responses: openapi.OperationResponses{ //nolint:exhaustive
 				"200": {Value: &openapi.Response{}},
 			},
 		}, `responses["200"].description is required`},
@@ -195,7 +195,7 @@ func TestOperation_Validate_Error(t *testing.T) {
 			},
 		}, `responses["default"]: must not be the only response`},
 		{openapi.Operation{
-			Responses: openapi.OperationResponses{
+			Responses: openapi.OperationResponses{ //nolint:exhaustive
 				"500": &openapi.ResponseRef{},
 			},
 		}, `responses["500"]: single response must be a successful response`},
