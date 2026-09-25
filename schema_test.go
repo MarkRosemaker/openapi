@@ -26,6 +26,23 @@ func TestSchema_JSON(t *testing.T) {
 		],
 		"default": "side"
 	}`), &openapi.Schema{})
+
+	// prefixItems: a tuple-shaped array, positionally typed, with items
+	// covering any element beyond the two listed here.
+	testJSON(t, []byte(`{
+		"type": "array",
+		"prefixItems": [
+			{
+				"type": "string"
+			},
+			{
+				"type": "integer"
+			}
+		],
+		"items": {
+			"type": "boolean"
+		}
+	}`), &openapi.Schema{})
 }
 
 func TestSchema_Validate(t *testing.T) {
@@ -49,6 +66,10 @@ func TestSchema_Validate(t *testing.T) {
 		// enum accepts any JSON type per JSON Schema 2020-12
 		{Type: openapi.TypeInteger, Enum: []jsontext.Value{jsontext.Value("4"), jsontext.Value("6"), jsontext.Value("8")}},
 		{Type: openapi.TypeString, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value(`"bar"`)}},
+		// prefixItems alone satisfies array's items requirement
+		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaRefList{str, num}},
+		// prefixItems together with items for elements beyond it
+		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaRefList{str, num}, Items: str},
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -150,6 +171,19 @@ func TestSchema_Validate_Error(t *testing.T) {
 			MaxItems: new(uint(4)),
 			Items:    &openapi.SchemaRef{},
 		}, `minItems (5) is invalid: minItems is greater than maxItems (5 > 4)`},
+		{openapi.Schema{
+			Type: openapi.TypeBoolean,
+			PrefixItems: openapi.SchemaRefList{
+				{Value: &openapi.Schema{Type: openapi.TypeString}},
+			},
+		}, `prefixItems is invalid: only valid for array type, got boolean`},
+		{openapi.Schema{
+			Type: openapi.TypeArray,
+			PrefixItems: openapi.SchemaRefList{
+				{Value: &openapi.Schema{}},
+			},
+			Items: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeBoolean}},
+		}, `prefixItems[0].type is required`},
 		{openapi.Schema{
 			AllOf: openapi.SchemaRefList{
 				{Value: &openapi.Schema{}},
@@ -261,5 +295,43 @@ func TestSchema_UnmarshalNumericEnum(t *testing.T) {
 		if v.String() != want[i] {
 			t.Errorf("Enum[%d] = %s, want %s", i, v.String(), want[i])
 		}
+	}
+}
+
+// TestSchema_UnmarshalPrefixItems guards against prefixItems silently
+// landing in Extensions as an unrecognized field again: before this field
+// existed, it parsed without error either way (Extensions has its own
+// catch-all for unrecognized members), so the schema loaded fine but
+// prefixItems carried no meaning -- invisible to Validate, $ref resolution,
+// or anything else that reads Schema's own fields.
+func TestSchema_UnmarshalPrefixItems(t *testing.T) {
+	const src = `{
+		"type": "array",
+		"prefixItems": [
+			{"type": "string"},
+			{"type": "integer"}
+		],
+		"items": {"type": "boolean"}
+	}`
+
+	s := &openapi.Schema{}
+	if err := json.Unmarshal([]byte(src), s); err != nil {
+		t.Fatalf("unmarshal failed: %v", err)
+	}
+
+	if len(s.PrefixItems) != 2 {
+		t.Fatalf("len(PrefixItems) = %d, want 2", len(s.PrefixItems))
+	}
+
+	if got, want := s.PrefixItems[0].Value.Type, openapi.TypeString; got != want {
+		t.Errorf("PrefixItems[0].Type = %q, want %q", got, want)
+	}
+
+	if got, want := s.PrefixItems[1].Value.Type, openapi.TypeInteger; got != want {
+		t.Errorf("PrefixItems[1].Type = %q, want %q", got, want)
+	}
+
+	if len(s.Extensions) != 0 {
+		t.Errorf("Extensions = %s, want empty", s.Extensions)
 	}
 }

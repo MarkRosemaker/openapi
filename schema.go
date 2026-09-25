@@ -69,7 +69,13 @@ type Schema struct {
 	MinItems uint `json:"minItems,omitzero" yaml:"minItems,omitempty"`
 	// The maximum number of items in the array.
 	MaxItems *uint `json:"maxItems,omitempty" yaml:"maxItems,omitempty"`
-	// The items of the array. When the type is array, this property is REQUIRED.
+	// PrefixItems validates the array positionally: the first element
+	// against the first schema here, the second against the second, and so
+	// on. Items still applies to any element beyond the ones listed here.
+	// See JSON Schema 2020-12, "prefixItems".
+	PrefixItems SchemaRefList `json:"prefixItems,omitempty" yaml:"prefixItems,omitempty"`
+	// The items of the array. When the type is array, this property is REQUIRED
+	// unless PrefixItems already covers every element.
 	// The empty schema for `items` indicates a media type of `application/octet-stream`.
 	Items *SchemaRef `json:"items,omitzero" yaml:"items,omitempty"`
 
@@ -265,12 +271,23 @@ func (s *Schema) Validate() error {
 			}}
 		}
 
-		if s.Items == nil {
+		for i, v := range s.PrefixItems {
+			if err := v.Validate(); err != nil {
+				return &errpath.ErrField{
+					Field: "prefixItems",
+					Err:   &errpath.ErrIndex{Index: i, Err: err},
+				}
+			}
+		}
+
+		// items is only required when prefixItems doesn't already cover
+		// every element.
+		if s.Items == nil && len(s.PrefixItems) == 0 {
 			return &errpath.ErrField{Field: "items", Err: &errpath.ErrRequired{}}
 		}
 
 		// empty schema for items indicates a media type of application/octet-stream.
-		if !s.Items.Value.isEmpty() {
+		if s.Items != nil && !s.Items.Value.isEmpty() {
 			if err := s.Items.Validate(); err != nil {
 				return &errpath.ErrField{Field: "items", Err: err}
 			}
@@ -283,6 +300,10 @@ func (s *Schema) Validate() error {
 	} else if s.MaxItems != nil {
 		return &errpath.ErrField{Field: "maxItems", Err: &errpath.ErrInvalid[uint]{
 			Value:   *s.MaxItems,
+			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+		}}
+	} else if len(s.PrefixItems) != 0 {
+		return &errpath.ErrField{Field: "prefixItems", Err: &errpath.ErrInvalid[string]{
 			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
 		}}
 	} else if s.Items != nil {
@@ -473,6 +494,10 @@ func (l *loader) resolveSchema(s *Schema) error {
 		}
 	}
 
+	if err := l.resolveSchemaRefList(s.PrefixItems); err != nil {
+		return &errpath.ErrField{Field: "prefixItems", Err: err}
+	}
+
 	if s.Items != nil {
 		if err := l.resolveSchemaRef(s.Items); err != nil {
 			return &errpath.ErrField{Field: "items", Err: err}
@@ -498,7 +523,7 @@ func (s *Schema) isEmpty() bool {
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
 			s.Min == nil && s.Max == nil &&
 			s.Pattern == nil &&
-			s.MinItems == 0 && s.MaxItems == nil && s.Items == nil &&
+			s.MinItems == 0 && s.MaxItems == nil && len(s.PrefixItems) == 0 && s.Items == nil &&
 			s.Properties == nil && s.Required == nil &&
 			s.AdditionalProperties == nil &&
 			s.ContentMediaType == "" && s.ContentEncoding == "" &&
