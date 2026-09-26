@@ -34,6 +34,15 @@ cost you something.
   request stops being mergeable, say so and stop — that is the instruction
   arriving, and it is not yours to give yourself.
 
+## Cross-repo dependencies
+
+Fixing a bug in one repository ends at that repository's pull request.
+Never bump another repository's dependency on it, vendor the fix, or open
+a pull request there yourself — not even to pick up your own merged fix.
+Propagating a fix downstream is the owner's decision: they decide which
+of their repositories takes it, and when. Report the fix as merged and
+stop.
+
 ## Committing
 
 - `make ready` passes before every commit. It regenerates what the
