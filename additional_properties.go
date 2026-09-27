@@ -32,7 +32,7 @@ var (
 
 // UnmarshalJSONFrom reads a boolean into Allowed and anything else into Schema.
 func (ap *AdditionalProperties) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	if k := dec.PeekKind(); k == 't' || k == 'f' {
+	if k := dec.PeekKind(); k == jsontext.KindTrue || k == jsontext.KindFalse {
 		tok, err := dec.ReadToken()
 		if err != nil {
 			return err
