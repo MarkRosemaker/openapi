@@ -1,4 +1,5 @@
 {
 	"coverage": 97.9,
-	"devtoolVersion": "v0.0.0-20260927001129-4f324c51339b"
+	"devtoolVersion": "v0.0.0-20260927105104-016049d867cb",
+	"kind": "library"
 }
