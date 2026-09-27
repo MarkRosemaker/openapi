@@ -84,8 +84,10 @@ type Schema struct {
 	// For object types, defines the properties of the object
 	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
 	// Which properties are required.
-	Required             []string   `json:"required,omitempty"             yaml:"required,omitempty"`
-	AdditionalProperties *SchemaRef `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
+	Required []string `json:"required,omitempty" yaml:"required,omitempty"`
+	// Applies to properties not listed in Properties: either a schema for
+	// their values, or whether they are allowed at all.
+	AdditionalProperties *AdditionalProperties `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
 
 	// special encoding for binary data
 	ContentMediaType string `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
@@ -508,8 +510,8 @@ func (l *loader) resolveSchema(s *Schema) error {
 		return &errpath.ErrField{Field: "properties", Err: err}
 	}
 
-	if s.AdditionalProperties != nil {
-		if err := l.resolveSchemaRef(s.AdditionalProperties); err != nil {
+	if s.AdditionalProperties != nil && s.AdditionalProperties.Schema != nil {
+		if err := l.resolveSchemaRef(s.AdditionalProperties.Schema); err != nil {
 			return &errpath.ErrField{Field: "additionalProperties", Err: err}
 		}
 	}

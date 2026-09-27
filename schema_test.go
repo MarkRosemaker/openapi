@@ -43,6 +43,30 @@ func TestSchema_JSON(t *testing.T) {
 			"type": "boolean"
 		}
 	}`), &openapi.Schema{})
+
+	// additionalProperties: a bare boolean, like any JSON Schema, or a schema
+	// for the values -- each written back exactly as it was read.
+	testJSON(t, []byte(`{
+		"type": "object",
+		"properties": {
+			"id": {
+				"type": "string"
+			}
+		},
+		"additionalProperties": false
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "object",
+		"additionalProperties": true
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "object",
+		"additionalProperties": {
+			"type": "integer"
+		}
+	}`), &openapi.Schema{})
 }
 
 func TestSchema_Validate(t *testing.T) {
@@ -214,8 +238,8 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `required[0] ("foo") is invalid: property does not exist`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
-			AdditionalProperties: &openapi.SchemaRef{
-				Value: &openapi.Schema{},
+			AdditionalProperties: &openapi.AdditionalProperties{
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
 			},
 		}, `additionalProperties.type is required`},
 		{openapi.Schema{
@@ -224,8 +248,8 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `properties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
-			AdditionalProperties: &openapi.SchemaRef{
-				Value: &openapi.Schema{},
+			AdditionalProperties: &openapi.AdditionalProperties{
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
 			},
 		}, `additionalProperties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
