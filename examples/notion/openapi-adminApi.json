@@ -514,7 +514,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Export a legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -659,7 +659,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -897,7 +897,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1122,7 +1122,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of users on a legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1291,7 +1291,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Add users to a legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1515,7 +1515,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of legal holds.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1785,7 +1785,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2010,7 +2010,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of workspaces on a legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2160,7 +2160,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Release a legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2387,7 +2387,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The removed user from a legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2655,7 +2655,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Enqueue a workspace export.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2811,7 +2811,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The workspace export status.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3024,7 +3024,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of pages on a legal hold.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3215,7 +3215,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The revoked managed user's sessions.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3408,7 +3408,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of MCP client connections in an organization.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3678,7 +3678,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Deny or restore enterprise-managed MCP client access.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3844,7 +3844,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The revoked MCP client connection.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3998,7 +3998,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The group.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -4211,7 +4211,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated group.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -4412,7 +4412,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The deleted group.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -4616,7 +4616,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of groups.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -4862,7 +4862,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created group.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -5067,7 +5067,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of users.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -5405,7 +5405,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of group members.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -5691,7 +5691,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Add a group member.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -5930,7 +5930,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated group member.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -6149,7 +6149,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The removed group member.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -6428,7 +6428,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of personal access tokens in a workspace.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -6680,7 +6680,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The revoked personal access token in a workspace.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -6845,7 +6845,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated setting for who can create agents in a space.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -7061,7 +7061,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated default agent credit limit for a workspace.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -7248,7 +7248,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Disable or re-enable an agent in a space.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -7436,7 +7436,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The deleted agent in a space.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -7751,7 +7751,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The agents in a space.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -8182,7 +8182,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The credit usage for an agent in a space.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -8441,7 +8441,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The custom agent's sharing permissions.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -8807,7 +8807,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated custom agent's sharing permissions.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -9071,7 +9071,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The credit usage for agents in a space.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -9365,7 +9365,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated credit limit for an agent in a space.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -9572,7 +9572,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of credit limit policies.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -9936,7 +9936,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created credit limit policy.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -10234,7 +10234,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated credit limit policy.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -10506,7 +10506,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Expire a credit limit policy.",
 						"content": {
 							"application/json": {
 								"schema": {

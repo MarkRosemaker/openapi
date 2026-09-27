@@ -19373,7 +19373,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The bot user of your token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19383,7 +19383,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19393,7 +19393,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19403,7 +19403,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19413,7 +19413,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19423,7 +19423,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19433,7 +19433,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19443,7 +19443,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19453,7 +19453,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19463,7 +19463,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19473,7 +19473,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19483,7 +19483,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19527,7 +19527,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The user.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19537,7 +19537,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19547,7 +19547,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19557,7 +19557,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19567,7 +19567,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19577,7 +19577,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19587,7 +19587,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19597,7 +19597,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19607,7 +19607,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19617,7 +19617,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19627,7 +19627,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19637,7 +19637,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19686,7 +19686,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of all users.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19730,7 +19730,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19740,7 +19740,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19750,7 +19750,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19760,7 +19760,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19770,7 +19770,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19780,7 +19780,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19790,7 +19790,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19800,7 +19800,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19810,7 +19810,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19820,7 +19820,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -19830,7 +19830,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20565,7 +20565,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created page.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20582,7 +20582,7 @@
 						}
 					},
 					"202": {
-						"description": "",
+						"description": "Accepted when `allow_async` is true and the page creation has been queued for background execution.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20659,7 +20659,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20669,7 +20669,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20679,7 +20679,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20689,7 +20689,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20699,7 +20699,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20709,7 +20709,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20719,7 +20719,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20729,7 +20729,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20739,7 +20739,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20749,7 +20749,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20759,7 +20759,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20815,7 +20815,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The page.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20832,7 +20832,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20842,7 +20842,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20852,7 +20852,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20862,7 +20862,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20872,7 +20872,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20882,7 +20882,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20892,7 +20892,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20902,7 +20902,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20912,7 +20912,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20922,7 +20922,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -20932,7 +20932,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21586,7 +21586,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated page.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21603,7 +21603,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21613,7 +21613,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21623,7 +21623,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21633,7 +21633,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21643,7 +21643,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21653,7 +21653,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21663,7 +21663,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21673,7 +21673,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21683,7 +21683,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21693,7 +21693,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21703,7 +21703,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21795,7 +21795,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Move a page.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21812,7 +21812,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21822,7 +21822,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21832,7 +21832,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21842,7 +21842,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21852,7 +21852,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21862,7 +21862,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21872,7 +21872,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21882,7 +21882,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21892,7 +21892,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21902,7 +21902,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21912,7 +21912,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21979,7 +21979,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The page property item.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -21996,7 +21996,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22006,7 +22006,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22016,7 +22016,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22026,7 +22026,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22036,7 +22036,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22046,7 +22046,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22056,7 +22056,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22066,7 +22066,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22076,7 +22076,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22086,7 +22086,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22096,7 +22096,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22148,7 +22148,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The page as markdown.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22158,7 +22158,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22168,7 +22168,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22178,7 +22178,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22188,7 +22188,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22198,7 +22198,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22208,7 +22208,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22218,7 +22218,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22228,7 +22228,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22238,7 +22238,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22248,7 +22248,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22258,7 +22258,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22494,7 +22494,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated page's content as markdown.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22584,7 +22584,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22594,7 +22594,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22604,7 +22604,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22614,7 +22614,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22624,7 +22624,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22634,7 +22634,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22644,7 +22644,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22654,7 +22654,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22664,7 +22664,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22674,7 +22674,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22684,7 +22684,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -22728,7 +22728,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The async task.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23915,7 +23915,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23925,7 +23925,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23935,7 +23935,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23945,7 +23945,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23955,7 +23955,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23965,7 +23965,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23975,7 +23975,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23985,7 +23985,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -23995,7 +23995,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24005,7 +24005,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24015,7 +24015,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24058,7 +24058,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The block.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24075,7 +24075,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24085,7 +24085,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24095,7 +24095,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24105,7 +24105,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24115,7 +24115,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24125,7 +24125,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24135,7 +24135,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24145,7 +24145,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24155,7 +24155,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24165,7 +24165,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24175,7 +24175,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24927,7 +24927,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated block.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24944,7 +24944,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24954,7 +24954,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24964,7 +24964,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24974,7 +24974,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24984,7 +24984,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -24994,7 +24994,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25004,7 +25004,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25014,7 +25014,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25024,7 +25024,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25034,7 +25034,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25044,7 +25044,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25085,7 +25085,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The deleted block.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25102,7 +25102,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25112,7 +25112,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25122,7 +25122,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25132,7 +25132,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25142,7 +25142,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25152,7 +25152,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25162,7 +25162,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25172,7 +25172,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25182,7 +25182,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25192,7 +25192,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25202,7 +25202,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25260,7 +25260,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The block children.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25311,7 +25311,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25321,7 +25321,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25331,7 +25331,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25341,7 +25341,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25351,7 +25351,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25361,7 +25361,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25371,7 +25371,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25381,7 +25381,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25391,7 +25391,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25401,7 +25401,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25411,7 +25411,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25476,7 +25476,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Append block children.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25527,7 +25527,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25537,7 +25537,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25547,7 +25547,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25557,7 +25557,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25567,7 +25567,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25577,7 +25577,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25587,7 +25587,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25597,7 +25597,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25607,7 +25607,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25617,7 +25617,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25627,7 +25627,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25671,7 +25671,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The data source.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25688,7 +25688,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25698,7 +25698,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25708,7 +25708,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25718,7 +25718,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25728,7 +25728,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25738,7 +25738,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25748,7 +25748,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25758,7 +25758,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25768,7 +25768,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25778,7 +25778,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -25788,7 +25788,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26509,7 +26509,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated data source.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26526,7 +26526,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26536,7 +26536,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26546,7 +26546,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26556,7 +26556,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26566,7 +26566,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26576,7 +26576,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26586,7 +26586,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26596,7 +26596,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26606,7 +26606,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26616,7 +26616,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26626,7 +26626,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26773,7 +26773,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The results of querying a data source.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26852,7 +26852,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26862,7 +26862,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26872,7 +26872,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26882,7 +26882,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26892,7 +26892,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26902,7 +26902,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26912,7 +26912,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26922,7 +26922,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26932,7 +26932,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26942,7 +26942,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -26952,7 +26952,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27030,7 +27030,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created data source.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27047,7 +27047,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27057,7 +27057,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27067,7 +27067,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27077,7 +27077,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27087,7 +27087,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27097,7 +27097,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27107,7 +27107,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27117,7 +27117,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27127,7 +27127,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27137,7 +27137,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27147,7 +27147,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27217,7 +27217,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of templates in a data source.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27270,7 +27270,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27280,7 +27280,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27290,7 +27290,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27300,7 +27300,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27310,7 +27310,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27320,7 +27320,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27330,7 +27330,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27340,7 +27340,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27350,7 +27350,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27360,7 +27360,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27370,7 +27370,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27414,7 +27414,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The database.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27431,7 +27431,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27441,7 +27441,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27451,7 +27451,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27461,7 +27461,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27471,7 +27471,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27481,7 +27481,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27491,7 +27491,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27501,7 +27501,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27511,7 +27511,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27521,7 +27521,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27531,7 +27531,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27673,7 +27673,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated database.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27690,7 +27690,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27700,7 +27700,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27710,7 +27710,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27720,7 +27720,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27730,7 +27730,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27740,7 +27740,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27750,7 +27750,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27760,7 +27760,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27770,7 +27770,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27780,7 +27780,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27790,7 +27790,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27927,7 +27927,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created database.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27944,7 +27944,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27954,7 +27954,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27964,7 +27964,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27974,7 +27974,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27984,7 +27984,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -27994,7 +27994,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28004,7 +28004,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28014,7 +28014,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28024,7 +28024,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28034,7 +28034,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28044,7 +28044,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28164,7 +28164,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The results of searching by title.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28243,7 +28243,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28253,7 +28253,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28263,7 +28263,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28273,7 +28273,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28283,7 +28283,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28293,7 +28293,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28303,7 +28303,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28313,7 +28313,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28323,7 +28323,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28333,7 +28333,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28343,7 +28343,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28597,7 +28597,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created comment.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28614,7 +28614,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28624,7 +28624,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28634,7 +28634,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28644,7 +28644,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28654,7 +28654,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28664,7 +28664,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28674,7 +28674,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28684,7 +28684,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28694,7 +28694,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28704,7 +28704,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28714,7 +28714,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28775,7 +28775,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of comments.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28831,7 +28831,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28841,7 +28841,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28851,7 +28851,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28861,7 +28861,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28871,7 +28871,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28881,7 +28881,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28891,7 +28891,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28901,7 +28901,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28911,7 +28911,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28921,7 +28921,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28931,7 +28931,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28975,7 +28975,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The comment.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -28992,7 +28992,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29002,7 +29002,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29012,7 +29012,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29022,7 +29022,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29032,7 +29032,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29042,7 +29042,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29052,7 +29052,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29062,7 +29062,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29072,7 +29072,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29082,7 +29082,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29092,7 +29092,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29166,7 +29166,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated comment.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29183,7 +29183,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29193,7 +29193,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29203,7 +29203,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29213,7 +29213,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29223,7 +29223,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29233,7 +29233,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29243,7 +29243,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29253,7 +29253,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29263,7 +29263,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29273,7 +29273,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29283,7 +29283,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29322,7 +29322,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The deleted comment.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29339,7 +29339,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29349,7 +29349,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29359,7 +29359,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29369,7 +29369,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29379,7 +29379,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29389,7 +29389,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29399,7 +29399,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29409,7 +29409,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29419,7 +29419,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29429,7 +29429,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29439,7 +29439,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29512,7 +29512,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created file upload.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29522,7 +29522,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29532,7 +29532,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29542,7 +29542,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29552,7 +29552,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29562,7 +29562,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29572,7 +29572,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29582,7 +29582,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29592,7 +29592,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29602,7 +29602,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29612,7 +29612,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29622,7 +29622,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29682,7 +29682,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of file uploads.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29738,7 +29738,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29748,7 +29748,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29758,7 +29758,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29768,7 +29768,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29778,7 +29778,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29788,7 +29788,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29798,7 +29798,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29808,7 +29808,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29818,7 +29818,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29828,7 +29828,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29838,7 +29838,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29905,7 +29905,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Upload a file.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29915,7 +29915,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29925,7 +29925,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29935,7 +29935,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29945,7 +29945,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29955,7 +29955,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29965,7 +29965,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29975,7 +29975,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29985,7 +29985,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -29995,7 +29995,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30005,7 +30005,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30015,7 +30015,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30060,7 +30060,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Complete a multi-part file upload.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30070,7 +30070,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30080,7 +30080,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30090,7 +30090,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30100,7 +30100,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30110,7 +30110,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30120,7 +30120,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30130,7 +30130,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30140,7 +30140,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30150,7 +30150,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30160,7 +30160,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30170,7 +30170,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30215,7 +30215,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The file upload.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30225,7 +30225,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30235,7 +30235,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30245,7 +30245,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30255,7 +30255,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30265,7 +30265,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30275,7 +30275,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30285,7 +30285,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30295,7 +30295,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30305,7 +30305,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30315,7 +30315,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30325,7 +30325,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30383,7 +30383,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of custom emojis.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30436,7 +30436,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30446,7 +30446,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30456,7 +30456,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30466,7 +30466,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30476,7 +30476,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30486,7 +30486,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30496,7 +30496,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30506,7 +30506,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30516,7 +30516,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30526,7 +30526,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30536,7 +30536,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30602,7 +30602,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of views.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30658,7 +30658,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30668,7 +30668,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30678,7 +30678,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30688,7 +30688,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30698,7 +30698,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30708,7 +30708,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30718,7 +30718,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30728,7 +30728,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30738,7 +30738,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30748,7 +30748,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30758,7 +30758,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30798,7 +30798,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created view.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30815,7 +30815,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30825,7 +30825,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30835,7 +30835,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30845,7 +30845,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30855,7 +30855,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30865,7 +30865,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30875,7 +30875,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30885,7 +30885,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30895,7 +30895,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30905,7 +30905,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30915,7 +30915,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30956,7 +30956,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The view.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30973,7 +30973,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30983,7 +30983,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -30993,7 +30993,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31003,7 +31003,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31013,7 +31013,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31023,7 +31023,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31033,7 +31033,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31043,7 +31043,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31053,7 +31053,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31063,7 +31063,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31073,7 +31073,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31122,7 +31122,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated view.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31139,7 +31139,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31149,7 +31149,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31159,7 +31159,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31169,7 +31169,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31179,7 +31179,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31189,7 +31189,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31199,7 +31199,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31209,7 +31209,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31219,7 +31219,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31229,7 +31229,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31239,7 +31239,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31278,7 +31278,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The deleted view.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31288,7 +31288,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31298,7 +31298,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31308,7 +31308,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31318,7 +31318,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31328,7 +31328,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31338,7 +31338,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31348,7 +31348,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31358,7 +31358,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31368,7 +31368,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31378,7 +31378,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31388,7 +31388,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31439,7 +31439,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created view query.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31449,7 +31449,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31459,7 +31459,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31469,7 +31469,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31479,7 +31479,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31489,7 +31489,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31499,7 +31499,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31509,7 +31509,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31519,7 +31519,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31529,7 +31529,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31539,7 +31539,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31549,7 +31549,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31617,7 +31617,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The view query results.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31673,7 +31673,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31683,7 +31683,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31693,7 +31693,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31703,7 +31703,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31713,7 +31713,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31723,7 +31723,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31733,7 +31733,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31743,7 +31743,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31753,7 +31753,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31763,7 +31763,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31773,7 +31773,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31821,7 +31821,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The deleted view query.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31831,7 +31831,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31841,7 +31841,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31851,7 +31851,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31861,7 +31861,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31871,7 +31871,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31881,7 +31881,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31891,7 +31891,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31901,7 +31901,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31911,7 +31911,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31921,7 +31921,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -31931,7 +31931,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32095,7 +32095,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The created meeting note.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32263,7 +32263,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32273,7 +32273,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32283,7 +32283,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32293,7 +32293,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32303,7 +32303,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32313,7 +32313,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32323,7 +32323,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32333,7 +32333,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32343,7 +32343,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32353,7 +32353,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -32363,7 +32363,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33388,7 +33388,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The results of querying meeting notes.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33552,7 +33552,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33562,7 +33562,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33572,7 +33572,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33582,7 +33582,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33592,7 +33592,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33602,7 +33602,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33612,7 +33612,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33622,7 +33622,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33632,7 +33632,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33642,7 +33642,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -33652,7 +33652,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -35650,7 +35650,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The results of querying agents.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37781,7 +37781,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37791,7 +37791,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37801,7 +37801,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37811,7 +37811,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37821,7 +37821,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37831,7 +37831,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37841,7 +37841,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37851,7 +37851,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37861,7 +37861,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37871,7 +37871,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37881,7 +37881,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -37940,7 +37940,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39128,7 +39128,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39138,7 +39138,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39148,7 +39148,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39158,7 +39158,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39168,7 +39168,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39178,7 +39178,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39188,7 +39188,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39198,7 +39198,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39208,7 +39208,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39218,7 +39218,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39228,7 +39228,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39277,7 +39277,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39303,7 +39303,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39313,7 +39313,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39323,7 +39323,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39333,7 +39333,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39343,7 +39343,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39353,7 +39353,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39363,7 +39363,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39373,7 +39373,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39383,7 +39383,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39393,7 +39393,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39403,7 +39403,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39472,7 +39472,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The agent insights.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39606,7 +39606,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39616,7 +39616,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39626,7 +39626,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39636,7 +39636,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39646,7 +39646,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39656,7 +39656,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39666,7 +39666,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39676,7 +39676,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39686,7 +39686,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39696,7 +39696,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39706,7 +39706,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39775,7 +39775,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated agent status.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39836,7 +39836,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39846,7 +39846,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39856,7 +39856,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39866,7 +39866,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39876,7 +39876,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39886,7 +39886,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39896,7 +39896,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39906,7 +39906,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39916,7 +39916,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39926,7 +39926,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -39936,7 +39936,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40011,7 +40011,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated agent credit limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40043,7 +40043,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40053,7 +40053,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40063,7 +40063,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40073,7 +40073,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40083,7 +40083,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40093,7 +40093,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40103,7 +40103,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40113,7 +40113,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40123,7 +40123,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40133,7 +40133,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40143,7 +40143,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40317,7 +40317,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Apply many agent operations.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40378,7 +40378,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40388,7 +40388,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40398,7 +40398,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40408,7 +40408,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40418,7 +40418,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40428,7 +40428,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40438,7 +40438,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40448,7 +40448,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40458,7 +40458,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40468,7 +40468,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40478,7 +40478,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40534,7 +40534,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "A list of skills plugins.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40603,7 +40603,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40613,7 +40613,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40623,7 +40623,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40633,7 +40633,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40643,7 +40643,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40653,7 +40653,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40663,7 +40663,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40673,7 +40673,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40683,7 +40683,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40693,7 +40693,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40703,7 +40703,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40750,7 +40750,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The plugin directory.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40777,7 +40777,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40787,7 +40787,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40797,7 +40797,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40807,7 +40807,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40817,7 +40817,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40827,7 +40827,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40837,7 +40837,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40847,7 +40847,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40857,7 +40857,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40867,7 +40867,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40877,7 +40877,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40922,7 +40922,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The skill directory.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40952,7 +40952,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40962,7 +40962,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40972,7 +40972,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40982,7 +40982,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -40992,7 +40992,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41002,7 +41002,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41012,7 +41012,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41022,7 +41022,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41032,7 +41032,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41042,7 +41042,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41052,7 +41052,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41223,7 +41223,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The updated session.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41332,7 +41332,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41342,7 +41342,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41352,7 +41352,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41362,7 +41362,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41372,7 +41372,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41382,7 +41382,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41392,7 +41392,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41402,7 +41402,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41412,7 +41412,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41422,7 +41422,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41432,7 +41432,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41474,7 +41474,7 @@
 				],
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The session.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41751,7 +41751,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41761,7 +41761,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41771,7 +41771,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41781,7 +41781,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41791,7 +41791,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41801,7 +41801,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41811,7 +41811,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41821,7 +41821,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41831,7 +41831,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41841,7 +41841,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -41851,7 +41851,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43012,7 +43012,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The results of querying sessions.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43339,7 +43339,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43349,7 +43349,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43359,7 +43359,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43369,7 +43369,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43379,7 +43379,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43389,7 +43389,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43399,7 +43399,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43409,7 +43409,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43419,7 +43419,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43429,7 +43429,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -43439,7 +43439,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -45799,7 +45799,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The results of querying session events.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46360,7 +46360,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46370,7 +46370,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46380,7 +46380,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46390,7 +46390,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46400,7 +46400,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46410,7 +46410,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46420,7 +46420,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46430,7 +46430,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46440,7 +46440,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46450,7 +46450,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46460,7 +46460,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46519,7 +46519,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Cancel a session.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46628,7 +46628,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46638,7 +46638,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46648,7 +46648,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46658,7 +46658,7 @@
 						}
 					},
 					"404": {
-						"description": "",
+						"description": "The requested resource could not be found.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46668,7 +46668,7 @@
 						}
 					},
 					"406": {
-						"description": "",
+						"description": "The request would exceed a row limit.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46678,7 +46678,7 @@
 						}
 					},
 					"409": {
-						"description": "",
+						"description": "The request conflicts with the current state: a data collision, a reused idempotency key, or a deleted agent.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46688,7 +46688,7 @@
 						}
 					},
 					"429": {
-						"description": "",
+						"description": "The request was rate limited.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46698,7 +46698,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46708,7 +46708,7 @@
 						}
 					},
 					"503": {
-						"description": "",
+						"description": "Notion is temporarily unavailable.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46718,7 +46718,7 @@
 						}
 					},
 					"504": {
-						"description": "",
+						"description": "Notion timed out while completing the request.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46728,7 +46728,7 @@
 						}
 					},
 					"529": {
-						"description": "",
+						"description": "Notion is overloaded; retry the request later.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46820,7 +46820,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Exchange an authorization code for an access and refresh token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46956,7 +46956,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46966,7 +46966,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46976,7 +46976,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -46986,7 +46986,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47042,7 +47042,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The revoked token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47058,7 +47058,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47068,7 +47068,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47078,7 +47078,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47088,7 +47088,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47144,7 +47144,7 @@
 				},
 				"responses": {
 					"200": {
-						"description": "",
+						"description": "The result of: Introspect a token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47170,7 +47170,7 @@
 						}
 					},
 					"400": {
-						"description": "",
+						"description": "The request body, path parameters, or query parameters are invalid.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47180,7 +47180,7 @@
 						}
 					},
 					"401": {
-						"description": "",
+						"description": "The request is missing a valid bearer token.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47190,7 +47190,7 @@
 						}
 					},
 					"403": {
-						"description": "",
+						"description": "The authenticated bot does not have access to the requested resource or scope.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -47200,7 +47200,7 @@
 						}
 					},
 					"500": {
-						"description": "",
+						"description": "An unexpected server error occurred.",
 						"content": {
 							"application/json": {
 								"schema": {
