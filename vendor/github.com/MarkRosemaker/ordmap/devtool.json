@@ -1,0 +1,5 @@
+{
+	"description": "Provides a generic ordered map implementation, primarily designed for JSON v2 marshalling and unmarshalling. Includes helper functions to easily define your own custom ordered maps with minimal boilerplate code.",
+	"coverage": 97.5,
+	"devtoolVersion": "v0.0.0-20260927001129-4f324c51339b"
+}

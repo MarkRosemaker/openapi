@@ -1,3 +1,13 @@
 {
-	"coverage": 100
+	"description": "Utilities for creating and managing detailed error paths, allowing users to construct error messages that include the full path to the error. Useful when traversing complex data structures such as JSON or YAML files. Example: components.schemas[\"Pet\"].allOf[0]: invalid schema",
+	"topics": [
+		"error-handling",
+		"errors",
+		"golang",
+		"json",
+		"openapi",
+		"yaml"
+	],
+	"coverage": 100,
+	"devtoolVersion": "v0.0.0-20260927001129-4f324c51339b"
 }
