@@ -31,6 +31,8 @@ type Schema struct {
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// Specifies the data type of the property.
 	Type DataType `json:"type,omitempty" yaml:"type,omitempty"`
+	// Whether null is a valid value too, written as a "type" of [Type, "null"].
+	Nullable bool `json:"-" yaml:"-"`
 	// Further refines the data type.
 	Format Format `json:"format,omitempty" yaml:"format,omitempty"`
 
@@ -103,10 +105,6 @@ type Schema struct {
 
 	// an index to the original location of this object
 	idx int
-
-	// NOTE: consider adding:
-	// Indicates whether the property can have a null value.
-	// Nullable bool `json:"nullable,omitempty,omitzero" yaml:"nullable,omitempty"`
 }
 
 func getIndexSchema(s *Schema) int              { return s.idx }
@@ -521,7 +519,7 @@ func (l *loader) resolveSchema(s *Schema) error {
 
 func (s *Schema) isEmpty() bool {
 	return s == nil ||
-		(s.Type == "" && s.Format == "" &&
+		(s.Type == "" && !s.Nullable && s.Format == "" &&
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
 			s.Min == nil && s.Max == nil &&
 			s.Pattern == nil &&

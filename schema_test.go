@@ -67,6 +67,51 @@ func TestSchema_JSON(t *testing.T) {
 			"type": "integer"
 		}
 	}`), &openapi.Schema{})
+
+	// a type array of one type and "null": the 3.1 form of nullable.
+	testJSON(t, []byte(`{
+		"title": "Boolean",
+		"description": "true, false or null",
+		"type": [
+			"boolean",
+			"null"
+		]
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "null"
+	}`), &openapi.Schema{})
+}
+
+func TestSchema_UnmarshalTypeArray(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct {
+		json     string
+		want     openapi.DataType
+		nullable bool
+	}{
+		{`{"type": "string"}`, openapi.TypeString, false},
+		{`{"type": ["string", "null"]}`, openapi.TypeString, true},
+		{`{"type": ["null", "integer"]}`, openapi.TypeInteger, true},
+		{`{"type": ["object"]}`, openapi.TypeObject, false},
+		{`{"type": ["null"]}`, openapi.TypeNull, false},
+	} {
+		var s openapi.Schema
+		if err := json.Unmarshal([]byte(tc.json), &s); err != nil {
+			t.Fatalf("%s: %v", tc.json, err)
+		}
+
+		if s.Type != tc.want || s.Nullable != tc.nullable {
+			t.Errorf("%s: got Type %q, Nullable %v; want %q, %v", tc.json, s.Type, s.Nullable, tc.want, tc.nullable)
+		}
+	}
+
+	// two types other than "null" have no representation, so they fail loudly.
+	var s openapi.Schema
+	if err := json.Unmarshal([]byte(`{"type": ["string", "integer"]}`), &s); err == nil {
+		t.Fatal("expected an error for multiple non-null types")
+	}
 }
 
 func TestSchema_Validate(t *testing.T) {
