@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
@@ -130,6 +131,12 @@ func TestSchema_Validate(t *testing.T) {
 		{Type: openapi.TypeInteger, Default: jsontext.Value("3")},
 		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: jsontext.Value("3")}, // e.g. seconds
 		{Type: openapi.TypeString, Format: openapi.FormatByte},                                    // base64-encoded data
+		// type is optional (JSON Schema 2020-12): the empty schema accepts
+		// any value, and enum or const alone constrain it.
+		{},
+		{Description: "Inference output."},
+		{Enum: []jsontext.Value{jsontext.Value(`"error"`)}},
+		{Const: jsontext.Value("401")},
 		// oneOf, anyOf, not allow type to be omitted
 		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
 		{OneOf: openapi.SchemaRefList{str, num}},
@@ -164,7 +171,6 @@ func TestSchema_Validate_Error(t *testing.T) {
 		s   openapi.Schema
 		err string
 	}{
-		{openapi.Schema{}, "type is required"},
 		{openapi.Schema{
 			Type: "foo",
 		}, `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object", "null"`},
@@ -258,34 +264,34 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: openapi.TypeArray,
 			PrefixItems: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
 			Items: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeBoolean}},
-		}, `prefixItems[0].type is required`},
+		}, `prefixItems[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			AllOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `allOf[0].type is required`},
+		}, `allOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			OneOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `oneOf[0].type is required`},
+		}, `oneOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			AnyOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `anyOf[0].type is required`},
+		}, `anyOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
-			Not: &openapi.SchemaRef{Value: &openapi.Schema{}},
-		}, `not.type is required`},
+			Not: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
+		}, `not.required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
 			Properties: openapi.SchemaRefs{
-				"foo": &openapi.SchemaRef{Value: &openapi.Schema{}},
+				"foo": &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `properties["foo"].type is required`},
+		}, `properties["foo"].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type:     openapi.TypeObject,
 			Required: []string{"foo"},
@@ -293,9 +299,9 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: openapi.TypeObject,
 			AdditionalProperties: &openapi.AdditionalProperties{
-				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `additionalProperties.type is required`},
+		}, `additionalProperties.required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type:       openapi.TypeBoolean,
 			Properties: openapi.SchemaRefs{},
@@ -318,6 +324,24 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:  openapi.TypeInteger,
 			Const: jsontext.Value(`"401"`),
 		}, `const ("401") is invalid: must be a integer value`},
+		// keywords that only apply to one type still require it.
+		{openapi.Schema{
+			Properties: openapi.SchemaRefs{},
+		}, `properties is invalid: only valid for object type, got no type`},
+		{openapi.Schema{
+			Required: []string{"id"},
+		}, `required is invalid: only valid for object type, got no type`},
+		{openapi.Schema{
+			Type:    openapi.TypeInteger,
+			Pattern: regexp.MustCompile(`^\d+$`),
+		}, `pattern is invalid: only valid for string type, got integer`},
+		{openapi.Schema{
+			ContentMediaType: "image/png",
+		}, `contentMediaType is invalid: only valid for string type, got no type`},
+		{openapi.Schema{
+			Type:            openapi.TypeObject,
+			ContentEncoding: "base64",
+		}, `contentEncoding is invalid: only valid for string type, got object`},
 		{openapi.Schema{
 			Type:  openapi.TypeString,
 			Const: jsontext.Value("null"),

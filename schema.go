@@ -116,12 +116,11 @@ func setIndexSchema(s *Schema, idx int) *Schema { s.idx = idx; return s }
 func (s *Schema) Validate() error {
 	s.Description = strings.TrimSpace(s.Description)
 
-	if s.Type == "" {
-		if len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil {
-			return &errpath.ErrField{Field: "type", Err: &errpath.ErrRequired{}}
+	// type is optional (JSON Schema 2020-12); keywords tied to one type still require it, below.
+	if s.Type != "" {
+		if err := s.Type.Validate(); err != nil {
+			return &errpath.ErrField{Field: "type", Err: err}
 		}
-	} else if err := s.Type.Validate(); err != nil {
-		return &errpath.ErrField{Field: "type", Err: err}
 	}
 
 	if s.Format != "" {
@@ -137,14 +136,14 @@ func (s *Schema) Validate() error {
 		if s.Type != TypeInteger {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for integer type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for integer type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatFloat, FormatDouble:
 		if s.Type != TypeNumber {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatEmail, FormatPassword,
@@ -153,7 +152,7 @@ func (s *Schema) Validate() error {
 		if s.Type != TypeString {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatDuration, FormatDate, FormatDateTime:
@@ -162,7 +161,7 @@ func (s *Schema) Validate() error {
 		default:
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for integer or string type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for integer or string type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatByte, FormatBinary:
@@ -171,11 +170,30 @@ func (s *Schema) Validate() error {
 		default:
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
 			}}
 		}
 	default:
 		return fmt.Errorf("unimplemented format: %s", s.Format)
+	}
+
+	// String
+
+	if s.Type != TypeString {
+		for _, kw := range []struct {
+			field string
+			set   bool
+		}{
+			{"pattern", s.Pattern != nil},
+			{"contentMediaType", s.ContentMediaType != ""},
+			{"contentEncoding", s.ContentEncoding != ""},
+		} {
+			if kw.set {
+				return &errpath.ErrField{Field: kw.field, Err: &errpath.ErrInvalid[string]{
+					Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
+				}}
+			}
+		}
 	}
 
 	for i, v := range s.AllOf {
@@ -240,12 +258,12 @@ func (s *Schema) Validate() error {
 	} else if s.Min != nil {
 		return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
 			Value:   *s.Min,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
 		}}
 	} else if s.Max != nil {
 		return &errpath.ErrField{Field: "maximum", Err: &errpath.ErrInvalid[float64]{
 			Value:   *s.Max,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
 		}}
 	}
 
@@ -305,20 +323,20 @@ func (s *Schema) Validate() error {
 	} else if s.MinItems != 0 {
 		return &errpath.ErrField{Field: "minItems", Err: &errpath.ErrInvalid[uint]{
 			Value:   s.MinItems,
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	} else if s.MaxItems != nil {
 		return &errpath.ErrField{Field: "maxItems", Err: &errpath.ErrInvalid[uint]{
 			Value:   *s.MaxItems,
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	} else if len(s.PrefixItems) != 0 {
 		return &errpath.ErrField{Field: "prefixItems", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	} else if s.Items != nil {
 		return &errpath.ErrField{Field: "items", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	}
 
@@ -350,11 +368,15 @@ func (s *Schema) Validate() error {
 		}
 	} else if s.Properties != nil {
 		return &errpath.ErrField{Field: "properties", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
+		}}
+	} else if s.Required != nil {
+		return &errpath.ErrField{Field: "required", Err: &errpath.ErrInvalid[string]{
+			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
 		}}
 	} else if s.AdditionalProperties != nil {
 		return &errpath.ErrField{Field: "additionalProperties", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
 		}}
 	}
 
@@ -363,7 +385,7 @@ func (s *Schema) Validate() error {
 		defaultTypeErr := func() error {
 			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
 				Value:   jsonDisplayValue(s.Default),
-				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+				Message: fmt.Sprintf("does not match schema type, got %s", s.typeOrNone()),
 			}}
 		}
 
@@ -422,6 +444,15 @@ func (s *Schema) Validate() error {
 	}
 
 	return nil
+}
+
+// typeOrNone names the schema's type for error messages.
+func (s *Schema) typeOrNone() string {
+	if s.Type == "" {
+		return "no type"
+	}
+
+	return string(s.Type)
 }
 
 // allowsKindOf reports whether v's kind is one the schema's type allows: its
