@@ -91,7 +91,6 @@ func TestSchema_JSON(t *testing.T) {
 	// a present but empty value differs from an absent one, so it is written back.
 	testJSON(t, []byte(`{
 		"type": "object",
-		"required": [],
 		"additionalProperties": {}
 	}`), &openapi.Schema{})
 

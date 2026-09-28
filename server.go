@@ -14,7 +14,7 @@ type Server struct {
 	// An optional string describing the host designated by the URL. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// A map between a variable name and its value. The value is used for substitution in the server's URL template.
-	Variables ServerVariables `json:"variables,omitzero" yaml:"variables,omitempty"`
+	Variables ServerVariables `json:"variables,omitempty" yaml:"variables,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }

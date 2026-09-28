@@ -26,9 +26,9 @@ type Header struct {
 	// Example of the parameter's potential value. The example SHOULD match the specified schema and encoding properties if present. The `example` field is mutually exclusive of the `examples` field. Furthermore, if referencing a `schema` that contains an example, the `example` value SHALL _override_ the example provided by the schema. To represent examples of media types that cannot naturally be represented in JSON or YAML, a string value can contain the example with escaping where necessary.
 	Example jsontext.Value `json:"example,omitzero" yaml:"example,omitempty"`
 	// Examples of the parameter's potential value. Each example SHOULD contain a value in the correct format as specified in the parameter encoding. The `examples` field is mutually exclusive of the `example` field. Furthermore, if referencing a `schema` that contains an example, the `examples` value SHALL _override_ the example provided by the schema.
-	Examples Examples `json:"examples,omitzero" yaml:"examples,omitempty"`
+	Examples Examples `json:"examples,omitempty" yaml:"examples,omitempty"`
 	// A map containing the representations for the parameter. The key is the media type and the value describes it. The map MUST only contain one entry.
-	Content Content `json:"content,omitzero" yaml:"content,omitempty"`
+	Content Content `json:"content,omitempty" yaml:"content,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:"-"`
 }

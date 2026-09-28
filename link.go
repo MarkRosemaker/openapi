@@ -29,7 +29,7 @@ type Link struct {
 	OperationID string `json:"operationId,omitempty" yaml:"operationId,omitempty"`
 	// A map representing parameters to pass to an operation as specified with `operationId` or identified via `operationRef`. The key is the parameter name to be used, whereas the value can be a constant or an expression to be evaluated and passed to the linked operation.
 	// The parameter name can be qualified using the parameter location `[{in}.]{name}` for operations that use the same parameter name in different locations (e.g. path.id).
-	Parameters MapOfStrings `json:"parameters,omitzero" yaml:"parameters,omitempty"`
+	Parameters MapOfStrings `json:"parameters,omitempty" yaml:"parameters,omitempty"`
 	// A literal value or {expression} to use as a request body when calling the target operation.
 	RequestBody RuntimeExpression `json:"requestBody,omitempty" yaml:"requestBody,omitempty"`
 	// A description of the link. CommonMark syntax MAY be used for rich text representation.

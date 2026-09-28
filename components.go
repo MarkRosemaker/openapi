@@ -28,25 +28,25 @@ var reKey = regexp.MustCompile(`^[a-zA-Z0-9\.\-_]+$`)
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#components-object
 type Components struct {
 	// An object to hold reusable Schema Objects.
-	Schemas Schemas `json:"schemas,omitzero" yaml:"schemas,omitempty"`
+	Schemas Schemas `json:"schemas,omitempty" yaml:"schemas,omitempty"`
 	// An object to hold reusable Response Objects.
-	Responses ResponsesByName `json:"responses,omitzero" yaml:"responses,omitempty"`
+	Responses ResponsesByName `json:"responses,omitempty" yaml:"responses,omitempty"`
 	// An object to hold reusable Parameter Objects.
-	Parameters Parameters `json:"parameters,omitzero" yaml:"parameters,omitempty"`
+	Parameters Parameters `json:"parameters,omitempty" yaml:"parameters,omitempty"`
 	// An object to hold reusable Example Objects.
-	Examples Examples `json:"examples,omitzero" yaml:"examples,omitempty"`
+	Examples Examples `json:"examples,omitempty" yaml:"examples,omitempty"`
 	// An object to hold reusable Request Body Objects.
-	RequestBodies RequestBodies `json:"requestBodies,omitzero" yaml:"requestBodies,omitempty"`
+	RequestBodies RequestBodies `json:"requestBodies,omitempty" yaml:"requestBodies,omitempty"`
 	// An object to hold reusable Header Objects.
-	Headers Headers `json:"headers,omitzero" yaml:"headers,omitempty"`
+	Headers Headers `json:"headers,omitempty" yaml:"headers,omitempty"`
 	// An object to hold reusable Security Scheme Objects.
-	SecuritySchemes SecuritySchemes `json:"securitySchemes,omitzero" yaml:"securitySchemes,omitempty"`
+	SecuritySchemes SecuritySchemes `json:"securitySchemes,omitempty" yaml:"securitySchemes,omitempty"`
 	// An object to hold reusable Link Objects.
-	Links Links `json:"links,omitzero" yaml:"links,omitempty"`
+	Links Links `json:"links,omitempty" yaml:"links,omitempty"`
 	// An object to hold reusable Callback Objects.
-	Callbacks CallbackRefs `json:"callbacks,omitzero" yaml:"callbacks,omitempty"`
+	Callbacks CallbackRefs `json:"callbacks,omitempty" yaml:"callbacks,omitempty"`
 	// An object to hold reusable Path Item Object.
-	PathItems PathItems `json:"pathItems,omitzero" yaml:"pathItems,omitempty"`
+	PathItems PathItems `json:"pathItems,omitempty" yaml:"pathItems,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }
