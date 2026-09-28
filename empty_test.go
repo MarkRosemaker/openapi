@@ -17,6 +17,7 @@ func TestJSON_EmptyMeansAbsent(t *testing.T) {
 		want string
 	}{
 		{"schema required", &openapi.Schema{Type: openapi.TypeObject, Required: []string{}}, `{"type":"object"}`},
+		{"schema properties", &openapi.Schema{Type: openapi.TypeObject, Properties: openapi.SchemaRefs{}}, `{"type":"object"}`},
 		{"schema allOf", &openapi.Schema{AllOf: openapi.SchemaRefList{}}, `{}`},
 		{"operation parameters and tags", &openapi.Operation{Parameters: openapi.ParameterList{}, Tags: []string{}}, `{}`},
 		{"path item parameters", &openapi.PathItem{Parameters: openapi.ParameterList{}}, `{}`},
@@ -26,7 +27,6 @@ func TestJSON_EmptyMeansAbsent(t *testing.T) {
 		{"schema enum", &openapi.Schema{Enum: []jsontext.Value{}}, `{"enum":[]}`},
 		{"operation security", &openapi.Operation{Security: openapi.SecurityRequirements{}}, `{"security":[]}`},
 		{"operation servers", &openapi.Operation{Servers: openapi.Servers{}}, `{"servers":[]}`},
-		{"schema properties", &openapi.Schema{Type: openapi.TypeObject, Properties: openapi.SchemaRefs{}}, `{"type":"object","properties":{}}`},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()

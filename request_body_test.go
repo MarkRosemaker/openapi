@@ -114,8 +114,7 @@ func TestRequestBody_JSON(t *testing.T) {
               "format": "uuid"
             },
             "address": {
-              "type": "object",
-              "properties": {}
+              "type": "object"
             }
           }
         }
@@ -135,8 +134,7 @@ func TestRequestBody_JSON(t *testing.T) {
               "format": "uuid"
             },
             "address": {
-              "type": "object",
-              "properties": {}
+              "type": "object"
             },
             "profileImage": {
               "type": "string",

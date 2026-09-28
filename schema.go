@@ -84,7 +84,7 @@ type Schema struct {
 	// Object
 
 	// For object types, defines the properties of the object
-	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
+	Properties SchemaRefs `json:"properties,omitempty" yaml:"properties,omitempty"`
 	// Which properties are required.
 	Required []string `json:"required,omitempty" yaml:"required,omitempty"`
 	// Applies to properties not listed in Properties: a schema for their values, or whether they are allowed at all.
