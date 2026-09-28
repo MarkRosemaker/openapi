@@ -59,11 +59,14 @@ type Schema struct {
 	// String
 
 	// The pattern is used to validate the string.
-	// This string SHOULD be a valid regular expression, according to the Ecma-262 Edition 5.1 regular expression dialect.
-	// NOTE: We simply use text unmarshalling for this field. This guarantees that the regular expression is valid or we can't unmarshal.
+	// This string SHOULD be a valid regular expression, according to the Ecma-262 regular expression dialect.
+	// It is compiled with Go's regexp, translating the escapes RE2 spells differently (see pattern.go);
+	// a pattern RE2 cannot express fails to unmarshal.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
 	// A list of possible values. Per JSON Schema 2020-12, enum may contain any JSON type.
 	Enum []jsontext.Value `json:"enum,omitempty" yaml:"enum,omitempty"`
+	// The one value allowed, of any JSON type.
+	Const jsontext.Value `json:"const,omitzero" yaml:"const,omitempty"`
 
 	// Array
 
@@ -248,15 +251,22 @@ func (s *Schema) Validate() error {
 
 	// String / Enum
 
-	// Per JSON Schema 2020-12, enum can hold any JSON type; validate each value's kind matches the schema type.
+	// Per JSON Schema 2020-12, enum and const can hold any JSON type; validate each value's kind matches the schema type.
 	if s.Type != "" {
 		for i, ev := range s.Enum {
-			if !enumKindMatchesType(ev, s.Type) {
+			if !s.allowsKindOf(ev) {
 				return &errpath.ErrField{Field: "enum", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
 					Value:   jsonDisplayValue(ev),
 					Message: fmt.Sprintf("must be a %s value", s.Type),
 				}}}
 			}
+		}
+
+		if s.Const != nil && !s.allowsKindOf(s.Const) {
+			return &errpath.ErrField{Field: "const", Err: &errpath.ErrInvalid[any]{
+				Value:   jsonDisplayValue(s.Const),
+				Message: fmt.Sprintf("must be a %s value", s.Type),
+			}}
 		}
 	}
 
@@ -414,6 +424,12 @@ func (s *Schema) Validate() error {
 	return nil
 }
 
+// allowsKindOf reports whether v's kind is one the schema's type allows: its
+// Type's, or null when the schema is nullable.
+func (s *Schema) allowsKindOf(v jsontext.Value) bool {
+	return s.Nullable && v.Kind() == jsontext.KindNull || enumKindMatchesType(v, s.Type)
+}
+
 // enumKindMatchesType reports whether a JSON value's kind is compatible with the given DataType.
 // For TypeInteger it additionally requires the number to be a whole number.
 func enumKindMatchesType(v jsontext.Value, t DataType) bool {
@@ -527,5 +543,6 @@ func (s *Schema) isEmpty() bool {
 			s.Properties == nil && s.Required == nil &&
 			s.AdditionalProperties == nil &&
 			s.ContentMediaType == "" && s.ContentEncoding == "" &&
+			s.Const == nil &&
 			s.Example == nil)
 }

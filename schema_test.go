@@ -81,6 +81,11 @@ func TestSchema_JSON(t *testing.T) {
 	testJSON(t, []byte(`{
 		"type": "null"
 	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "integer",
+		"const": 400
+	}`), &openapi.Schema{})
 }
 
 func TestSchema_UnmarshalTypeArray(t *testing.T) {
@@ -135,6 +140,10 @@ func TestSchema_Validate(t *testing.T) {
 		// enum accepts any JSON type per JSON Schema 2020-12
 		{Type: openapi.TypeInteger, Enum: []jsontext.Value{jsontext.Value("4"), jsontext.Value("6"), jsontext.Value("8")}},
 		{Type: openapi.TypeString, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value(`"bar"`)}},
+		{Type: openapi.TypeInteger, Const: jsontext.Value("401")},
+		// a nullable schema's enum and const may hold null too
+		{Type: openapi.TypeString, Nullable: true, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value("null")}},
+		{Type: openapi.TypeString, Nullable: true, Const: jsontext.Value("null")},
 		// prefixItems alone satisfies array's items requirement
 		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaRefList{str, num}},
 		// prefixItems together with items for elements beyond it
@@ -305,6 +314,14 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type: openapi.TypeInteger,
 			Enum: []jsontext.Value{jsontext.Value("3.14")},
 		}, `enum[0] (3.14) is invalid: must be a integer value`},
+		{openapi.Schema{
+			Type:  openapi.TypeInteger,
+			Const: jsontext.Value(`"401"`),
+		}, `const ("401") is invalid: must be a integer value`},
+		{openapi.Schema{
+			Type:  openapi.TypeString,
+			Const: jsontext.Value("null"),
+		}, `const ("null") is invalid: must be a string value`},
 		{openapi.Schema{
 			Type:    openapi.TypeBoolean,
 			Default: jsontext.Value(`"foo"`),
