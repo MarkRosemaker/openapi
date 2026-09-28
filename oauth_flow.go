@@ -11,7 +11,7 @@ type OAuthFlowImplicit struct {
 	// REQUIRED. The authorization URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
 	AuthorizationURL *url.URL `json:"authorizationUrl" yaml:"authorizationUrl"`
 	// The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
-	RefreshURL *url.URL `json:"refreshUrl,omitempty" yaml:"refreshUrl,omitempty"`
+	RefreshURL *url.URL `json:"refreshUrl,omitzero" yaml:"refreshUrl,omitempty"`
 	// REQUIRED. The available scopes for the OAuth2 security scheme. A map between the scope name and a short description for it. The map MAY be empty.
 	Scopes MapOfStrings `json:"scopes" yaml:"scopes"`
 	// This object MAY be extended with Specification Extensions.
@@ -35,7 +35,7 @@ type OAuthFlowPassword struct {
 	// REQUIRED. The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
 	TokenURL *url.URL `json:"tokenUrl" yaml:"tokenUrl"`
 	// The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
-	RefreshURL *url.URL `json:"refreshUrl,omitempty" yaml:"refreshUrl,omitempty"`
+	RefreshURL *url.URL `json:"refreshUrl,omitzero" yaml:"refreshUrl,omitempty"`
 	// REQUIRED. The available scopes for the OAuth2 security scheme. A map between the scope name and a short description for it. The map MAY be empty.
 	Scopes MapOfStrings `json:"scopes" yaml:"scopes"`
 
@@ -65,7 +65,7 @@ type OAuthFlowAuthorizationCode struct {
 	// REQUIRED. The token URL to be used for this flow. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
 	TokenURL *url.URL `json:"tokenUrl" yaml:"tokenUrl"`
 	// The URL to be used for obtaining refresh tokens. This MUST be in the form of a URL. The OAuth2 standard requires the use of TLS.
-	RefreshURL *url.URL `json:"refreshUrl,omitempty" yaml:"refreshUrl,omitempty"`
+	RefreshURL *url.URL `json:"refreshUrl,omitzero" yaml:"refreshUrl,omitempty"`
 	// REQUIRED. The available scopes for the OAuth2 security scheme. A map between the scope name and a short description for it. The map MAY be empty.
 	Scopes MapOfStrings `json:"scopes" yaml:"scopes"`
 

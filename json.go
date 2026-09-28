@@ -13,9 +13,11 @@ var jsonOpts = json.JoinOptions([]json.Options{
 	json.RejectUnknownMembers(true),
 	json.WithMarshalers(json.JoinMarshalers(
 		json.MarshalToFunc(jsonutil.URLMarshal),
+		json.MarshalToFunc(patternMarshal),
 	)),
 	json.WithUnmarshalers(json.JoinUnmarshalers(
 		json.UnmarshalFromFunc(jsonutil.URLUnmarshal),
+		json.UnmarshalFromFunc(patternUnmarshal),
 	)),
 	jsontext.WithIndent("  "), // indent with two spaces
 }...)

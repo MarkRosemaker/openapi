@@ -19,25 +19,25 @@ type PathItem struct {
 	// An optional, string description, intended to apply to all operations in this path. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// An alternative `server` array to service all operations in this path.
-	Servers Servers `json:"servers,omitempty" yaml:"servers,omitempty"`
+	Servers Servers `json:"servers,omitzero" yaml:"servers,omitempty"`
 	// A list of parameters that are applicable for all the operations described under this path. These parameters can be overridden at the operation level, but cannot be removed there. The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location. The list can use the Reference Object to link to parameters that are defined at the OpenAPI Object's components/parameters.
-	Parameters ParameterList `json:"parameters,omitempty" yaml:"parameters,omitempty"`
+	Parameters ParameterList `json:"parameters,omitzero" yaml:"parameters,omitempty"`
 	// A definition of a GET operation on this path.
-	Get *Operation `json:"get,omitempty" yaml:"get,omitempty"`
+	Get *Operation `json:"get,omitzero" yaml:"get,omitempty"`
 	// A definition of a PUT operation on this path.
-	Put *Operation `json:"put,omitempty" yaml:"put,omitempty"`
+	Put *Operation `json:"put,omitzero" yaml:"put,omitempty"`
 	// A definition of a POST operation on this path.
-	Post *Operation `json:"post,omitempty" yaml:"post,omitempty"`
+	Post *Operation `json:"post,omitzero" yaml:"post,omitempty"`
 	// A definition of a DELETE operation on this path.
-	Delete *Operation `json:"delete,omitempty" yaml:"delete,omitempty"`
+	Delete *Operation `json:"delete,omitzero" yaml:"delete,omitempty"`
 	// A definition of a OPTIONS operation on this path.
-	Options *Operation `json:"options,omitempty" yaml:"options,omitempty"`
+	Options *Operation `json:"options,omitzero" yaml:"options,omitempty"`
 	// A definition of a HEAD operation on this path.
-	Head *Operation `json:"head,omitempty" yaml:"head,omitempty"`
+	Head *Operation `json:"head,omitzero" yaml:"head,omitempty"`
 	// A definition of a PATCH operation on this path.
-	Patch *Operation `json:"patch,omitempty" yaml:"patch,omitempty"`
+	Patch *Operation `json:"patch,omitzero" yaml:"patch,omitempty"`
 	// A definition of a TRACE operation on this path.
-	Trace *Operation `json:"trace,omitempty" yaml:"trace,omitempty"`
+	Trace *Operation `json:"trace,omitzero" yaml:"trace,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:"-"`
 

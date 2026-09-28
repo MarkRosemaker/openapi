@@ -155,9 +155,9 @@ func TestDocumentValidate_Error(t *testing.T) {
 			OpenAPI: "3.1.0",
 			Info:    &openapi.Info{Title: "Sample API", Version: "1.0.0"},
 			Components: openapi.Components{
-				Schemas: openapi.Schemas{"Pet": &openapi.Schema{}},
+				Schemas: openapi.Schemas{"Pet": &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `components.schemas["Pet"].type is required`},
+		}, `components.schemas["Pet"].required is invalid: only valid for object type, got no type`},
 		{&openapi.Document{
 			OpenAPI:  "3.1.0",
 			Info:     &openapi.Info{Title: "Sample API", Version: "1.0.0"},

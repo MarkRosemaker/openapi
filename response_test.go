@@ -90,9 +90,9 @@ func TestResponse_Validate_Error(t *testing.T) {
 		{openapi.Response{
 			Description: "some description",
 			Content: openapi.Content{openapi.MediaRangeJSON: {
-				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
 			}},
-		}, `content["application/json"].schema.type is required`},
+		}, `content["application/json"].schema.required is invalid: only valid for object type, got no type`},
 		{openapi.Response{
 			Description: "some description",
 			Links:       openapi.Links{"address": {Value: &openapi.Link{}}},

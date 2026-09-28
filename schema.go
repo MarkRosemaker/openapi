@@ -31,49 +31,51 @@ type Schema struct {
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// Specifies the data type of the property.
 	Type DataType `json:"type,omitempty" yaml:"type,omitempty"`
+	// Whether null is a valid value too, written as a "type" of [Type, "null"].
+	Nullable bool `json:"-" yaml:"-"`
 	// Further refines the data type.
 	Format Format `json:"format,omitempty" yaml:"format,omitempty"`
 
 	// AllOf validates the value against ALL of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	AllOf SchemaRefList `json:"allOf,omitempty" yaml:"allOf,omitempty"`
+	AllOf SchemaRefList `json:"allOf,omitzero" yaml:"allOf,omitempty"`
 	// OneOf validates the value against EXACTLY ONE of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	OneOf SchemaRefList `json:"oneOf,omitempty" yaml:"oneOf,omitempty"`
+	OneOf SchemaRefList `json:"oneOf,omitzero" yaml:"oneOf,omitempty"`
 	// AnyOf validates the value against AT LEAST ONE of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	AnyOf SchemaRefList `json:"anyOf,omitempty" yaml:"anyOf,omitempty"`
+	AnyOf SchemaRefList `json:"anyOf,omitzero" yaml:"anyOf,omitempty"`
 	// Not validates the value against the negation of the given schema — the value must NOT validate against it.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	Not *SchemaRef `json:"not,omitempty" yaml:"not,omitempty"`
+	Not *SchemaRef `json:"not,omitzero" yaml:"not,omitempty"`
 
 	// Integer / Number
 
 	// The minimum value of the number.
-	Min *float64 `json:"minimum,omitempty" yaml:"minimum,omitempty"`
+	Min *float64 `json:"minimum,omitzero" yaml:"minimum,omitempty"`
 	// The maximum value of the number.
-	Max *float64 `json:"maximum,omitempty" yaml:"maximum,omitempty"`
+	Max *float64 `json:"maximum,omitzero" yaml:"maximum,omitempty"`
 
 	// String
 
-	// The pattern is used to validate the string.
-	// This string SHOULD be a valid regular expression, according to the Ecma-262 Edition 5.1 regular expression dialect.
-	// NOTE: We simply use text unmarshalling for this field. This guarantees that the regular expression is valid or we can't unmarshal.
-	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
+	// An ECMA-262 regular expression the string must match, compiled with Go's regexp; see pattern.go.
+	Pattern *regexp.Regexp `json:"pattern,omitzero" yaml:"pattern,omitempty"`
 	// A list of possible values. Per JSON Schema 2020-12, enum may contain any JSON type.
-	Enum []jsontext.Value `json:"enum,omitempty" yaml:"enum,omitempty"`
+	Enum []jsontext.Value `json:"enum,omitzero" yaml:"enum,omitempty"`
+	// The one value allowed, of any JSON type.
+	Const jsontext.Value `json:"const,omitzero" yaml:"const,omitempty"`
 
 	// Array
 
 	// The minimum number of items in the array.
 	MinItems uint `json:"minItems,omitzero" yaml:"minItems,omitempty"`
 	// The maximum number of items in the array.
-	MaxItems *uint `json:"maxItems,omitempty" yaml:"maxItems,omitempty"`
+	MaxItems *uint `json:"maxItems,omitzero" yaml:"maxItems,omitempty"`
 	// PrefixItems validates the array positionally: the first element
 	// against the first schema here, the second against the second, and so
 	// on. Items still applies to any element beyond the ones listed here.
 	// See JSON Schema 2020-12, "prefixItems".
-	PrefixItems SchemaRefList `json:"prefixItems,omitempty" yaml:"prefixItems,omitempty"`
+	PrefixItems SchemaRefList `json:"prefixItems,omitzero" yaml:"prefixItems,omitempty"`
 	// The items of the array. When the type is array, this property is REQUIRED
 	// unless PrefixItems already covers every element.
 	// The empty schema for `items` indicates a media type of `application/octet-stream`.
@@ -84,15 +86,16 @@ type Schema struct {
 	// For object types, defines the properties of the object
 	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
 	// Which properties are required.
-	Required             []string   `json:"required,omitempty"             yaml:"required,omitempty"`
-	AdditionalProperties *SchemaRef `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
+	Required []string `json:"required,omitzero" yaml:"required,omitempty"`
+	// Applies to properties not listed in Properties: a schema for their values, or whether they are allowed at all.
+	AdditionalProperties *AdditionalProperties `json:"additionalProperties,omitzero" yaml:"additionalProperties,omitempty"`
 
 	// special encoding for binary data
 	ContentMediaType string `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
 	ContentEncoding  string `json:"contentEncoding,omitempty"  yaml:"contentEncoding,omitempty"`
 
 	// Specifies the default value of the property if no value is provided.
-	Default jsontext.Value `json:"default,omitempty" yaml:"default,omitempty"`
+	Default jsontext.Value `json:"default,omitzero" yaml:"default,omitempty"`
 
 	Example jsontext.Value `json:"example,omitzero" yaml:"example,omitzero"`
 
@@ -101,10 +104,6 @@ type Schema struct {
 
 	// an index to the original location of this object
 	idx int
-
-	// NOTE: consider adding:
-	// Indicates whether the property can have a null value.
-	// Nullable bool `json:"nullable,omitempty,omitzero" yaml:"nullable,omitempty"`
 }
 
 func getIndexSchema(s *Schema) int              { return s.idx }
@@ -113,12 +112,11 @@ func setIndexSchema(s *Schema, idx int) *Schema { s.idx = idx; return s }
 func (s *Schema) Validate() error {
 	s.Description = strings.TrimSpace(s.Description)
 
-	if s.Type == "" {
-		if len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil {
-			return &errpath.ErrField{Field: "type", Err: &errpath.ErrRequired{}}
+	// type is optional (JSON Schema 2020-12); keywords tied to one type still require it, below.
+	if s.Type != "" {
+		if err := s.Type.Validate(); err != nil {
+			return &errpath.ErrField{Field: "type", Err: err}
 		}
-	} else if err := s.Type.Validate(); err != nil {
-		return &errpath.ErrField{Field: "type", Err: err}
 	}
 
 	if s.Format != "" {
@@ -134,14 +132,14 @@ func (s *Schema) Validate() error {
 		if s.Type != TypeInteger {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for integer type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for integer type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatFloat, FormatDouble:
 		if s.Type != TypeNumber {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatEmail, FormatPassword,
@@ -150,7 +148,7 @@ func (s *Schema) Validate() error {
 		if s.Type != TypeString {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatDuration, FormatDate, FormatDateTime:
@@ -159,7 +157,7 @@ func (s *Schema) Validate() error {
 		default:
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for integer or string type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for integer or string type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatByte, FormatBinary:
@@ -168,11 +166,30 @@ func (s *Schema) Validate() error {
 		default:
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for string type, got %s", s.Type),
+				Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
 			}}
 		}
 	default:
 		return fmt.Errorf("unimplemented format: %s", s.Format)
+	}
+
+	// String
+
+	if s.Type != TypeString {
+		for _, kw := range []struct {
+			field string
+			set   bool
+		}{
+			{"pattern", s.Pattern != nil},
+			{"contentMediaType", s.ContentMediaType != ""},
+			{"contentEncoding", s.ContentEncoding != ""},
+		} {
+			if kw.set {
+				return &errpath.ErrField{Field: kw.field, Err: &errpath.ErrInvalid[string]{
+					Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
+				}}
+			}
+		}
 	}
 
 	for i, v := range s.AllOf {
@@ -237,26 +254,33 @@ func (s *Schema) Validate() error {
 	} else if s.Min != nil {
 		return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
 			Value:   *s.Min,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
 		}}
 	} else if s.Max != nil {
 		return &errpath.ErrField{Field: "maximum", Err: &errpath.ErrInvalid[float64]{
 			Value:   *s.Max,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
 		}}
 	}
 
 	// String / Enum
 
-	// Per JSON Schema 2020-12, enum can hold any JSON type; validate each value's kind matches the schema type.
+	// Per JSON Schema 2020-12, enum and const can hold any JSON type; validate each value's kind matches the schema type.
 	if s.Type != "" {
 		for i, ev := range s.Enum {
-			if !enumKindMatchesType(ev, s.Type) {
+			if !s.allowsKindOf(ev) {
 				return &errpath.ErrField{Field: "enum", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
 					Value:   jsonDisplayValue(ev),
 					Message: fmt.Sprintf("must be a %s value", s.Type),
 				}}}
 			}
+		}
+
+		if s.Const != nil && !s.allowsKindOf(s.Const) {
+			return &errpath.ErrField{Field: "const", Err: &errpath.ErrInvalid[any]{
+				Value:   jsonDisplayValue(s.Const),
+				Message: fmt.Sprintf("must be a %s value", s.Type),
+			}}
 		}
 	}
 
@@ -295,20 +319,20 @@ func (s *Schema) Validate() error {
 	} else if s.MinItems != 0 {
 		return &errpath.ErrField{Field: "minItems", Err: &errpath.ErrInvalid[uint]{
 			Value:   s.MinItems,
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	} else if s.MaxItems != nil {
 		return &errpath.ErrField{Field: "maxItems", Err: &errpath.ErrInvalid[uint]{
 			Value:   *s.MaxItems,
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	} else if len(s.PrefixItems) != 0 {
 		return &errpath.ErrField{Field: "prefixItems", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	} else if s.Items != nil {
 		return &errpath.ErrField{Field: "items", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for array type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
 		}}
 	}
 
@@ -340,11 +364,15 @@ func (s *Schema) Validate() error {
 		}
 	} else if s.Properties != nil {
 		return &errpath.ErrField{Field: "properties", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
+		}}
+	} else if s.Required != nil {
+		return &errpath.ErrField{Field: "required", Err: &errpath.ErrInvalid[string]{
+			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
 		}}
 	} else if s.AdditionalProperties != nil {
 		return &errpath.ErrField{Field: "additionalProperties", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.Type),
+			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
 		}}
 	}
 
@@ -353,7 +381,7 @@ func (s *Schema) Validate() error {
 		defaultTypeErr := func() error {
 			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
 				Value:   jsonDisplayValue(s.Default),
-				Message: fmt.Sprintf("does not match schema type, got %s", s.Type),
+				Message: fmt.Sprintf("does not match schema type, got %s", s.typeOrNone()),
 			}}
 		}
 
@@ -412,6 +440,21 @@ func (s *Schema) Validate() error {
 	}
 
 	return nil
+}
+
+// typeOrNone names the schema's type for error messages.
+func (s *Schema) typeOrNone() string {
+	if s.Type == "" {
+		return "no type"
+	}
+
+	return string(s.Type)
+}
+
+// allowsKindOf reports whether v's kind is one the schema's type allows: its
+// Type's, or null when the schema is nullable.
+func (s *Schema) allowsKindOf(v jsontext.Value) bool {
+	return s.Nullable && v.Kind() == jsontext.KindNull || enumKindMatchesType(v, s.Type)
 }
 
 // enumKindMatchesType reports whether a JSON value's kind is compatible with the given DataType.
@@ -508,8 +551,8 @@ func (l *loader) resolveSchema(s *Schema) error {
 		return &errpath.ErrField{Field: "properties", Err: err}
 	}
 
-	if s.AdditionalProperties != nil {
-		if err := l.resolveSchemaRef(s.AdditionalProperties); err != nil {
+	if s.AdditionalProperties != nil && s.AdditionalProperties.Schema != nil {
+		if err := l.resolveSchemaRef(s.AdditionalProperties.Schema); err != nil {
 			return &errpath.ErrField{Field: "additionalProperties", Err: err}
 		}
 	}
@@ -519,7 +562,7 @@ func (l *loader) resolveSchema(s *Schema) error {
 
 func (s *Schema) isEmpty() bool {
 	return s == nil ||
-		(s.Type == "" && s.Format == "" &&
+		(s.Type == "" && !s.Nullable && s.Format == "" &&
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
 			s.Min == nil && s.Max == nil &&
 			s.Pattern == nil &&
@@ -527,5 +570,6 @@ func (s *Schema) isEmpty() bool {
 			s.Properties == nil && s.Required == nil &&
 			s.AdditionalProperties == nil &&
 			s.ContentMediaType == "" && s.ContentEncoding == "" &&
+			s.Const == nil &&
 			s.Example == nil)
 }

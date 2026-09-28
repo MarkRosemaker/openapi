@@ -18,7 +18,7 @@ type Tag struct {
 	// A description for the tag. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// Additional external documentation for this tag.
-	ExternalDocs *ExternalDocs `json:"externalDocs,omitempty" yaml:"externalDocs,omitempty"`
+	ExternalDocs *ExternalDocs `json:"externalDocs,omitzero" yaml:"externalDocs,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }

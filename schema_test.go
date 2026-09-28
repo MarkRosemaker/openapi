@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
@@ -43,6 +44,102 @@ func TestSchema_JSON(t *testing.T) {
 			"type": "boolean"
 		}
 	}`), &openapi.Schema{})
+
+	// additionalProperties: a bare boolean, like any JSON Schema, or a schema
+	// for the values -- each written back exactly as it was read.
+	testJSON(t, []byte(`{
+		"type": "object",
+		"properties": {
+			"id": {
+				"type": "string"
+			}
+		},
+		"additionalProperties": false
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "object",
+		"additionalProperties": true
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "object",
+		"additionalProperties": {
+			"type": "integer"
+		}
+	}`), &openapi.Schema{})
+
+	// a type array of one type and "null": the 3.1 form of nullable.
+	testJSON(t, []byte(`{
+		"title": "Boolean",
+		"description": "true, false or null",
+		"type": [
+			"boolean",
+			"null"
+		]
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "null"
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "integer",
+		"const": 400
+	}`), &openapi.Schema{})
+
+	// a present but empty value differs from an absent one, so it is written back.
+	testJSON(t, []byte(`{
+		"type": "object",
+		"required": [],
+		"additionalProperties": {}
+	}`), &openapi.Schema{})
+
+	// no value is valid: enum lists none, and not excludes everything.
+	testJSON(t, []byte(`{
+		"type": "string",
+		"enum": []
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"not": {}
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "object",
+		"default": {}
+	}`), &openapi.Schema{})
+}
+
+func TestSchema_UnmarshalTypeArray(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct {
+		json     string
+		want     openapi.DataType
+		nullable bool
+	}{
+		{`{"type": "string"}`, openapi.TypeString, false},
+		{`{"type": ["string", "null"]}`, openapi.TypeString, true},
+		{`{"type": ["null", "integer"]}`, openapi.TypeInteger, true},
+		{`{"type": ["object"]}`, openapi.TypeObject, false},
+		{`{"type": ["null"]}`, openapi.TypeNull, false},
+	} {
+		var s openapi.Schema
+		if err := json.Unmarshal([]byte(tc.json), &s); err != nil {
+			t.Fatalf("%s: %v", tc.json, err)
+		}
+
+		if s.Type != tc.want || s.Nullable != tc.nullable {
+			t.Errorf("%s: got Type %q, Nullable %v; want %q, %v", tc.json, s.Type, s.Nullable, tc.want, tc.nullable)
+		}
+	}
+
+	// two types other than "null" have no representation, so they fail loudly.
+	var s openapi.Schema
+	if err := json.Unmarshal([]byte(`{"type": ["string", "integer"]}`), &s); err == nil {
+		t.Fatal("expected an error for multiple non-null types")
+	}
 }
 
 func TestSchema_Validate(t *testing.T) {
@@ -56,6 +153,12 @@ func TestSchema_Validate(t *testing.T) {
 		{Type: openapi.TypeInteger, Default: jsontext.Value("3")},
 		{Type: openapi.TypeInteger, Format: openapi.FormatDuration, Default: jsontext.Value("3")}, // e.g. seconds
 		{Type: openapi.TypeString, Format: openapi.FormatByte},                                    // base64-encoded data
+		// type is optional (JSON Schema 2020-12): the empty schema accepts
+		// any value, and enum or const alone constrain it.
+		{},
+		{Description: "Inference output."},
+		{Enum: []jsontext.Value{jsontext.Value(`"error"`)}},
+		{Const: jsontext.Value("401")},
 		// oneOf, anyOf, not allow type to be omitted
 		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
 		{OneOf: openapi.SchemaRefList{str, num}},
@@ -66,6 +169,10 @@ func TestSchema_Validate(t *testing.T) {
 		// enum accepts any JSON type per JSON Schema 2020-12
 		{Type: openapi.TypeInteger, Enum: []jsontext.Value{jsontext.Value("4"), jsontext.Value("6"), jsontext.Value("8")}},
 		{Type: openapi.TypeString, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value(`"bar"`)}},
+		{Type: openapi.TypeInteger, Const: jsontext.Value("401")},
+		// a nullable schema's enum and const may hold null too
+		{Type: openapi.TypeString, Nullable: true, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value("null")}},
+		{Type: openapi.TypeString, Nullable: true, Const: jsontext.Value("null")},
 		// prefixItems alone satisfies array's items requirement
 		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaRefList{str, num}},
 		// prefixItems together with items for elements beyond it
@@ -86,7 +193,6 @@ func TestSchema_Validate_Error(t *testing.T) {
 		s   openapi.Schema
 		err string
 	}{
-		{openapi.Schema{}, "type is required"},
 		{openapi.Schema{
 			Type: "foo",
 		}, `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object", "null"`},
@@ -180,52 +286,52 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: openapi.TypeArray,
 			PrefixItems: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
 			Items: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeBoolean}},
-		}, `prefixItems[0].type is required`},
+		}, `prefixItems[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			AllOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `allOf[0].type is required`},
+		}, `allOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			OneOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `oneOf[0].type is required`},
+		}, `oneOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			AnyOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{}},
+				{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `anyOf[0].type is required`},
+		}, `anyOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
-			Not: &openapi.SchemaRef{Value: &openapi.Schema{}},
-		}, `not.type is required`},
+			Not: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
+		}, `not.required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
 			Properties: openapi.SchemaRefs{
-				"foo": &openapi.SchemaRef{Value: &openapi.Schema{}},
+				"foo": &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `properties["foo"].type is required`},
+		}, `properties["foo"].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type:     openapi.TypeObject,
 			Required: []string{"foo"},
 		}, `required[0] ("foo") is invalid: property does not exist`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
-			AdditionalProperties: &openapi.SchemaRef{
-				Value: &openapi.Schema{},
+			AdditionalProperties: &openapi.AdditionalProperties{
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `additionalProperties.type is required`},
+		}, `additionalProperties.required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type:       openapi.TypeBoolean,
 			Properties: openapi.SchemaRefs{},
 		}, `properties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
-			AdditionalProperties: &openapi.SchemaRef{
-				Value: &openapi.Schema{},
+			AdditionalProperties: &openapi.AdditionalProperties{
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
 			},
 		}, `additionalProperties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
@@ -236,6 +342,32 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type: openapi.TypeInteger,
 			Enum: []jsontext.Value{jsontext.Value("3.14")},
 		}, `enum[0] (3.14) is invalid: must be a integer value`},
+		{openapi.Schema{
+			Type:  openapi.TypeInteger,
+			Const: jsontext.Value(`"401"`),
+		}, `const ("401") is invalid: must be a integer value`},
+		// keywords that only apply to one type still require it.
+		{openapi.Schema{
+			Properties: openapi.SchemaRefs{},
+		}, `properties is invalid: only valid for object type, got no type`},
+		{openapi.Schema{
+			Required: []string{"id"},
+		}, `required is invalid: only valid for object type, got no type`},
+		{openapi.Schema{
+			Type:    openapi.TypeInteger,
+			Pattern: regexp.MustCompile(`^\d+$`),
+		}, `pattern is invalid: only valid for string type, got integer`},
+		{openapi.Schema{
+			ContentMediaType: "image/png",
+		}, `contentMediaType is invalid: only valid for string type, got no type`},
+		{openapi.Schema{
+			Type:            openapi.TypeObject,
+			ContentEncoding: "base64",
+		}, `contentEncoding is invalid: only valid for string type, got object`},
+		{openapi.Schema{
+			Type:  openapi.TypeString,
+			Const: jsontext.Value("null"),
+		}, `const ("null") is invalid: must be a string value`},
 		{openapi.Schema{
 			Type:    openapi.TypeBoolean,
 			Default: jsontext.Value(`"foo"`),

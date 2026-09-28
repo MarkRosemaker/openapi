@@ -72,7 +72,17 @@ func testJSON(t *testing.T, exampleJSON []byte, v validator) {
 		t.Fatalf("validate: %v", err)
 	}
 
-	b, err := json.Marshal(v, jsonOpts)
+	// a document is written the way users write it, with the library's own options.
+	var (
+		b   []byte
+		err error
+	)
+	if doc, ok := v.(*openapi.Document); ok {
+		b, err = doc.ToJSON()
+	} else {
+		b, err = json.Marshal(v, jsonOpts)
+	}
+
 	if err != nil {
 		t.Fatal(err)
 	}

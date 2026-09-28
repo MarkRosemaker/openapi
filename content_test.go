@@ -77,9 +77,9 @@ func TestContent_Validate_Error(t *testing.T) {
 		}, `["not a real media type"]: mime: expected slash after first token`},
 		{openapi.Content{
 			openapi.MediaRangeJSON: &openapi.MediaType{
-				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
+				Schema: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
 			},
-		}, `["application/json"].schema.type is required`},
+		}, `["application/json"].schema.required is invalid: only valid for object type, got no type`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.c.Validate(); err == nil || err.Error() != tc.err {
