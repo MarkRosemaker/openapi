@@ -5,10 +5,7 @@ import (
 	"encoding/json/v2"
 )
 
-// AdditionalProperties is the value of a Schema's "additionalProperties",
-// which applies to the properties not listed in "properties". Like any JSON
-// Schema, it is either a schema for those properties' values or a bare
-// boolean: true allows them regardless of value, false forbids them.
+// AdditionalProperties is a schema for the values of properties not in "properties", or a bare boolean allowing (true) or forbidding (false) them.
 type AdditionalProperties struct {
 	// Schema is the schema of the additional properties' values, when one is given.
 	Schema *SchemaRef

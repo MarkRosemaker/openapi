@@ -58,10 +58,7 @@ type Schema struct {
 
 	// String
 
-	// The pattern is used to validate the string.
-	// This string SHOULD be a valid regular expression, according to the Ecma-262 regular expression dialect.
-	// It is compiled with Go's regexp, translating the escapes RE2 spells differently (see pattern.go);
-	// a pattern RE2 cannot express fails to unmarshal.
+	// An ECMA-262 regular expression the string must match, compiled with Go's regexp; see pattern.go.
 	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
 	// A list of possible values. Per JSON Schema 2020-12, enum may contain any JSON type.
 	Enum []jsontext.Value `json:"enum,omitempty" yaml:"enum,omitempty"`
@@ -90,8 +87,7 @@ type Schema struct {
 	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
 	// Which properties are required.
 	Required []string `json:"required,omitempty" yaml:"required,omitempty"`
-	// Applies to properties not listed in Properties: either a schema for
-	// their values, or whether they are allowed at all.
+	// Applies to properties not listed in Properties: a schema for their values, or whether they are allowed at all.
 	AdditionalProperties *AdditionalProperties `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
 
 	// special encoding for binary data

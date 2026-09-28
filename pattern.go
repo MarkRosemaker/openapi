@@ -6,17 +6,12 @@ import (
 	"strings"
 )
 
-// A Schema's "pattern" is an ECMA-262 regular expression, but it is compiled
-// with Go's regexp (RE2). These convert between the two for what RE2 can
-// express under different syntax, so that a pattern reads as ECMA-262 again
-// once written back.
-
-// patternMarshal writes re in ECMA-262 syntax.
+// patternMarshal writes re in ECMA-262 syntax, the dialect of a Schema's "pattern".
 func patternMarshal(enc *jsontext.Encoder, re *regexp.Regexp) error {
 	return enc.WriteToken(jsontext.String(re2ToECMA(re.String())))
 }
 
-// patternUnmarshal compiles an ECMA-262 pattern with Go's regexp.
+// patternUnmarshal compiles an ECMA-262 pattern with Go's regexp (RE2), translating the escapes RE2 spells differently.
 func patternUnmarshal(dec *jsontext.Decoder, re *regexp.Regexp) error {
 	tkn, err := dec.ReadToken()
 	if err != nil {
@@ -60,11 +55,7 @@ func re2ToECMA(p string) string {
 	})
 }
 
-// rewriteEscapes copies p, offering each escape sequence's text after its
-// backslash to rewrite, which returns the replacement for the backslash and
-// the n bytes after it, or n == 0 to keep them. An escaped backslash is
-// skipped as a whole, so the character after it is never taken for an
-// escape.
+// rewriteEscapes copies p, replacing an escape and the n bytes after its backslash where rewrite returns n > 0; an escaped backslash is never rewritten.
 func rewriteEscapes(p string, rewrite func(rest string) (string, int)) string {
 	var b strings.Builder
 

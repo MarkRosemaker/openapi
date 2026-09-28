@@ -6,13 +6,10 @@ import (
 	"errors"
 )
 
-// schemaFields is Schema without its methods, so that (un)marshaling it
-// doesn't recurse into Schema's own.
+// schemaFields is Schema without its methods, so (un)marshaling it doesn't recurse.
 type schemaFields Schema
 
-// schemaJSON is Schema as it appears in JSON: its "type" field, being
-// shallower, takes the place of the embedded one. Title and Description are
-// repeated only so that fields keep Schema's order, in which they precede it.
+// schemaJSON overrides the embedded "type" with a shallower one; Title and Description only keep Schema's field order.
 type schemaJSON struct {
 	Title       string     `json:"title,omitempty"`
 	Description string     `json:"description,omitempty"`
@@ -21,9 +18,7 @@ type schemaJSON struct {
 	*schemaFields
 }
 
-// schemaType is the value of a schema's "type": a single type, or an array
-// of them. Only the arrays this library can express are accepted: one type,
-// optionally together with "null".
+// schemaType is a schema's "type": a single type, or an array of one type and optionally "null".
 type schemaType struct {
 	Type     DataType
 	Nullable bool
@@ -75,8 +70,7 @@ var (
 	_ json.MarshalerTo     = (*Schema)(nil)
 )
 
-// UnmarshalJSONFrom unmarshals a schema, reading a "type" of [X, "null"] as
-// Type X with Nullable set.
+// UnmarshalJSONFrom unmarshals a schema, reading a "type" of [X, "null"] as Type X with Nullable set.
 func (s *Schema) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	v := schemaJSON{schemaFields: (*schemaFields)(s)}
 	if err := json.UnmarshalDecode(dec, &v); err != nil {
