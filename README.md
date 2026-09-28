@@ -93,6 +93,7 @@ A typical pipeline records traffic with `openapi-enrich`, normalizes structure w
 ## Additional Information
 
 - [**Go Reference**](https://pkg.go.dev/github.com/MarkRosemaker/openapi): API documentation.
+- [**Architecture**](docs/architecture.md): how the parts fit together.
 
 ## Contributing
 
