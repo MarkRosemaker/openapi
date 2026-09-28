@@ -38,13 +38,13 @@ type Schema struct {
 
 	// AllOf validates the value against ALL of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	AllOf SchemaRefList `json:"allOf,omitzero" yaml:"allOf,omitempty"`
+	AllOf SchemaRefList `json:"allOf,omitempty" yaml:"allOf,omitempty"`
 	// OneOf validates the value against EXACTLY ONE of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	OneOf SchemaRefList `json:"oneOf,omitzero" yaml:"oneOf,omitempty"`
+	OneOf SchemaRefList `json:"oneOf,omitempty" yaml:"oneOf,omitempty"`
 	// AnyOf validates the value against AT LEAST ONE of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	AnyOf SchemaRefList `json:"anyOf,omitzero" yaml:"anyOf,omitempty"`
+	AnyOf SchemaRefList `json:"anyOf,omitempty" yaml:"anyOf,omitempty"`
 	// Not validates the value against the negation of the given schema — the value must NOT validate against it.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
 	Not *SchemaRef `json:"not,omitzero" yaml:"not,omitempty"`
@@ -75,7 +75,7 @@ type Schema struct {
 	// against the first schema here, the second against the second, and so
 	// on. Items still applies to any element beyond the ones listed here.
 	// See JSON Schema 2020-12, "prefixItems".
-	PrefixItems SchemaRefList `json:"prefixItems,omitzero" yaml:"prefixItems,omitempty"`
+	PrefixItems SchemaRefList `json:"prefixItems,omitempty" yaml:"prefixItems,omitempty"`
 	// The items of the array. When the type is array, this property is REQUIRED
 	// unless PrefixItems already covers every element.
 	// The empty schema for `items` indicates a media type of `application/octet-stream`.
@@ -84,9 +84,9 @@ type Schema struct {
 	// Object
 
 	// For object types, defines the properties of the object
-	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
+	Properties SchemaRefs `json:"properties,omitempty" yaml:"properties,omitempty"`
 	// Which properties are required.
-	Required []string `json:"required,omitzero" yaml:"required,omitempty"`
+	Required []string `json:"required,omitempty" yaml:"required,omitempty"`
 	// Applies to properties not listed in Properties: a schema for their values, or whether they are allowed at all.
 	AdditionalProperties *AdditionalProperties `json:"additionalProperties,omitzero" yaml:"additionalProperties,omitempty"`
 

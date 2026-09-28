@@ -21,13 +21,11 @@ func TestEncoding_JSON(t *testing.T) {
               "format": "uuid"
             },
             "address": {
-              "type": "object",
-              "properties": {}
+              "type": "object"
             },
             "historyMetadata": {
               "description": "metadata in XML format",
-              "type": "object",
-              "properties": {}
+              "type": "object"
             }
           }
         },

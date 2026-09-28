@@ -477,8 +477,7 @@
                   "name": {
                     "type": "string"
                   }
-                },
-                "required": []
+                }
               }
             }
           }
@@ -6649,8 +6648,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {}
+                  "type": "object"
                 }
               }
             }
@@ -7446,8 +7444,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {}
+                  "type": "object"
                 }
               }
             }
@@ -8903,7 +8900,6 @@
                     }
                   }
                 },
-                "required": [],
                 "additionalProperties": false
               }
             }
@@ -11501,7 +11497,6 @@
       },
       "emptyObject": {
         "type": "object",
-        "properties": {},
         "additionalProperties": false
       },
       "idRequest": {

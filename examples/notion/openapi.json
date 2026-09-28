@@ -11154,8 +11154,7 @@
                 "properties": {
                   "file": {
                     "description": "The raw binary file contents to upload.",
-                    "type": "object",
-                    "properties": {}
+                    "type": "object"
                   },
                   "part_number": {
                     "description": "When uploading files greater than 20MB in parts, this is the current part number. Must be an integer between 1 and 1,000.",
@@ -25267,7 +25266,6 @@
                     },
                     "session": {
                       "type": "object",
-                      "properties": {},
                       "additionalProperties": false
                     },
                     "results": {
@@ -28316,7 +28314,6 @@
                     },
                     "session_event": {
                       "type": "object",
-                      "properties": {},
                       "additionalProperties": false
                     },
                     "results": {
@@ -39019,7 +39016,6 @@
       },
       "emptyObject": {
         "type": "object",
-        "properties": {},
         "additionalProperties": false
       },
       "equationBlockObjectResponse": {
