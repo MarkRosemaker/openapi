@@ -137,6 +137,16 @@ func TestOperation_JSON(t *testing.T) {
   "x-foo": "bar",
   "x-bar": 42
 }`), &openapi.Operation{})
+
+	// an empty security list removes the document's requirements, unlike an absent one.
+	testJSON(t, []byte(`{
+  "responses": {
+    "200": {
+      "description": "OK"
+    }
+  },
+  "security": []
+}`), &openapi.Operation{})
 }
 
 func TestOperation_Validate_Error(t *testing.T) {

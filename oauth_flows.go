@@ -8,15 +8,15 @@ import "github.com/MarkRosemaker/errpath"
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#oauth-flows-object
 type OAuthFlows struct {
 	// Configuration for the OAuth Implicit flow
-	Implicit *OAuthFlowImplicit `json:"implicit,omitempty" yaml:"implicit,omitempty"`
+	Implicit *OAuthFlowImplicit `json:"implicit,omitzero" yaml:"implicit,omitempty"`
 	// Configuration for the OAuth Resource Owner Password flow
-	Password *OAuthFlowPassword `json:"password,omitempty" yaml:"password,omitempty"`
+	Password *OAuthFlowPassword `json:"password,omitzero" yaml:"password,omitempty"`
 	// Configuration for the OAuth Client Credentials flow.
 	// Previously called `application` in OpenAPI 2.0.
-	ClientCredentials *OAuthFlowClientCredentials `json:"clientCredentials,omitempty" yaml:"clientCredentials,omitempty"`
+	ClientCredentials *OAuthFlowClientCredentials `json:"clientCredentials,omitzero" yaml:"clientCredentials,omitempty"`
 	// Configuration for the OAuth Authorization Code flow.
 	// Previously called `accessCode` in OpenAPI 2.0.
-	AuthorizationCode *OAuthFlowAuthorizationCode `json:"authorizationCode,omitempty" yaml:"authorizationCode,omitempty"`
+	AuthorizationCode *OAuthFlowAuthorizationCode `json:"authorizationCode,omitzero" yaml:"authorizationCode,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }

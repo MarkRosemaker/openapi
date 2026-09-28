@@ -14,17 +14,17 @@ import (
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#media-type-object
 type MediaType struct {
 	// The schema defining the content of the request, response, or parameter.
-	Schema *SchemaRef `json:"schema,omitempty" yaml:"schema,omitempty"`
+	Schema *SchemaRef `json:"schema,omitzero" yaml:"schema,omitempty"`
 	// Example of the media type.
 	// The example object SHOULD be in the correct format as specified by the media type.
 	// The `example` field is mutually exclusive of the `examples` field.  Furthermore, if referencing a `schema` which contains an example, the `example` value SHALL _override_ the example provided by the schema.
-	Example jsontext.Value `json:"example,omitempty" yaml:"example,omitempty"`
+	Example jsontext.Value `json:"example,omitzero" yaml:"example,omitempty"`
 	// Examples of the media type.
 	// Each example object SHOULD match the media type and specified schema if present.
 	// The `examples` field is mutually exclusive of the `example` field.  Furthermore, if referencing a `schema` which contains an example, the `examples` value SHALL _override_ the example provided by the schema.
-	Examples Examples `json:"examples,omitempty" yaml:"examples,omitempty"`
+	Examples Examples `json:"examples,omitzero" yaml:"examples,omitempty"`
 	// A map between a property name and its encoding information. The key, being the property name, MUST exist in the schema as a property. The encoding object SHALL only apply to `requestBody` objects when the media type is `multipart` or `application/x-www-form-urlencoded`.
-	Encoding Encodings `json:"encoding,omitempty" yaml:"encoding,omitempty"`
+	Encoding Encodings `json:"encoding,omitzero" yaml:"encoding,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:",embed"`
 

@@ -38,30 +38,30 @@ type Schema struct {
 
 	// AllOf validates the value against ALL of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	AllOf SchemaRefList `json:"allOf,omitempty" yaml:"allOf,omitempty"`
+	AllOf SchemaRefList `json:"allOf,omitzero" yaml:"allOf,omitempty"`
 	// OneOf validates the value against EXACTLY ONE of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	OneOf SchemaRefList `json:"oneOf,omitempty" yaml:"oneOf,omitempty"`
+	OneOf SchemaRefList `json:"oneOf,omitzero" yaml:"oneOf,omitempty"`
 	// AnyOf validates the value against AT LEAST ONE of the given schemas.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	AnyOf SchemaRefList `json:"anyOf,omitempty" yaml:"anyOf,omitempty"`
+	AnyOf SchemaRefList `json:"anyOf,omitzero" yaml:"anyOf,omitempty"`
 	// Not validates the value against the negation of the given schema — the value must NOT validate against it.
 	// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-	Not *SchemaRef `json:"not,omitempty" yaml:"not,omitempty"`
+	Not *SchemaRef `json:"not,omitzero" yaml:"not,omitempty"`
 
 	// Integer / Number
 
 	// The minimum value of the number.
-	Min *float64 `json:"minimum,omitempty" yaml:"minimum,omitempty"`
+	Min *float64 `json:"minimum,omitzero" yaml:"minimum,omitempty"`
 	// The maximum value of the number.
-	Max *float64 `json:"maximum,omitempty" yaml:"maximum,omitempty"`
+	Max *float64 `json:"maximum,omitzero" yaml:"maximum,omitempty"`
 
 	// String
 
 	// An ECMA-262 regular expression the string must match, compiled with Go's regexp; see pattern.go.
-	Pattern *regexp.Regexp `json:"pattern,omitempty" yaml:"pattern,omitempty"`
+	Pattern *regexp.Regexp `json:"pattern,omitzero" yaml:"pattern,omitempty"`
 	// A list of possible values. Per JSON Schema 2020-12, enum may contain any JSON type.
-	Enum []jsontext.Value `json:"enum,omitempty" yaml:"enum,omitempty"`
+	Enum []jsontext.Value `json:"enum,omitzero" yaml:"enum,omitempty"`
 	// The one value allowed, of any JSON type.
 	Const jsontext.Value `json:"const,omitzero" yaml:"const,omitempty"`
 
@@ -70,12 +70,12 @@ type Schema struct {
 	// The minimum number of items in the array.
 	MinItems uint `json:"minItems,omitzero" yaml:"minItems,omitempty"`
 	// The maximum number of items in the array.
-	MaxItems *uint `json:"maxItems,omitempty" yaml:"maxItems,omitempty"`
+	MaxItems *uint `json:"maxItems,omitzero" yaml:"maxItems,omitempty"`
 	// PrefixItems validates the array positionally: the first element
 	// against the first schema here, the second against the second, and so
 	// on. Items still applies to any element beyond the ones listed here.
 	// See JSON Schema 2020-12, "prefixItems".
-	PrefixItems SchemaRefList `json:"prefixItems,omitempty" yaml:"prefixItems,omitempty"`
+	PrefixItems SchemaRefList `json:"prefixItems,omitzero" yaml:"prefixItems,omitempty"`
 	// The items of the array. When the type is array, this property is REQUIRED
 	// unless PrefixItems already covers every element.
 	// The empty schema for `items` indicates a media type of `application/octet-stream`.
@@ -86,16 +86,16 @@ type Schema struct {
 	// For object types, defines the properties of the object
 	Properties SchemaRefs `json:"properties,omitzero" yaml:"properties,omitempty"`
 	// Which properties are required.
-	Required []string `json:"required,omitempty" yaml:"required,omitempty"`
+	Required []string `json:"required,omitzero" yaml:"required,omitempty"`
 	// Applies to properties not listed in Properties: a schema for their values, or whether they are allowed at all.
-	AdditionalProperties *AdditionalProperties `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
+	AdditionalProperties *AdditionalProperties `json:"additionalProperties,omitzero" yaml:"additionalProperties,omitempty"`
 
 	// special encoding for binary data
 	ContentMediaType string `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
 	ContentEncoding  string `json:"contentEncoding,omitempty"  yaml:"contentEncoding,omitempty"`
 
 	// Specifies the default value of the property if no value is provided.
-	Default jsontext.Value `json:"default,omitempty" yaml:"default,omitempty"`
+	Default jsontext.Value `json:"default,omitzero" yaml:"default,omitempty"`
 
 	Example jsontext.Value `json:"example,omitzero" yaml:"example,omitzero"`
 

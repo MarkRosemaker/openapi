@@ -14,7 +14,7 @@ type ExternalDocs struct {
 	// A description of the target documentation. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// REQUIRED. The URL for the target documentation. This MUST be in the form of a URL.
-	URL *url.URL `json:"url,omitempty" yaml:"url,omitempty"`
+	URL *url.URL `json:"url,omitzero" yaml:"url,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }

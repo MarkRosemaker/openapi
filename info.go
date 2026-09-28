@@ -18,11 +18,11 @@ type Info struct {
 	// A description of the API. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// A URL to the Terms of Service for the API.
-	TermsOfService *url.URL `json:"termsOfService,omitempty" yaml:"termsOfService,omitempty"`
+	TermsOfService *url.URL `json:"termsOfService,omitzero" yaml:"termsOfService,omitempty"`
 	// The contact information for the exposed API.
-	Contact *Contact `json:"contact,omitempty" yaml:"contact,omitempty"`
+	Contact *Contact `json:"contact,omitzero" yaml:"contact,omitempty"`
 	// The license information for the exposed API.
-	License *License `json:"license,omitempty" yaml:"license,omitempty"`
+	License *License `json:"license,omitzero" yaml:"license,omitempty"`
 	// REQUIRED. The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the API implementation version).
 	Version string `json:"version" yaml:"version"`
 	// The object MAY be extended with Specification Extensions.

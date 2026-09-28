@@ -87,6 +87,28 @@ func TestSchema_JSON(t *testing.T) {
 		"type": "integer",
 		"const": 400
 	}`), &openapi.Schema{})
+
+	// a present but empty value differs from an absent one, so it is written back.
+	testJSON(t, []byte(`{
+		"type": "object",
+		"required": [],
+		"additionalProperties": {}
+	}`), &openapi.Schema{})
+
+	// no value is valid: enum lists none, and not excludes everything.
+	testJSON(t, []byte(`{
+		"type": "string",
+		"enum": []
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"not": {}
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "object",
+		"default": {}
+	}`), &openapi.Schema{})
 }
 
 func TestSchema_UnmarshalTypeArray(t *testing.T) {

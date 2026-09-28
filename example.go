@@ -16,10 +16,10 @@ type Example struct {
 	// Long description for the example. CommonMark syntax MAY be used for rich text representation.
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 	// Embedded literal example. The `value` field and `externalValue` field are mutually exclusive. To represent examples of media types that cannot naturally represented in JSON or YAML, use a string value to contain the example, escaping where necessary.
-	Value jsontext.Value `json:"value,omitempty" yaml:"value,omitempty"`
+	Value jsontext.Value `json:"value,omitzero" yaml:"value,omitempty"`
 	// A URI that points to the literal example. This provides the capability to reference examples that cannot easily be included in JSON or YAML documents.
 	// The `value` field and `externalValue` field are mutually exclusive. See the rules for resolving [Relative References](#relative-references-in-uris).
-	ExternalValue *url.URL `json:"externalValue,omitempty" yaml:"externalValue,omitempty"`
+	ExternalValue *url.URL `json:"externalValue,omitzero" yaml:"externalValue,omitempty"`
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:"-"`
 }
