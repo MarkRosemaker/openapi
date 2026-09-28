@@ -2,17 +2,8 @@
 
 ## Workflow Preferences
 
-- **Start from latest master**: Always `git fetch origin master && git rebase origin/master` (or create the branch from `origin/master`) before starting work. Avoid unnecessary merge commits.
-- **One focused PR per feature**: Keep changes small and scoped. Don't bundle unrelated cleanup into a feature PR.
 - **No `gh` CLI**: GitHub interactions go through the MCP GitHub tools (`mcp__github__*`). Use `ToolSearch` to load their schemas.
 - **Skip YAML handling**: When adding JSON-level features, focus on JSON only. Do not add corresponding YAML plumbing unless explicitly requested.
-
-## Building and Testing
-
-```bash
-go build ./...
-go test ./...
-```
 
 ## Key Architecture
 
