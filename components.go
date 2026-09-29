@@ -63,6 +63,12 @@ func validateKey(key string) error {
 }
 
 func (c *Components) Validate() error {
+	for name := range c.Schemas.ByIndex() {
+		if err := validateKey(name); err != nil {
+			return &errpath.ErrField{Field: "schemas", Err: err}
+		}
+	}
+
 	if err := c.Schemas.Validate(); err != nil {
 		return &errpath.ErrField{Field: "schemas", Err: err}
 	}

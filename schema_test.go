@@ -144,8 +144,8 @@ func TestSchema_UnmarshalTypeArray(t *testing.T) {
 func TestSchema_Validate(t *testing.T) {
 	t.Parallel()
 
-	str := &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeString}}
-	num := &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeNumber}}
+	str := &openapi.Schema{Type: openapi.TypeString}
+	num := &openapi.Schema{Type: openapi.TypeNumber}
 
 	for i, tc := range []openapi.Schema{
 		{Type: openapi.TypeNumber, Default: jsontext.Value("3.14")},
@@ -160,11 +160,11 @@ func TestSchema_Validate(t *testing.T) {
 		{Const: jsontext.Value("401")},
 		// oneOf, anyOf, not allow type to be omitted
 		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
-		{OneOf: openapi.SchemaRefList{str, num}},
-		{AnyOf: openapi.SchemaRefList{str, num}},
+		{OneOf: openapi.SchemaList{str, num}},
+		{AnyOf: openapi.SchemaList{str, num}},
 		{Not: str},
 		// combining with a type is also valid
-		{Type: openapi.TypeString, OneOf: openapi.SchemaRefList{str}},
+		{Type: openapi.TypeString, OneOf: openapi.SchemaList{str}},
 		// enum accepts any JSON type per JSON Schema 2020-12
 		{Type: openapi.TypeInteger, Enum: []jsontext.Value{jsontext.Value("4"), jsontext.Value("6"), jsontext.Value("8")}},
 		{Type: openapi.TypeString, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value(`"bar"`)}},
@@ -173,9 +173,9 @@ func TestSchema_Validate(t *testing.T) {
 		{Type: openapi.TypeString, Nullable: true, Enum: []jsontext.Value{jsontext.Value(`"foo"`), jsontext.Value("null")}},
 		{Type: openapi.TypeString, Nullable: true, Const: jsontext.Value("null")},
 		// prefixItems alone satisfies array's items requirement
-		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaRefList{str, num}},
+		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaList{str, num}},
 		// prefixItems together with items for elements beyond it
-		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaRefList{str, num}, Items: str},
+		{Type: openapi.TypeArray, PrefixItems: openapi.SchemaList{str, num}, Items: str},
 	} {
 		t.Run(fmt.Sprintf("#%d", i), func(t *testing.T) {
 			if err := tc.Validate(); err != nil {
@@ -224,16 +224,14 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `format ("duration") is invalid: only valid for integer or string type, got boolean`},
 		{openapi.Schema{
 			Type:  openapi.TypeBoolean,
-			Items: &openapi.SchemaRef{},
+			Items: &openapi.Schema{},
 		}, `items is invalid: only valid for array type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeArray,
-			Items: &openapi.SchemaRef{
-				Value: &openapi.Schema{
-					Type: openapi.TypeNumber,
-					Min:  new(4.0),
-					Max:  new(3.0),
-				},
+			Items: &openapi.Schema{
+				Type: openapi.TypeNumber,
+				Min:  new(4.0),
+				Max:  new(3.0),
 			},
 		}, `items.minimum (4) is invalid: minimum is greater than maximum (4 > 3)`},
 		{openapi.Schema{
@@ -274,43 +272,43 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:     openapi.TypeArray,
 			MinItems: 5,
 			MaxItems: new(uint(4)),
-			Items:    &openapi.SchemaRef{},
+			Items:    &openapi.Schema{},
 		}, `minItems (5) is invalid: minItems is greater than maxItems (5 > 4)`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
-			PrefixItems: openapi.SchemaRefList{
-				{Value: &openapi.Schema{Type: openapi.TypeString}},
+			PrefixItems: openapi.SchemaList{
+				&openapi.Schema{Type: openapi.TypeString},
 			},
 		}, `prefixItems is invalid: only valid for array type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeArray,
-			PrefixItems: openapi.SchemaRefList{
-				{Value: &openapi.Schema{Required: []string{"id"}}},
+			PrefixItems: openapi.SchemaList{
+				&openapi.Schema{Required: []string{"id"}},
 			},
-			Items: &openapi.SchemaRef{Value: &openapi.Schema{Type: openapi.TypeBoolean}},
+			Items: &openapi.Schema{Type: openapi.TypeBoolean},
 		}, `prefixItems[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
-			AllOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{Required: []string{"id"}}},
+			AllOf: openapi.SchemaList{
+				&openapi.Schema{Required: []string{"id"}},
 			},
 		}, `allOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
-			OneOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{Required: []string{"id"}}},
+			OneOf: openapi.SchemaList{
+				&openapi.Schema{Required: []string{"id"}},
 			},
 		}, `oneOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
-			AnyOf: openapi.SchemaRefList{
-				{Value: &openapi.Schema{Required: []string{"id"}}},
+			AnyOf: openapi.SchemaList{
+				&openapi.Schema{Required: []string{"id"}},
 			},
 		}, `anyOf[0].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
-			Not: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
+			Not: &openapi.Schema{Required: []string{"id"}},
 		}, `not.required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
-			Properties: openapi.SchemaRefs{
-				"foo": &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
+			Properties: openapi.Schemas{
+				"foo": &openapi.Schema{Required: []string{"id"}},
 			},
 		}, `properties["foo"].required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
@@ -320,17 +318,17 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: openapi.TypeObject,
 			AdditionalProperties: &openapi.AdditionalProperties{
-				Schema: &openapi.SchemaRef{Value: &openapi.Schema{Required: []string{"id"}}},
+				Schema: &openapi.Schema{Required: []string{"id"}},
 			},
 		}, `additionalProperties.required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type:       openapi.TypeBoolean,
-			Properties: openapi.SchemaRefs{},
+			Properties: openapi.Schemas{},
 		}, `properties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
 			Type: openapi.TypeBoolean,
 			AdditionalProperties: &openapi.AdditionalProperties{
-				Schema: &openapi.SchemaRef{Value: &openapi.Schema{}},
+				Schema: &openapi.Schema{},
 			},
 		}, `additionalProperties is invalid: only valid for object type, got boolean`},
 		{openapi.Schema{
@@ -347,7 +345,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `const ("401") is invalid: must be a integer value`},
 		// keywords that only apply to one type still require it.
 		{openapi.Schema{
-			Properties: openapi.SchemaRefs{},
+			Properties: openapi.Schemas{},
 		}, `properties is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Required: []string{"id"},
@@ -388,6 +386,45 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:    openapi.TypeString,
 			Default: jsontext.Value("3"),
 		}, `default (3) is invalid: does not match schema type, got string`},
+		{openapi.Schema{
+			Type:      openapi.TypeString,
+			MinLength: 5,
+			MaxLength: new(uint(4)),
+		}, `minLength (5) is invalid: minLength is greater than maxLength (5 > 4)`},
+		{openapi.Schema{
+			Type:      openapi.TypeInteger,
+			MaxLength: new(uint(4)),
+		}, `maxLength is invalid: only valid for string type, got integer`},
+		{openapi.Schema{
+			Type:         openapi.TypeString,
+			ExclusiveMin: new(0.0),
+		}, `exclusiveMinimum (0) is invalid: only valid for number type, got string`},
+		{openapi.Schema{
+			Type:         openapi.TypeString,
+			ExclusiveMax: new(1.0),
+		}, `exclusiveMaximum (1) is invalid: only valid for number type, got string`},
+		{openapi.Schema{
+			Type:        openapi.TypeObject,
+			UniqueItems: true,
+		}, `uniqueItems (true) is invalid: only valid for array type, got object`},
+		{openapi.Schema{
+			Type:          openapi.TypeArray,
+			Items:         &openapi.Schema{},
+			MaxProperties: new(uint(2)),
+		}, `maxProperties (2) is invalid: only valid for object type, got array`},
+		{openapi.Schema{
+			Discriminator: &openapi.Discriminator{PropertyName: "kind"},
+		}, `discriminator is invalid: only valid with oneOf, anyOf or allOf`},
+		{openapi.Schema{
+			OneOf:         openapi.SchemaList{{Type: openapi.TypeString}},
+			Discriminator: &openapi.Discriminator{},
+		}, `discriminator.propertyName is required`},
+		{openapi.Schema{
+			Ref: "#/components/schemas/Pet",
+		}, `$ref: "#/components/schemas/Pet" was not resolved`},
+		{openapi.Schema{
+			Extensions: jsontext.Value(`{"minContains":1}`),
+		}, `minContains: unknown field or extension without "x-" prefix`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
@@ -454,11 +491,11 @@ func TestSchema_UnmarshalPrefixItems(t *testing.T) {
 		t.Fatalf("len(PrefixItems) = %d, want 2", len(s.PrefixItems))
 	}
 
-	if got, want := s.PrefixItems[0].Value.Type, openapi.TypeString; got != want {
+	if got, want := s.PrefixItems[0].Type, openapi.TypeString; got != want {
 		t.Errorf("PrefixItems[0].Type = %q, want %q", got, want)
 	}
 
-	if got, want := s.PrefixItems[1].Value.Type, openapi.TypeInteger; got != want {
+	if got, want := s.PrefixItems[1].Type, openapi.TypeInteger; got != want {
 		t.Errorf("PrefixItems[1].Type = %q, want %q", got, want)
 	}
 

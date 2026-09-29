@@ -17,8 +17,8 @@ func TestJSON_EmptyMeansAbsent(t *testing.T) {
 		want string
 	}{
 		{"schema required", &openapi.Schema{Type: openapi.TypeObject, Required: []string{}}, `{"type":"object"}`},
-		{"schema properties", &openapi.Schema{Type: openapi.TypeObject, Properties: openapi.SchemaRefs{}}, `{"type":"object"}`},
-		{"schema allOf", &openapi.Schema{AllOf: openapi.SchemaRefList{}}, `{}`},
+		{"schema properties", &openapi.Schema{Type: openapi.TypeObject, Properties: openapi.Schemas{}}, `{"type":"object"}`},
+		{"schema allOf", &openapi.Schema{AllOf: openapi.SchemaList{}}, `{}`},
 		{"operation parameters and tags", &openapi.Operation{Parameters: openapi.ParameterList{}, Tags: []string{}}, `{}`},
 		{"path item parameters", &openapi.PathItem{Parameters: openapi.ParameterList{}}, `{}`},
 		{"response content", &openapi.Response{Description: "OK", Content: openapi.Content{}}, `{"description":"OK"}`},

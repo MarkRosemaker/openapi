@@ -1445,8 +1445,8 @@
                     "maxLength": 10000
                   },
                   "thread_id": {
-                    "description": "Deprecated. Use POST /v1/threads/:thread_id/messages to continue an existing thread. If not provided, a new thread will be created.",
                     "$ref": "#/components/schemas/idRequest",
+                    "description": "Deprecated. Use POST /v1/threads/:thread_id/messages to continue an existing thread. If not provided, a new thread will be created.",
                     "deprecated": true
                   }
                 },
@@ -3490,9 +3490,9 @@
                   "name": {
                     "description": "The name of the group.",
                     "type": "string",
-                    "pattern": "\\S",
                     "minLength": 1,
                     "maxLength": 200,
+                    "pattern": "\\S",
                     "examples": [
                       "Engineering"
                     ]
@@ -5329,9 +5329,9 @@
                   "name": {
                     "description": "The new name of the group.",
                     "type": "string",
-                    "pattern": "\\S",
                     "minLength": 1,
                     "maxLength": 200,
+                    "pattern": "\\S",
                     "examples": [
                       "Engineering"
                     ]
@@ -16190,9 +16190,9 @@
                           "query": {
                             "description": "Words or a short phrase to find in personal memories.",
                             "type": "string",
-                            "pattern": "\\S",
                             "minLength": 1,
-                            "maxLength": 500
+                            "maxLength": 500,
+                            "pattern": "\\S"
                           },
                           "limit": {
                             "description": "Maximum number of memories to return. Defaults to 10 and cannot exceed 50.",
@@ -17304,20 +17304,20 @@
                             "type": "array",
                             "minItems": 1,
                             "maxItems": 100,
+                            "uniqueItems": true,
                             "items": {
                               "type": "string"
-                            },
-                            "uniqueItems": true
+                            }
                           },
                           "file_urls": {
                             "description": "Required for remove_files. The exact file URLs shown in the Folder's latest fetch output.",
                             "type": "array",
                             "minItems": 1,
                             "maxItems": 100,
+                            "uniqueItems": true,
                             "items": {
                               "type": "string"
-                            },
-                            "uniqueItems": true
+                            }
                           },
                           "title": {
                             "description": "Required for add_subfolder. The new Folder's title.",
@@ -22004,8 +22004,8 @@
                             "description": "Maximum number of resources to return per time slot (default: 20, max: 40)",
                             "type": "integer",
                             "maximum": 40,
-                            "default": 20,
-                            "exclusiveMinimum": 0
+                            "exclusiveMinimum": 0,
+                            "default": 20
                           },
                           "ignoreWorkingLocation": {
                             "description": "If true, do not narrow rooms to the user's working-location building for this day. Set this when the user is explicitly asking about rooms in a different office (e.g. for a visiting team).",
@@ -23979,9 +23979,9 @@
                       "query": {
                         "description": "Words or a short phrase to find in personal memories.",
                         "type": "string",
-                        "pattern": "\\S",
                         "minLength": 1,
-                        "maxLength": 500
+                        "maxLength": 500,
+                        "pattern": "\\S"
                       },
                       "limit": {
                         "description": "Maximum number of memories to return. Defaults to 10 and cannot exceed 50.",
@@ -24782,20 +24782,20 @@
                         "type": "array",
                         "minItems": 1,
                         "maxItems": 100,
+                        "uniqueItems": true,
                         "items": {
                           "type": "string"
-                        },
-                        "uniqueItems": true
+                        }
                       },
                       "file_urls": {
                         "description": "Required for remove_files. The exact file URLs shown in the Folder's latest fetch output.",
                         "type": "array",
                         "minItems": 1,
                         "maxItems": 100,
+                        "uniqueItems": true,
                         "items": {
                           "type": "string"
-                        },
-                        "uniqueItems": true
+                        }
                       },
                       "title": {
                         "description": "Required for add_subfolder. The new Folder's title.",
@@ -28378,8 +28378,8 @@
                         "description": "Maximum number of resources to return per time slot (default: 20, max: 40)",
                         "type": "integer",
                         "maximum": 40,
-                        "default": 20,
-                        "exclusiveMinimum": 0
+                        "exclusiveMinimum": 0,
+                        "default": 20
                       },
                       "ignoreWorkingLocation": {
                         "description": "If true, do not narrow rooms to the user's working-location building for this day. Set this when the user is explicitly asking about rooms in a different office (e.g. for a visiting team).",
@@ -29695,16 +29695,16 @@
                       "eval_session_id": {
                         "description": "The eval session ID for tracking operations across multiple tool calls.",
                         "type": "string",
-                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
                         "minLength": 1,
-                        "maxLength": 64
+                        "maxLength": 64,
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$"
                       },
                       "eval_run_id": {
                         "description": "The eval run ID for organizing a group of eval sessions.",
                         "type": "string",
-                        "pattern": "^[A-Za-z0-9_-]{1,64}$",
                         "minLength": 1,
-                        "maxLength": 64
+                        "maxLength": 64,
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$"
                       }
                     },
                     "required": [
@@ -30026,9 +30026,9 @@
                               "query": {
                                 "description": "Words or a short phrase to find in personal memories.",
                                 "type": "string",
-                                "pattern": "\\S",
                                 "minLength": 1,
-                                "maxLength": 500
+                                "maxLength": 500,
+                                "pattern": "\\S"
                               },
                               "limit": {
                                 "description": "Maximum number of memories to return. Defaults to 10 and cannot exceed 50.",
@@ -30853,20 +30853,20 @@
                                 "type": "array",
                                 "minItems": 1,
                                 "maxItems": 100,
+                                "uniqueItems": true,
                                 "items": {
                                   "type": "string"
-                                },
-                                "uniqueItems": true
+                                }
                               },
                               "file_urls": {
                                 "description": "Required for remove_files. The exact file URLs shown in the Folder's latest fetch output.",
                                 "type": "array",
                                 "minItems": 1,
                                 "maxItems": 100,
+                                "uniqueItems": true,
                                 "items": {
                                   "type": "string"
-                                },
-                                "uniqueItems": true
+                                }
                               },
                               "title": {
                                 "description": "Required for add_subfolder. The new Folder's title.",
@@ -48976,10 +48976,10 @@
                                     "description": "Option URLs that activate this conditional group.",
                                     "type": "array",
                                     "minItems": 1,
+                                    "uniqueItems": true,
                                     "items": {
                                       "type": "string"
-                                    },
-                                    "uniqueItems": true
+                                    }
                                   }
                                 },
                                 "required": [
@@ -49008,10 +49008,10 @@
                                     "description": "Option URLs matched by this conditional group.",
                                     "type": "array",
                                     "minItems": 1,
+                                    "uniqueItems": true,
                                     "items": {
                                       "type": "string"
-                                    },
-                                    "uniqueItems": true
+                                    }
                                   }
                                 },
                                 "required": [
@@ -49168,10 +49168,10 @@
                                                 "description": "Option URLs that activate this conditional group.",
                                                 "type": "array",
                                                 "minItems": 1,
+                                                "uniqueItems": true,
                                                 "items": {
                                                   "type": "string"
-                                                },
-                                                "uniqueItems": true
+                                                }
                                               }
                                             },
                                             "required": [
@@ -49200,10 +49200,10 @@
                                                 "description": "Option URLs matched by this conditional group.",
                                                 "type": "array",
                                                 "minItems": 1,
+                                                "uniqueItems": true,
                                                 "items": {
                                                   "type": "string"
-                                                },
-                                                "uniqueItems": true
+                                                }
                                               }
                                             },
                                             "required": [
@@ -55853,8 +55853,8 @@
       },
       "stringRequest": {
         "type": "string",
-        "maxLength": 100,
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 100
       },
       "syncedBlockBlockObjectResponse": {
         "title": "Synced Block",
@@ -56353,8 +56353,8 @@
       },
       "textRequest": {
         "type": "string",
-        "maxLength": 2000,
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 2000
       },
       "textRichTextItemRequest": {
         "title": "Text",

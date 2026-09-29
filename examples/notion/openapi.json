@@ -6049,11 +6049,11 @@
                               "width_ratio": {
                                 "description": "Ratio between 0 and 1 of the width of this column relative to all columns in the list. If not provided, uses an equal width.",
                                 "type": "number",
+                                "exclusiveMinimum": 0,
+                                "exclusiveMaximum": 1,
                                 "examples": [
                                   0.5
-                                ],
-                                "exclusiveMinimum": 0,
-                                "exclusiveMaximum": 1
+                                ]
                               }
                             },
                             "additionalProperties": false
@@ -22499,9 +22499,9 @@
             "schema": {
               "description": "An opaque cursor returned by the previous page of results.",
               "type": "string",
-              "pattern": "^[A-Za-z0-9]+$",
               "minLength": 1,
-              "maxLength": 200
+              "maxLength": 200,
+              "pattern": "^[A-Za-z0-9]+$"
             }
           },
           {
@@ -22721,9 +22721,9 @@
             "required": true,
             "schema": {
               "type": "string",
-              "pattern": "^[^\\u0000-\\u001f\\u007f]+$",
               "minLength": 1,
               "maxLength": 200,
+              "pattern": "^[^\\u0000-\\u001f\\u007f]+$",
               "examples": [
                 "9b4a1d3f-1f0a-4c2a-9f0b-6c1f5a3d2e10"
               ]
@@ -23178,6 +23178,7 @@
                         "type": "array",
                         "minItems": 1,
                         "maxItems": 100,
+                        "uniqueItems": true,
                         "items": {
                           "type": "object",
                           "properties": {
@@ -23198,8 +23199,7 @@
                             "option_id"
                           ],
                           "additionalProperties": false
-                        },
-                        "uniqueItems": true
+                        }
                       },
                       "metadata": {
                         "type": "object",
@@ -35865,11 +35865,11 @@
           "width_ratio": {
             "description": "Ratio between 0 and 1 of the width of this column relative to all columns in the list. If not provided, uses an equal width.",
             "type": "number",
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 1,
             "examples": [
               0.5
-            ],
-            "exclusiveMinimum": 0,
-            "exclusiveMaximum": 1
+            ]
           }
         },
         "required": [
@@ -48727,8 +48727,8 @@
       },
       "stringRequest": {
         "type": "string",
-        "maxLength": 100,
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 100
       },
       "subtaskConfigRequest": {
         "type": "object",
@@ -49698,8 +49698,8 @@
       },
       "textRequest": {
         "type": "string",
-        "maxLength": 2000,
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 2000
       },
       "textRichTextItemRequest": {
         "title": "Text",

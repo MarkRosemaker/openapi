@@ -1,8 +1,10 @@
 # Architecture
 
 - **`encoding/json/v2`** (`encoding/json/jsontext`) — stable in Go 1.27 standard library.
-- **`refOrValue[T, O]`** (`ref.go`) — generic type backing all `*Ref` aliases (SchemaRef, HeaderRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`. Probes for `$ref` by attempting to unmarshal as `Reference`; falls back to the value type if `$ref` is absent.
+- **`refOrValue[T, O]`** (`ref.go`) — generic type backing the `*Ref` aliases of every object but Schema (HeaderRef, ResponseRef, etc.). Implements custom `UnmarshalJSONFrom` / `MarshalJSONTo`. Probes for `$ref` by attempting to unmarshal as `Reference`; falls back to the value type if `$ref` is absent.
 - **`loader`** (`loader.go`) — two-pass load: unmarshal → `collectResolveRefs` (collect component schemas, then resolve all `$ref`s).
+- **`Schema.Ref`** is the JSON Schema `$ref` keyword, as OAS 3.1 defines it: a schema that refers to another is a `*Schema` like any other, so it can carry sibling keywords (`deprecated`, `description`, …) and a component schema can be just a reference. The loader sets `Resolved` to the schema it points to; nothing follows it recursively. There is no Reference-or-Schema wrapper for schemas.
+- **Unknown schema keywords fail validation.** A keyword the library does not model lands in `Extensions` on load, and `Validate` rejects anything there without an `x-` prefix, so an unsupported keyword is reported instead of being carried along unseen.
 - **`Schema.Enum`** is `[]jsontext.Value`, **`Schema.Const`** and **`Schema.Default`** are `jsontext.Value` — raw JSON is preserved exactly as written. Kind-based validation (`enumKindMatchesType`, `isJSONInteger`) checks types without decoding to Go values.
 - **`Schema` (un)marshalling** (`schema_json.go`) — decodes through `schemaJSON`, whose shallower `type` field overrides the embedded one: a `type` of `[X, "null"]` becomes `Type` X with `Nullable` set. An array of several non-null types fails to decode.
 - **`Schema.Type` is optional** (JSON Schema 2020-12): without it a schema constrains no type, and the empty schema accepts any value. Keywords tied to one type (`properties`, `items`, `format`, `pattern`, …) still require it in `Validate`.

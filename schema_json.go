@@ -9,8 +9,9 @@ import (
 // schemaFields is Schema without its methods, so (un)marshaling it doesn't recurse.
 type schemaFields Schema
 
-// schemaJSON overrides the embedded "type" with a shallower one; Title and Description only keep Schema's field order.
+// schemaJSON overrides the embedded "type" with a shallower one; Ref, Title and Description only keep Schema's field order.
 type schemaJSON struct {
+	Ref         string     `json:"$ref,omitempty"`
 	Title       string     `json:"title,omitempty"`
 	Description string     `json:"description,omitempty"`
 	Type        schemaType `json:"type,omitzero"`
@@ -77,7 +78,7 @@ func (s *Schema) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return err
 	}
 
-	s.Title, s.Description = v.Title, v.Description
+	s.Ref, s.Title, s.Description = v.Ref, v.Title, v.Description
 	s.Type, s.Nullable = v.Type.Type, v.Type.Nullable
 
 	return nil
@@ -86,6 +87,7 @@ func (s *Schema) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // MarshalJSONTo marshals a schema, writing a nullable Type X as [X, "null"].
 func (s *Schema) MarshalJSONTo(enc *jsontext.Encoder) error {
 	return json.MarshalEncode(enc, &schemaJSON{
+		Ref:          s.Ref,
 		Title:        s.Title,
 		Description:  s.Description,
 		Type:         schemaType{Type: s.Type, Nullable: s.Nullable},

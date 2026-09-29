@@ -91,9 +91,7 @@ func TestHeader_Validate_Error(t *testing.T) {
 			openapi.Header{
 				Content: openapi.Content{
 					openapi.MediaRangeJSON: {
-						Schema: &openapi.SchemaRef{
-							Value: &openapi.Schema{Required: []string{"id"}},
-						},
+						Schema: &openapi.Schema{Required: []string{"id"}},
 					},
 				},
 			},

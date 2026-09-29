@@ -4221,9 +4221,9 @@
                   "name": {
                     "description": "The new name of the group.",
                     "type": "string",
-                    "pattern": "\\S",
                     "minLength": 1,
-                    "maxLength": 200
+                    "maxLength": 200,
+                    "pattern": "\\S"
                   }
                 },
                 "required": [
@@ -4689,9 +4689,9 @@
                   "name": {
                     "description": "The name of the group.",
                     "type": "string",
-                    "pattern": "\\S",
                     "minLength": 1,
-                    "maxLength": 200
+                    "maxLength": 200,
+                    "pattern": "\\S"
                   }
                 },
                 "required": [
