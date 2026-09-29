@@ -69,8 +69,19 @@ func (c *Components) Validate() error {
 		}
 	}
 
-	if err := c.Schemas.Validate(); err != nil {
-		return &errpath.ErrField{Field: "schemas", Err: err}
+	extended := map[*Schema]bool{}
+	for _, s := range c.Schemas {
+		for _, e := range s.AllOf {
+			if e.Ref != nil && e.Ref.Value != nil {
+				extended[e.Ref.Value] = true
+			}
+		}
+	}
+
+	for name, s := range c.Schemas.ByIndex() {
+		if err := s.validate(extended[s]); err != nil {
+			return &errpath.ErrField{Field: "schemas", Err: &errpath.ErrKey{Key: name, Err: err}}
+		}
 	}
 
 	// validate the key: check if it is a valid key

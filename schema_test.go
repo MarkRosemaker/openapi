@@ -424,7 +424,7 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `maxProperties (2) is invalid: only valid for object type, got array`},
 		{openapi.Schema{
 			Discriminator: &openapi.Discriminator{PropertyName: "kind"},
-		}, `discriminator is invalid: only valid with oneOf, anyOf or allOf`},
+		}, `discriminator is invalid: only valid with oneOf, anyOf or allOf, or on a component schema another extends through allOf`},
 		{openapi.Schema{
 			OneOf:         openapi.SchemaList{{Type: openapi.TypeString}},
 			Discriminator: &openapi.Discriminator{},
