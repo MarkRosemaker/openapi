@@ -8,7 +8,7 @@ import (
 // AdditionalProperties is a schema for the values of properties not in "properties", or a bare boolean allowing (true) or forbidding (false) them.
 type AdditionalProperties struct {
 	// Schema is the schema of the additional properties' values, when one is given.
-	Schema *SchemaRef
+	Schema *Schema
 	// Allowed is the value of the boolean form, only meaningful when Schema is nil.
 	Allowed bool
 }
@@ -40,7 +40,7 @@ func (ap *AdditionalProperties) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return nil
 	}
 
-	s := &SchemaRef{}
+	s := &Schema{}
 	if err := json.UnmarshalDecode(dec, s); err != nil {
 		return err
 	}

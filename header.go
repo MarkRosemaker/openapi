@@ -75,10 +75,10 @@ func (h *Header) Validate() error {
 			}}
 		}
 
-		if h.Schema == nil || (h.Schema.Type != TypeArray && h.Schema.Type != TypeObject) {
+		if h.Schema == nil || (h.Schema.derefType() != TypeArray && h.Schema.derefType() != TypeObject) {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
 				Value:   true,
-				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", h.Schema.Type),
+				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", h.Schema.derefType()),
 			}}
 		}
 	}

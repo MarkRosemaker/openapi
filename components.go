@@ -63,6 +63,12 @@ func validateKey(key string) error {
 }
 
 func (c *Components) Validate() error {
+	for name := range c.Schemas.ByIndex() {
+		if err := validateKey(name); err != nil {
+			return &errpath.ErrField{Field: "schemas", Err: err}
+		}
+	}
+
 	if err := c.Schemas.Validate(); err != nil {
 		return &errpath.ErrField{Field: "schemas", Err: err}
 	}
@@ -160,6 +166,10 @@ func (l *loader) collectComponents(cs Components, ref ref) {
 
 func (l *loader) resolveComponents(c Components) error {
 	if err := l.resolveSchemas(c.Schemas); err != nil {
+		return &errpath.ErrField{Field: "schemas", Err: err}
+	}
+
+	if err := checkSchemaCycles(c.Schemas); err != nil {
 		return &errpath.ErrField{Field: "schemas", Err: err}
 	}
 

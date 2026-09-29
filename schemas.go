@@ -9,14 +9,14 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// Schemas maps names to schemas, in order: component schemas, or an object's properties.
 type Schemas map[string]*Schema
+
+// SchemaList is a list of schemas, such as the alternatives of oneOf.
+type SchemaList []*Schema
 
 func (ss Schemas) Validate() error {
 	for name, s := range ss.ByIndex() {
-		if err := validateKey(name); err != nil {
-			return err
-		}
-
 		if err := s.Validate(); err != nil {
 			return &errpath.ErrKey{Key: name, Err: err}
 		}
@@ -64,6 +64,16 @@ func (l *loader) resolveSchemas(ss Schemas) error {
 	for name, s := range ss.ByIndex() {
 		if err := l.resolveSchema(s); err != nil {
 			return &errpath.ErrKey{Key: name, Err: err}
+		}
+	}
+
+	return nil
+}
+
+func (l *loader) resolveSchemaList(ss SchemaList) error {
+	for i, s := range ss {
+		if err := l.resolveSchema(s); err != nil {
+			return &errpath.ErrIndex{Index: i, Err: err}
 		}
 	}
 

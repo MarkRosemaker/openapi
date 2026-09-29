@@ -5,6 +5,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"path/filepath"
+	"reflect"
 	"testing"
 
 	"github.com/MarkRosemaker/jsonutil"
@@ -24,9 +25,38 @@ var jsonOpts = json.JoinOptions([]json.Options{
 	jsontext.WithIndent("  "), // indent with two spaces
 }...)
 
-func resolveSchemaRef(s *openapi.SchemaRef) {
-	if s != nil && s.Ref != nil && s.Value == nil {
-		s.Value = &openapi.Schema{}
+// resolveSchemaRefs points every unresolved schema reference within v at an empty schema.
+func resolveSchemaRefs(v reflect.Value) {
+	switch v.Kind() {
+	case reflect.Pointer, reflect.Interface:
+		if v.IsNil() {
+			return
+		}
+
+		if r, ok := v.Interface().(*openapi.SchemaRef); ok {
+			if r.Value == nil {
+				r.Value = &openapi.Schema{}
+			}
+
+			return
+		}
+
+		resolveSchemaRefs(v.Elem())
+	case reflect.Struct:
+		for i := range v.NumField() {
+			if v.Type().Field(i).IsExported() {
+				resolveSchemaRefs(v.Field(i))
+			}
+		}
+	case reflect.Slice, reflect.Array:
+		for i := range v.Len() {
+			resolveSchemaRefs(v.Index(i))
+		}
+	case reflect.Map:
+		for _, k := range v.MapKeys() {
+			resolveSchemaRefs(v.MapIndex(k))
+		}
+	default: // nothing within can hold a schema
 	}
 }
 
@@ -108,18 +138,9 @@ func testJSON(t *testing.T, exampleJSON []byte, v validator) {
 
 func fixReferences(v validator) {
 	switch v := v.(type) {
-	case *openapi.Callback:
-		for _, pi := range *v {
-			resolveSchemaRef(pi.Value.Post.RequestBody.Value.Content[openapi.MediaRangeJSON].Schema)
-		}
 	case *openapi.Content:
 		for _, mt := range *v {
-			resolveSchemaRef(mt.Schema)
 			resolveExamples(mt.Examples)
-		}
-	case *openapi.RequestBody:
-		for _, c := range v.Content {
-			resolveSchemaRef(c.Schema)
 		}
 	case *openapi.ParameterList:
 		for _, p := range *v {
@@ -127,13 +148,11 @@ func fixReferences(v validator) {
 		}
 	case *openapi.OperationResponses:
 		for _, r := range *v {
-			mt := r.Value.Content[openapi.MediaRangeJSON]
-			resolveSchemaRef(mt.Schema)
-			resolveExamples(mt.Examples)
+			resolveExamples(r.Value.Content[openapi.MediaRangeJSON].Examples)
 		}
-	case *openapi.PathItem:
-		resolveSchemaRef(v.Get.Responses["default"].Value.Content[openapi.MediaRangeHTML].Schema)
 	case *openapi.Components:
-		v.Responses["GeneralError"].Value.Content[openapi.MediaRangeJSON].Schema.Value = v.Schemas["GeneralError"]
+		v.Responses["GeneralError"].Value.Content[openapi.MediaRangeJSON].Schema.Ref.Value = v.Schemas["GeneralError"]
 	}
+
+	resolveSchemaRefs(reflect.ValueOf(v))
 }

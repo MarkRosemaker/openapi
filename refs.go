@@ -1,10 +1,6 @@
 package openapi
 
-import "github.com/MarkRosemaker/errpath"
-
 type (
-	// SchemaRef is a reference to a Schema or an actual Schema.
-	SchemaRef = refOrValue[Schema, *Schema]
 	// HeaderRef is a reference to a Header or an actual Header.
 	HeaderRef = refOrValue[Header, *Header]
 	// ResponseRef is a reference to a Response or an actual Response.
@@ -23,9 +19,6 @@ type (
 	SecuritySchemeRef = refOrValue[SecurityScheme, *SecurityScheme]
 	// CallbackRef is a reference to a Callback or an actual Callback.
 	CallbackRef = refOrValue[Callback, *Callback]
-
-	// SchemaRefList is a slice of SchemaRef.
-	SchemaRefList []*SchemaRef
 )
 
 func getIndexRef[T any, O referencable[T]](ref *refOrValue[T, O]) int { return ref.idx }
@@ -34,14 +27,4 @@ func setIndexRef[T any, O referencable[T]](
 ) *refOrValue[T, O] {
 	ref.idx = i
 	return ref
-}
-
-func (l *loader) resolveSchemaRefList(ss SchemaRefList) error {
-	for i, s := range ss {
-		if err := l.resolveSchemaRef(s); err != nil {
-			return &errpath.ErrIndex{Index: i, Err: err}
-		}
-	}
-
-	return nil
 }
