@@ -86,6 +86,25 @@ func TestSchema_JSON(t *testing.T) {
 		"type": "null"
 	}`), &openapi.Schema{})
 
+	// pixellab: a map whose keys are compass directions, and an image size in steps of 4
+	testJSON(t, []byte(`{
+		"type": "object",
+		"additionalProperties": {
+			"type": "string"
+		},
+		"propertyNames": {
+			"enum": [
+				"north",
+				"south"
+			]
+		}
+	}`), &openapi.Schema{})
+
+	testJSON(t, []byte(`{
+		"type": "integer",
+		"multipleOf": 4
+	}`), &openapi.Schema{})
+
 	testJSON(t, []byte(`{
 		"type": "integer",
 		"const": 400
@@ -467,6 +486,26 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:    openapi.TypeObject,
 			Example: jsontext.Value(`null`),
 		}, `example ("null") is invalid: must be a object value`},
+		{openapi.Schema{
+			Type:       openapi.TypeNumber,
+			MultipleOf: new(0.0),
+		}, `multipleOf (0) is invalid: must be greater than 0`},
+		{openapi.Schema{
+			Type:       openapi.TypeInteger,
+			MultipleOf: new(0.5),
+		}, `multipleOf (0.5) is invalid: not an integer`},
+		{openapi.Schema{
+			Type:       openapi.TypeString,
+			MultipleOf: new(4.0),
+		}, `multipleOf (4) is invalid: only valid for number type, got string`},
+		{openapi.Schema{
+			Type:          openapi.TypeArray,
+			PropertyNames: &openapi.Schema{Type: openapi.TypeString},
+		}, `propertyNames is invalid: only valid for object type, got array`},
+		{openapi.Schema{
+			Type:          openapi.TypeObject,
+			PropertyNames: &openapi.Schema{Type: openapi.TypeInteger, MaxLength: new(uint(2))},
+		}, `propertyNames.maxLength is invalid: only valid for string type, got integer`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {

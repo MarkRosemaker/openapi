@@ -59,6 +59,8 @@ type Schema struct {
 	ExclusiveMin *float64 `json:"exclusiveMinimum,omitzero" yaml:"exclusiveMinimum,omitempty"`
 	// A value the number must be less than.
 	ExclusiveMax *float64 `json:"exclusiveMaximum,omitzero" yaml:"exclusiveMaximum,omitempty"`
+	// A number the value must be a multiple of.
+	MultipleOf *float64 `json:"multipleOf,omitzero" yaml:"multipleOf,omitempty"`
 
 	// String
 
@@ -100,6 +102,8 @@ type Schema struct {
 	AdditionalProperties *AdditionalProperties `json:"additionalProperties,omitzero" yaml:"additionalProperties,omitempty"`
 	// The maximum number of properties of the object.
 	MaxProperties *uint `json:"maxProperties,omitzero" yaml:"maxProperties,omitempty"`
+	// A schema every property name of the object must match.
+	PropertyNames *Schema `json:"propertyNames,omitzero" yaml:"propertyNames,omitempty"`
 	// Tells which of the composed schemas a payload is, by the value of one of its properties.
 	Discriminator *Discriminator `json:"discriminator,omitzero" yaml:"discriminator,omitempty"`
 
@@ -305,6 +309,13 @@ func (s *Schema) Validate() error {
 				Message: "not an integer",
 			}}
 		}
+
+		if s.MultipleOf != nil && *s.MultipleOf != float64(int(*s.MultipleOf)) {
+			return &errpath.ErrField{Field: "multipleOf", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.MultipleOf,
+				Message: "not an integer",
+			}}
+		}
 	}
 
 	if s.Type == TypeNumber || s.Type == TypeInteger {
@@ -354,6 +365,18 @@ func (s *Schema) Validate() error {
 		return &errpath.ErrField{Field: "exclusiveMaximum", Err: &errpath.ErrInvalid[float64]{
 			Value:   *s.ExclusiveMax,
 			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
+		}}
+	} else if s.MultipleOf != nil {
+		return &errpath.ErrField{Field: "multipleOf", Err: &errpath.ErrInvalid[float64]{
+			Value:   *s.MultipleOf,
+			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
+		}}
+	}
+
+	if s.MultipleOf != nil && *s.MultipleOf <= 0 {
+		return &errpath.ErrField{Field: "multipleOf", Err: &errpath.ErrInvalid[float64]{
+			Value:   *s.MultipleOf,
+			Message: "must be greater than 0",
 		}}
 	}
 
@@ -472,6 +495,12 @@ func (s *Schema) Validate() error {
 			}
 		}
 
+		if s.PropertyNames != nil {
+			if err := s.PropertyNames.Validate(); err != nil {
+				return &errpath.ErrField{Field: "propertyNames", Err: err}
+			}
+		}
+
 		if s.MaxProperties != nil && uint(len(s.Required)) > *s.MaxProperties {
 			return &errpath.ErrField{Field: "maxProperties", Err: &errpath.ErrInvalid[uint]{
 				Value:   *s.MaxProperties,
@@ -493,6 +522,10 @@ func (s *Schema) Validate() error {
 	} else if s.MaxProperties != nil {
 		return &errpath.ErrField{Field: "maxProperties", Err: &errpath.ErrInvalid[uint]{
 			Value:   *s.MaxProperties,
+			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
+		}}
+	} else if s.PropertyNames != nil {
+		return &errpath.ErrField{Field: "propertyNames", Err: &errpath.ErrInvalid[string]{
 			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
 		}}
 	}
@@ -695,6 +728,12 @@ func (l *loader) resolveSchema(s *Schema) error {
 		}
 	}
 
+	if s.PropertyNames != nil {
+		if err := l.resolveSchema(s.PropertyNames); err != nil {
+			return &errpath.ErrField{Field: "propertyNames", Err: err}
+		}
+	}
+
 	if s.Discriminator != nil {
 		if err := l.resolveDiscriminator(s.Discriminator); err != nil {
 			return &errpath.ErrField{Field: "discriminator", Err: err}
@@ -720,11 +759,11 @@ func (s *Schema) isEmpty() bool {
 	return s == nil ||
 		(s.Ref == nil && s.Type == "" && !s.Nullable && s.Format == "" &&
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
-			s.Min == nil && s.Max == nil && s.ExclusiveMin == nil && s.ExclusiveMax == nil &&
+			s.Min == nil && s.Max == nil && s.ExclusiveMin == nil && s.ExclusiveMax == nil && s.MultipleOf == nil &&
 			s.MinLength == 0 && s.MaxLength == nil && s.Pattern == nil &&
 			s.MinItems == 0 && s.MaxItems == nil && !s.UniqueItems && len(s.PrefixItems) == 0 && s.Items == nil &&
 			s.Properties == nil && s.Required == nil &&
-			s.AdditionalProperties == nil && s.MaxProperties == nil && s.Discriminator == nil &&
+			s.AdditionalProperties == nil && s.MaxProperties == nil && s.PropertyNames == nil && s.Discriminator == nil &&
 			len(s.Examples) == 0 && !s.Deprecated &&
 			s.ContentMediaType == "" && s.ContentEncoding == "" &&
 			s.Const == nil &&
