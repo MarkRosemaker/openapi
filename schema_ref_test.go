@@ -1,6 +1,7 @@
 package openapi_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
@@ -97,5 +98,28 @@ func TestSchema_Ref(t *testing.T) {
 	resp := doc.Paths["/things"].Get.Responses["200"].Value
 	if got := resp.Content[openapi.MediaRangeJSON].Schema.Ref.Value; got != schemas["Alias"] {
 		t.Errorf("response schema resolves to %v, want Alias", got)
+	}
+}
+
+func TestSchema_Replace(t *testing.T) {
+	t.Parallel()
+
+	var props openapi.Schemas
+	props.Set("a", &openapi.Schema{Type: openapi.TypeString})
+	props.Set("b", &openapi.Schema{Type: openapi.TypeInteger})
+	props.Set("c", &openapi.Schema{Type: openapi.TypeBoolean})
+
+	// replacing b with a schema from elsewhere keeps it second
+	var other openapi.Schemas
+	other.Set("x", &openapi.Schema{Type: openapi.TypeNumber})
+	props["b"].Replace(other["x"])
+
+	var order []string
+	for k, s := range props.ByIndex() {
+		order = append(order, k+":"+string(s.Type))
+	}
+
+	if got, want := strings.Join(order, " "), "a:string b:number c:boolean"; got != want {
+		t.Errorf("got %s, want %s", got, want)
 	}
 }

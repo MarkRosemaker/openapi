@@ -134,6 +134,14 @@ type SchemaRef struct {
 	Value *Schema
 }
 
+// Replace makes s a copy of v while keeping s's place in the ordered map that holds it.
+// Assigning *s = *v instead would also copy v's place, reordering the properties or components around s.
+func (s *Schema) Replace(v *Schema) {
+	idx := s.idx
+	*s = *v
+	s.idx = idx
+}
+
 func getIndexSchema(s *Schema) int              { return s.idx }
 func setIndexSchema(s *Schema, idx int) *Schema { s.idx = idx; return s }
 
