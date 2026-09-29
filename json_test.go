@@ -33,14 +33,18 @@ func resolveSchemaRefs(v reflect.Value) {
 			return
 		}
 
-		if s, ok := v.Interface().(*openapi.Schema); ok && s.Ref != "" && s.Resolved == nil {
-			s.Resolved = &openapi.Schema{}
+		if r, ok := v.Interface().(*openapi.SchemaRef); ok {
+			if r.Value == nil {
+				r.Value = &openapi.Schema{}
+			}
+
+			return
 		}
 
 		resolveSchemaRefs(v.Elem())
 	case reflect.Struct:
 		for i := range v.NumField() {
-			if v.Type().Field(i).IsExported() && v.Type().Field(i).Name != "Resolved" {
+			if v.Type().Field(i).IsExported() {
 				resolveSchemaRefs(v.Field(i))
 			}
 		}
@@ -147,7 +151,7 @@ func fixReferences(v validator) {
 			resolveExamples(r.Value.Content[openapi.MediaRangeJSON].Examples)
 		}
 	case *openapi.Components:
-		v.Responses["GeneralError"].Value.Content[openapi.MediaRangeJSON].Schema.Resolved = v.Schemas["GeneralError"]
+		v.Responses["GeneralError"].Value.Content[openapi.MediaRangeJSON].Schema.Ref.Value = v.Schemas["GeneralError"]
 	}
 
 	resolveSchemaRefs(reflect.ValueOf(v))

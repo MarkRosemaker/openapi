@@ -77,13 +77,13 @@ func TestSchema_Ref(t *testing.T) {
 	schemas := doc.Components.Schemas
 
 	// a component can be just a reference to another one
-	if got := schemas["Alias"].Resolved; got != schemas["Thing"] {
+	if got := schemas["Alias"].Ref.Value; got != schemas["Thing"] {
 		t.Errorf("Alias resolves to %v, want Thing", got)
 	}
 
 	// sibling keywords stay on the reference, which still resolves
 	old := schemas["Thing"].Properties["old"]
-	if old.Resolved != schemas["Ids"] || !old.Deprecated || old.Description != "Use ids instead." {
+	if old.Ref.Value != schemas["Ids"] || !old.Deprecated || old.Description != "Use ids instead." {
 		t.Errorf("got %+v, want a deprecated, described reference to Ids", old)
 	}
 
@@ -95,7 +95,7 @@ func TestSchema_Ref(t *testing.T) {
 
 	// a reference to a reference resolves one step at a time
 	resp := doc.Paths["/things"].Get.Responses["200"].Value
-	if got := resp.Content[openapi.MediaRangeJSON].Schema.Resolved; got != schemas["Alias"] {
+	if got := resp.Content[openapi.MediaRangeJSON].Schema.Ref.Value; got != schemas["Alias"] {
 		t.Errorf("response schema resolves to %v, want Alias", got)
 	}
 }

@@ -420,11 +420,48 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Discriminator: &openapi.Discriminator{},
 		}, `discriminator.propertyName is required`},
 		{openapi.Schema{
-			Ref: "#/components/schemas/Pet",
+			Ref: &openapi.SchemaRef{Identifier: "#/components/schemas/Pet"},
 		}, `$ref: "#/components/schemas/Pet" was not resolved`},
 		{openapi.Schema{
 			Extensions: jsontext.Value(`{"minContains":1}`),
 		}, `minContains: unknown field or extension without "x-" prefix`},
+		{openapi.Schema{
+			Type:         openapi.TypeInteger,
+			ExclusiveMin: new(0.5),
+		}, `exclusiveMinimum (0.5) is invalid: not an integer`},
+		{openapi.Schema{
+			Type:         openapi.TypeInteger,
+			ExclusiveMax: new(1.5),
+		}, `exclusiveMaximum (1.5) is invalid: not an integer`},
+		{openapi.Schema{
+			Type:         openapi.TypeNumber,
+			Min:          new(1.0),
+			ExclusiveMax: new(1.0),
+		}, `minimum (1) is invalid: minimum is not less than exclusiveMaximum (1 >= 1)`},
+		{openapi.Schema{
+			Type:         openapi.TypeNumber,
+			ExclusiveMin: new(1.0),
+			Max:          new(1.0),
+		}, `exclusiveMinimum (1) is invalid: exclusiveMinimum is not less than maximum (1 >= 1)`},
+		{openapi.Schema{
+			Type:         openapi.TypeNumber,
+			ExclusiveMin: new(2.0),
+			ExclusiveMax: new(1.0),
+		}, `exclusiveMinimum (2) is invalid: exclusiveMinimum is not less than exclusiveMaximum (2 >= 1)`},
+		{openapi.Schema{
+			Type:          openapi.TypeObject,
+			Properties:    openapi.Schemas{"a": {}, "b": {}},
+			Required:      []string{"a", "b"},
+			MaxProperties: new(uint(1)),
+		}, `maxProperties (1) is invalid: fewer than the 2 required properties`},
+		{openapi.Schema{
+			Type:    openapi.TypeString,
+			Example: jsontext.Value(`1`),
+		}, `example (1) is invalid: must be a string value`},
+		{openapi.Schema{
+			Type:     openapi.TypeInteger,
+			Examples: []jsontext.Value{jsontext.Value(`1`), jsontext.Value(`"two"`)},
+		}, `examples[1] ("two") is invalid: must be a integer value`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {

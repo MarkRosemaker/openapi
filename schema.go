@@ -24,11 +24,6 @@ import (
 //
 // [Specification]: https://spec.openapis.org/oas/v3.2.0.html#schema-object
 type Schema struct {
-	// The location of another schema this one also applies, e.g. "#/components/schemas/Pet".
-	Ref string `json:"$ref,omitempty" yaml:"$ref,omitempty"`
-	// The schema Ref points to, set when the document is loaded.
-	Resolved *Schema `json:"-" yaml:"-"`
-
 	// The name of the schema.
 	Title string `json:"title,omitempty" yaml:"title,omitempty"`
 	// A short description of the schema.
@@ -122,11 +117,22 @@ type Schema struct {
 	// Whether the schema should no longer be used.
 	Deprecated bool `json:"deprecated,omitzero" yaml:"deprecated,omitempty"`
 
+	// Another schema this one also applies, written last as "$ref"; see schema_json.go.
+	Ref *SchemaRef `json:"-" yaml:"-"`
+
 	// This object MAY be extended with Specification Extensions.
 	Extensions Extensions `json:",embed" yaml:"-"`
 
 	// an index to the original location of this object
 	idx int
+}
+
+// SchemaRef is a schema's "$ref": the location of another schema, and that schema once the document is loaded.
+type SchemaRef struct {
+	// The location of the schema, e.g. "#/components/schemas/Pet".
+	Identifier string
+	// The schema Identifier points to, set when the document is loaded.
+	Value *Schema
 }
 
 func getIndexSchema(s *Schema) int              { return s.idx }
@@ -135,8 +141,8 @@ func setIndexSchema(s *Schema, idx int) *Schema { s.idx = idx; return s }
 func (s *Schema) Validate() error {
 	s.Description = strings.TrimSpace(s.Description)
 
-	if s.Ref != "" && s.Resolved == nil {
-		return &errpath.ErrField{Field: "$ref", Err: fmt.Errorf("%q was not resolved", s.Ref)}
+	if s.Ref != nil && s.Ref.Value == nil {
+		return &errpath.ErrField{Field: "$ref", Err: fmt.Errorf("%q was not resolved", s.Ref.Identifier)}
 	}
 
 	// type is optional (JSON Schema 2020-12); keywords tied to one type still require it, below.
@@ -278,6 +284,20 @@ func (s *Schema) Validate() error {
 				Message: "not an integer",
 			}}
 		}
+
+		if s.ExclusiveMin != nil && *s.ExclusiveMin != float64(int(*s.ExclusiveMin)) {
+			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.ExclusiveMin,
+				Message: "not an integer",
+			}}
+		}
+
+		if s.ExclusiveMax != nil && *s.ExclusiveMax != float64(int(*s.ExclusiveMax)) {
+			return &errpath.ErrField{Field: "exclusiveMaximum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.ExclusiveMax,
+				Message: "not an integer",
+			}}
+		}
 	}
 
 	if s.Type == TypeNumber || s.Type == TypeInteger {
@@ -285,6 +305,27 @@ func (s *Schema) Validate() error {
 			return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
 				Value:   *s.Min,
 				Message: fmt.Sprintf("minimum is greater than maximum (%v > %v)", *s.Min, *s.Max),
+			}}
+		}
+
+		if s.Min != nil && s.ExclusiveMax != nil && *s.Min >= *s.ExclusiveMax {
+			return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.Min,
+				Message: fmt.Sprintf("minimum is not less than exclusiveMaximum (%v >= %v)", *s.Min, *s.ExclusiveMax),
+			}}
+		}
+
+		if s.ExclusiveMin != nil && s.Max != nil && *s.ExclusiveMin >= *s.Max {
+			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.ExclusiveMin,
+				Message: fmt.Sprintf("exclusiveMinimum is not less than maximum (%v >= %v)", *s.ExclusiveMin, *s.Max),
+			}}
+		}
+
+		if s.ExclusiveMin != nil && s.ExclusiveMax != nil && *s.ExclusiveMin >= *s.ExclusiveMax {
+			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
+				Value:   *s.ExclusiveMin,
+				Message: fmt.Sprintf("exclusiveMinimum is not less than exclusiveMaximum (%v >= %v)", *s.ExclusiveMin, *s.ExclusiveMax),
 			}}
 		}
 	} else if s.Min != nil {
@@ -327,6 +368,23 @@ func (s *Schema) Validate() error {
 				Value:   jsonDisplayValue(s.Const),
 				Message: fmt.Sprintf("must be a %s value", s.Type),
 			}}
+		}
+
+		// null is let through: openapi-enrich marks a value only ever seen as null with an example of null
+		if s.Example != nil && s.Example.Kind() != jsontext.KindNull && !s.allowsKindOf(s.Example) {
+			return &errpath.ErrField{Field: "example", Err: &errpath.ErrInvalid[any]{
+				Value:   jsonDisplayValue(s.Example),
+				Message: fmt.Sprintf("must be a %s value", s.Type),
+			}}
+		}
+
+		for i, ev := range s.Examples {
+			if ev.Kind() != jsontext.KindNull && !s.allowsKindOf(ev) {
+				return &errpath.ErrField{Field: "examples", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
+					Value:   jsonDisplayValue(ev),
+					Message: fmt.Sprintf("must be a %s value", s.Type),
+				}}}
+			}
 		}
 	}
 
@@ -412,6 +470,13 @@ func (s *Schema) Validate() error {
 			if err := s.AdditionalProperties.Validate(); err != nil {
 				return &errpath.ErrField{Field: "additionalProperties", Err: err}
 			}
+		}
+
+		if s.MaxProperties != nil && uint(len(s.Required)) > *s.MaxProperties {
+			return &errpath.ErrField{Field: "maxProperties", Err: &errpath.ErrInvalid[uint]{
+				Value:   *s.MaxProperties,
+				Message: fmt.Sprintf("fewer than the %d required properties", len(s.Required)),
+			}}
 		}
 	} else if s.Properties != nil {
 		return &errpath.ErrField{Field: "properties", Err: &errpath.ErrInvalid[string]{
@@ -583,13 +648,13 @@ func (l *loader) collectSchema(s *Schema, ref ref) {
 }
 
 func (l *loader) resolveSchema(s *Schema) error {
-	if s.Ref != "" {
-		target, ok := l.schemas[s.Ref]
+	if s.Ref != nil {
+		target, ok := l.schemas[s.Ref.Identifier]
 		if !ok {
-			return fmt.Errorf("couldn't resolve %q", s.Ref)
+			return fmt.Errorf("couldn't resolve %q", s.Ref.Identifier)
 		}
 
-		s.Resolved = target
+		s.Ref.Value = target
 	}
 
 	if err := l.resolveSchemaList(s.AllOf); err != nil {
@@ -635,8 +700,8 @@ func (l *loader) resolveSchema(s *Schema) error {
 
 // derefType is the schema's type, or for a reference without one, the type of the schema it points to.
 func (s *Schema) derefType() DataType {
-	for s.Type == "" && s.Resolved != nil {
-		s = s.Resolved
+	for s.Type == "" && s.Ref != nil && s.Ref.Value != nil {
+		s = s.Ref.Value
 	}
 
 	return s.Type
@@ -644,7 +709,7 @@ func (s *Schema) derefType() DataType {
 
 func (s *Schema) isEmpty() bool {
 	return s == nil ||
-		(s.Ref == "" && s.Type == "" && !s.Nullable && s.Format == "" &&
+		(s.Ref == nil && s.Type == "" && !s.Nullable && s.Format == "" &&
 			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
 			s.Min == nil && s.Max == nil && s.ExclusiveMin == nil && s.ExclusiveMax == nil &&
 			s.MinLength == 0 && s.MaxLength == nil && s.Pattern == nil &&
