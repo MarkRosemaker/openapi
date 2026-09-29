@@ -695,6 +695,12 @@ func (l *loader) resolveSchema(s *Schema) error {
 		}
 	}
 
+	if s.Discriminator != nil {
+		if err := l.resolveDiscriminator(s.Discriminator); err != nil {
+			return &errpath.ErrField{Field: "discriminator", Err: err}
+		}
+	}
+
 	return nil
 }
 
