@@ -303,34 +303,34 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: openapi.TypeArray,
 			PrefixItems: openapi.SchemaList{
-				&openapi.Schema{Required: []string{"id"}},
+				&openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 			},
 			Items: &openapi.Schema{Type: openapi.TypeBoolean},
-		}, `prefixItems[0].required is invalid: only valid for object type, got no type`},
+		}, `prefixItems[0].required is invalid: only valid for object type, got string`},
 		{openapi.Schema{
 			AllOf: openapi.SchemaList{
-				&openapi.Schema{Required: []string{"id"}},
+				&openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 			},
-		}, `allOf[0].required is invalid: only valid for object type, got no type`},
+		}, `allOf[0].required is invalid: only valid for object type, got string`},
 		{openapi.Schema{
 			OneOf: openapi.SchemaList{
-				&openapi.Schema{Required: []string{"id"}},
+				&openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 			},
-		}, `oneOf[0].required is invalid: only valid for object type, got no type`},
+		}, `oneOf[0].required is invalid: only valid for object type, got string`},
 		{openapi.Schema{
 			AnyOf: openapi.SchemaList{
-				&openapi.Schema{Required: []string{"id"}},
+				&openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 			},
-		}, `anyOf[0].required is invalid: only valid for object type, got no type`},
+		}, `anyOf[0].required is invalid: only valid for object type, got string`},
 		{openapi.Schema{
-			Not: &openapi.Schema{Required: []string{"id"}},
-		}, `not.required is invalid: only valid for object type, got no type`},
+			Not: &openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
+		}, `not.required is invalid: only valid for object type, got string`},
 		{openapi.Schema{
 			Type: openapi.TypeObject,
 			Properties: openapi.Schemas{
-				"foo": &openapi.Schema{Required: []string{"id"}},
+				"foo": &openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 			},
-		}, `properties["foo"].required is invalid: only valid for object type, got no type`},
+		}, `properties["foo"].required is invalid: only valid for object type, got string`},
 		{openapi.Schema{
 			Type:     openapi.TypeObject,
 			Required: []string{"foo"},
@@ -338,9 +338,9 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: openapi.TypeObject,
 			AdditionalProperties: &openapi.AdditionalProperties{
-				Schema: &openapi.Schema{Required: []string{"id"}},
+				Schema: &openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 			},
-		}, `additionalProperties.required is invalid: only valid for object type, got no type`},
+		}, `additionalProperties.required is invalid: only valid for object type, got string`},
 		{openapi.Schema{
 			Type:       openapi.TypeBoolean,
 			Properties: openapi.Schemas{},
@@ -363,20 +363,10 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:  openapi.TypeInteger,
 			Const: jsontext.Value(`"401"`),
 		}, `const ("401") is invalid: must be a integer value`},
-		// keywords that only apply to one type still require it.
-		{openapi.Schema{
-			Properties: openapi.Schemas{},
-		}, `properties is invalid: only valid for object type, got no type`},
-		{openapi.Schema{
-			Required: []string{"id"},
-		}, `required is invalid: only valid for object type, got no type`},
 		{openapi.Schema{
 			Type:    openapi.TypeInteger,
 			Pattern: regexp.MustCompile(`^\d+$`),
 		}, `pattern is invalid: only valid for string type, got integer`},
-		{openapi.Schema{
-			ContentMediaType: "image/png",
-		}, `contentMediaType is invalid: only valid for string type, got no type`},
 		{openapi.Schema{
 			Type:            openapi.TypeObject,
 			ContentEncoding: "base64",
@@ -582,5 +572,32 @@ func TestSchema_UnmarshalPrefixItems(t *testing.T) {
 
 	if len(s.Extensions) != 0 {
 		t.Errorf("Extensions = %s, want empty", s.Extensions)
+	}
+}
+
+func TestSchema_Validate_Untyped(t *testing.T) {
+	t.Parallel()
+
+	maxItems := uint(3)
+	multipleOf := 4.0
+
+	// without a type, each keyword applies to instances of its own type (JSON Schema 2020-12 core, §7.6.1)
+	s := &openapi.Schema{
+		AnyOf:      openapi.SchemaList{{Type: openapi.TypeObject}, {Type: openapi.TypeNull}},
+		Properties: openapi.Schemas{"width": {Type: openapi.TypeInteger, MultipleOf: &multipleOf}},
+		Required:   []string{"width", "height"},
+		MinLength:  1,
+		Format:     openapi.FormatUUID,
+		MultipleOf: &multipleOf,
+		MaxItems:   &maxItems,
+	}
+	if err := s.Validate(); err != nil {
+		t.Fatal(err)
+	}
+
+	// the keywords themselves are still checked
+	s.Properties["width"].Type = openapi.TypeString
+	if err := s.Validate(); err == nil || err.Error() != `properties["width"].multipleOf (4) is invalid: only valid for number type, got string` {
+		t.Fatalf("got %v", err)
 	}
 }

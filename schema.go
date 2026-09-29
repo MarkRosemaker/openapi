@@ -156,7 +156,7 @@ func (s *Schema) Validate() error {
 		return &errpath.ErrField{Field: "$ref", Err: fmt.Errorf("%q was not resolved", s.Ref.Identifier)}
 	}
 
-	// type is optional (JSON Schema 2020-12); keywords tied to one type still require it, below.
+	// type is optional (JSON Schema 2020-12): without one, every type's keywords apply, each to instances of its type.
 	if s.Type != "" {
 		if err := s.Type.Validate(); err != nil {
 			return &errpath.ErrField{Field: "type", Err: err}
@@ -173,14 +173,14 @@ func (s *Schema) Validate() error {
 	switch s.Format {
 	case "": // no format
 	case FormatInt32, FormatInt64, FormatUint, FormatUint32, FormatUint64:
-		if s.Type != TypeInteger {
+		if !s.allows(TypeInteger) {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
 				Message: fmt.Sprintf("only valid for integer type, got %s", s.typeOrNone()),
 			}}
 		}
 	case FormatFloat, FormatDouble:
-		if s.Type != TypeNumber {
+		if !s.allows(TypeNumber) {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
 				Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
@@ -189,7 +189,7 @@ func (s *Schema) Validate() error {
 	case FormatEmail, FormatPassword,
 		FormatUUID, FormatURI, FormatURIRef, FormatZipCode,
 		FormatIPv4, FormatIPv6:
-		if s.Type != TypeString {
+		if !s.allows(TypeString) {
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
 				Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
@@ -197,7 +197,7 @@ func (s *Schema) Validate() error {
 		}
 	case FormatDuration, FormatDate, FormatDateTime:
 		switch s.Type {
-		case TypeInteger, TypeString:
+		case "", TypeInteger, TypeString:
 		default:
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
@@ -206,7 +206,7 @@ func (s *Schema) Validate() error {
 		}
 	case FormatByte, FormatBinary:
 		switch s.Type {
-		case TypeString:
+		case "", TypeString:
 		default:
 			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
 				Value:   s.Format,
@@ -219,7 +219,7 @@ func (s *Schema) Validate() error {
 
 	// String
 
-	if s.Type != TypeString {
+	if !s.allows(TypeString) {
 		for _, kw := range []struct {
 			field string
 			set   bool
@@ -318,7 +318,7 @@ func (s *Schema) Validate() error {
 		}
 	}
 
-	if s.Type == TypeNumber || s.Type == TypeInteger {
+	if s.allows(TypeNumber) || s.allows(TypeInteger) {
 		if s.Min != nil && s.Max != nil && *s.Min > *s.Max {
 			return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
 				Value:   *s.Min,
@@ -420,7 +420,7 @@ func (s *Schema) Validate() error {
 	// Array
 
 	// validate min and max items
-	if s.Type == TypeArray {
+	if s.allows(TypeArray) {
 		if s.MaxItems != nil && s.MinItems > *s.MaxItems {
 			return &errpath.ErrField{Field: "minItems", Err: &errpath.ErrInvalid[uint]{
 				Value:   s.MinItems,
@@ -470,13 +470,14 @@ func (s *Schema) Validate() error {
 
 	// Object
 
-	if s.Type == TypeObject {
+	if s.allows(TypeObject) {
 		if err := s.Properties.Validate(); err != nil {
 			return &errpath.ErrField{Field: "properties", Err: err}
 		}
 
 		for i, r := range s.Required {
-			if _, ok := s.Properties[r]; ok {
+			// without a type, required is a constraint on whatever object properties hold
+			if _, ok := s.Properties[r]; ok || s.Type == "" {
 				continue
 			}
 
@@ -607,6 +608,9 @@ func (s *Schema) Validate() error {
 
 	return validateExtensions(s.Extensions)
 }
+
+// allows reports whether the schema's keywords for type t apply: it is of type t, or of no type at all.
+func (s *Schema) allows(t DataType) bool { return s.Type == "" || s.Type == t }
 
 // typeOrNone names the schema's type for error messages.
 func (s *Schema) typeOrNone() string {
