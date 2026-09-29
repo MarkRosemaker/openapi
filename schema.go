@@ -149,7 +149,11 @@ func (s *Schema) Replace(v *Schema) {
 func getIndexSchema(s *Schema) int              { return s.idx }
 func setIndexSchema(s *Schema, idx int) *Schema { s.idx = idx; return s }
 
-func (s *Schema) Validate() error {
+// Validate checks the schema for correctness.
+func (s *Schema) Validate() error { return s.validate(false) }
+
+// validate checks the schema; extended says another component schema builds on it through allOf.
+func (s *Schema) validate(extended bool) error {
 	s.Description = strings.TrimSpace(s.Description)
 
 	if s.Ref != nil && s.Ref.Value == nil {
@@ -532,9 +536,10 @@ func (s *Schema) Validate() error {
 	}
 
 	if s.Discriminator != nil {
-		if len(s.OneOf) == 0 && len(s.AnyOf) == 0 && len(s.AllOf) == 0 {
+		// a parent schema may carry the discriminator for the schemas extending it through allOf
+		if len(s.OneOf) == 0 && len(s.AnyOf) == 0 && len(s.AllOf) == 0 && !extended {
 			return &errpath.ErrField{Field: "discriminator", Err: &errpath.ErrInvalid[string]{
-				Message: "only valid with oneOf, anyOf or allOf",
+				Message: "only valid with oneOf, anyOf or allOf, or on a component schema another extends through allOf",
 			}}
 		}
 
