@@ -120,8 +120,8 @@ func TestParameter_Validate_Error(t *testing.T) {
 			Name:     "myname",
 			In:       openapi.ParameterLocationPath,
 			Required: true,
-			Schema:   &openapi.Schema{Required: []string{"id"}},
-		}, "schema.required is invalid: only valid for object type, got no type"},
+			Schema:   &openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
+		}, "schema.required is invalid: only valid for object type, got string"},
 		{openapi.Parameter{
 			Name:            "myname",
 			In:              openapi.ParameterLocationPath,

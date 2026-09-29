@@ -77,9 +77,9 @@ func TestHeader_Validate_Error(t *testing.T) {
 		},
 		{
 			openapi.Header{
-				Schema: &openapi.Schema{Required: []string{"id"}},
+				Schema: &openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 			},
-			"schema.required is invalid: only valid for object type, got no type",
+			"schema.required is invalid: only valid for object type, got string",
 		},
 		{
 			openapi.Header{
@@ -91,11 +91,11 @@ func TestHeader_Validate_Error(t *testing.T) {
 			openapi.Header{
 				Content: openapi.Content{
 					openapi.MediaRangeJSON: {
-						Schema: &openapi.Schema{Required: []string{"id"}},
+						Schema: &openapi.Schema{Type: openapi.TypeString, Required: []string{"id"}},
 					},
 				},
 			},
-			`content["application/json"].schema.required is invalid: only valid for object type, got no type`,
+			`content["application/json"].schema.required is invalid: only valid for object type, got string`,
 		},
 		{openapi.Header{
 			Content: openapi.Content{openapi.MediaRangeJSON: {}},

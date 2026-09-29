@@ -126,3 +126,29 @@ func TestSchema_Replace(t *testing.T) {
 		t.Errorf("got %s, want %s", got, want)
 	}
 }
+
+func TestSchema_PropertyNamesRef(t *testing.T) {
+	t.Parallel()
+
+	doc, err := openapi.LoadFromDataJSON([]byte(`{
+  "openapi": "3.1.0",
+  "info": {"title": "t", "version": "1"},
+  "components": {
+    "schemas": {
+      "Direction": {"type": "string", "enum": ["north", "south"]},
+      "Directions": {
+        "type": "object",
+        "propertyNames": {"$ref": "#/components/schemas/Direction"}
+      }
+    }
+  }
+}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := doc.Components.Schemas
+	if got := s["Directions"].PropertyNames.Ref.Value; got != s["Direction"] {
+		t.Errorf("propertyNames resolves to %v, want Direction", got)
+	}
+}
