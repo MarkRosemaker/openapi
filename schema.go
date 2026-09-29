@@ -86,8 +86,7 @@ type Schema struct {
 	// on. Items still applies to any element beyond the ones listed here.
 	// See JSON Schema 2020-12, "prefixItems".
 	PrefixItems SchemaList `json:"prefixItems,omitempty" yaml:"prefixItems,omitempty"`
-	// The items of the array. When the type is array, this property is REQUIRED
-	// unless PrefixItems already covers every element.
+	// The items of the array; without it, any items are allowed (JSON Schema 2020-12).
 	// The empty schema for `items` indicates a media type of `application/octet-stream`.
 	Items *Schema `json:"items,omitzero" yaml:"items,omitempty"`
 
@@ -370,8 +369,7 @@ func (s *Schema) Validate() error {
 			}}
 		}
 
-		// null is let through: openapi-enrich marks a value only ever seen as null with an example of null
-		if s.Example != nil && s.Example.Kind() != jsontext.KindNull && !s.allowsKindOf(s.Example) {
+		if s.Example != nil && !s.allowsKindOf(s.Example) {
 			return &errpath.ErrField{Field: "example", Err: &errpath.ErrInvalid[any]{
 				Value:   jsonDisplayValue(s.Example),
 				Message: fmt.Sprintf("must be a %s value", s.Type),
@@ -379,7 +377,7 @@ func (s *Schema) Validate() error {
 		}
 
 		for i, ev := range s.Examples {
-			if ev.Kind() != jsontext.KindNull && !s.allowsKindOf(ev) {
+			if !s.allowsKindOf(ev) {
 				return &errpath.ErrField{Field: "examples", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
 					Value:   jsonDisplayValue(ev),
 					Message: fmt.Sprintf("must be a %s value", s.Type),
@@ -406,12 +404,6 @@ func (s *Schema) Validate() error {
 					Err:   &errpath.ErrIndex{Index: i, Err: err},
 				}
 			}
-		}
-
-		// items is only required when prefixItems doesn't already cover
-		// every element.
-		if s.Items == nil && len(s.PrefixItems) == 0 {
-			return &errpath.ErrField{Field: "items", Err: &errpath.ErrRequired{}}
 		}
 
 		// empty schema for items indicates a media type of application/octet-stream.

@@ -14,7 +14,10 @@ func TestSchema_JSON(t *testing.T) {
 	t.Parallel()
 
 	testJSON(t, []byte(`{
-		"type": "object",
+		"type": [
+			"object",
+			"null"
+		],
 		"example": null
 	}`), &openapi.Schema{})
 
@@ -157,6 +160,7 @@ func TestSchema_Validate(t *testing.T) {
 		{},
 		{Description: "Inference output."},
 		{Enum: []jsontext.Value{jsontext.Value(`"error"`)}},
+		{Type: openapi.TypeArray, MaxItems: new(uint(0))},
 		{Const: jsontext.Value("401")},
 		// oneOf, anyOf, not allow type to be omitted
 		// See: https://spec.openapis.org/oas/v3.2.0.html#schema-object
@@ -195,9 +199,6 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Type: "foo",
 		}, `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object", "null"`},
-		{openapi.Schema{
-			Type: openapi.TypeArray,
-		}, `items is required`},
 		{openapi.Schema{
 			Type:   openapi.TypeString,
 			Format: "foo",
@@ -462,6 +463,10 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Type:     openapi.TypeInteger,
 			Examples: []jsontext.Value{jsontext.Value(`1`), jsontext.Value(`"two"`)},
 		}, `examples[1] ("two") is invalid: must be a integer value`},
+		{openapi.Schema{
+			Type:    openapi.TypeObject,
+			Example: jsontext.Value(`null`),
+		}, `example ("null") is invalid: must be a object value`},
 	} {
 		t.Run(tc.err, func(t *testing.T) {
 			if err := tc.s.Validate(); err == nil || err.Error() != tc.err {
