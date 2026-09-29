@@ -700,7 +700,10 @@ func (l *loader) resolveSchema(s *Schema) error {
 
 // derefType is the schema's type, or for a reference without one, the type of the schema it points to.
 func (s *Schema) derefType() DataType {
-	for s.Type == "" && s.Ref != nil && s.Ref.Value != nil {
+	// a document built in code has not been checked for cycles, so stop at the first schema seen twice
+	seen := map[*Schema]bool{}
+	for s.Type == "" && s.Ref != nil && s.Ref.Value != nil && !seen[s] {
+		seen[s] = true
 		s = s.Ref.Value
 	}
 

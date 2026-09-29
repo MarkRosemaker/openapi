@@ -169,6 +169,10 @@ func (l *loader) resolveComponents(c Components) error {
 		return &errpath.ErrField{Field: "schemas", Err: err}
 	}
 
+	if err := checkSchemaCycles(c.Schemas); err != nil {
+		return &errpath.ErrField{Field: "schemas", Err: err}
+	}
+
 	if err := l.resolveResponses(c.Responses); err != nil {
 		return &errpath.ErrField{Field: "responses", Err: err}
 	}
