@@ -66,7 +66,6 @@ stop.
 Edit the directory, never the file:
 
 - `AGENTS.md` → `AGENTS/`
-- `CLAUDE.md` → `AGENTS/`
 - `README.md` → `README/`
 - `Makefile` → `mk/`
 
