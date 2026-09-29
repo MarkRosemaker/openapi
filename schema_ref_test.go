@@ -109,17 +109,20 @@ func TestSchema_Replace(t *testing.T) {
 	props.Set("b", &openapi.Schema{Type: openapi.TypeInteger})
 	props.Set("c", &openapi.Schema{Type: openapi.TypeBoolean})
 
-	// replacing b with a schema from elsewhere keeps it second
+	// replacing a with the last of four schemas elsewhere keeps it first
 	var other openapi.Schemas
-	other.Set("x", &openapi.Schema{Type: openapi.TypeNumber})
-	props["b"].Replace(other["x"])
+	for _, k := range []string{"w", "x", "y", "z"} {
+		other.Set(k, &openapi.Schema{Type: openapi.TypeNumber})
+	}
+
+	props["a"].Replace(other["z"])
 
 	var order []string
 	for k, s := range props.ByIndex() {
 		order = append(order, k+":"+string(s.Type))
 	}
 
-	if got, want := strings.Join(order, " "), "a:string b:number c:boolean"; got != want {
+	if got, want := strings.Join(order, " "), "a:number b:integer c:boolean"; got != want {
 		t.Errorf("got %s, want %s", got, want)
 	}
 }
