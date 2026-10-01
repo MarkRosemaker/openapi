@@ -100,6 +100,7 @@ to decode a response, recording the call and enriching again closes the gap.
 
 - [**Go Reference**](https://pkg.go.dev/github.com/MarkRosemaker/openapi): API documentation.
 - [**Architecture**](docs/architecture.md): how the parts fit together.
+- [**Roadmap**](docs/roadmap.md): what is planned and not yet done.
 
 ## Contributing
 
