@@ -9,6 +9,6 @@
 		"yaml"
 	],
 	"coverage": 100,
-	"devtoolVersion": "v0.0.0-20260929233049-f0f953dbd40d",
+	"devtoolVersion": "v0.0.0-20261003221119-dc596b955388",
 	"kind": "library"
 }

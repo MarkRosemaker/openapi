@@ -36,12 +36,10 @@ cost you something.
 
 ## Cross-repo dependencies
 
-Fixing a bug in one repository ends at that repository's pull request.
-Never bump another repository's dependency on it, vendor the fix, or open
-a pull request there yourself — not even to pick up your own merged fix.
-Propagating a fix downstream is the owner's decision: they decide which
-of their repositories takes it, and when. Report the fix as merged and
-stop.
+A scheduled run bumps every repository's dependencies every six hours, so a
+fix merged here reaches the repositories that use it without help. Don't
+bump, vendor or open a pull request elsewhere just to pass it on. Do, where
+the work in hand cannot go on without the fix.
 
 ## Committing
 
