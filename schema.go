@@ -119,6 +119,10 @@ type Schema struct {
 	Examples []jsontext.Value `json:"examples,omitempty" yaml:"examples,omitempty"`
 	// Whether the schema should no longer be used.
 	Deprecated bool `json:"deprecated,omitzero" yaml:"deprecated,omitempty"`
+	// Whether the value is only ever sent in responses, such as an ID the server assigns, and left out of requests.
+	ReadOnly bool `json:"readOnly,omitzero" yaml:"readOnly,omitempty"`
+	// Whether the value is only ever sent in requests, such as a password, and left out of responses.
+	WriteOnly bool `json:"writeOnly,omitzero" yaml:"writeOnly,omitempty"`
 
 	// Another schema this one also applies, written last as "$ref"; see schema_json.go.
 	Ref *SchemaRef `json:"-" yaml:"-"`
@@ -773,7 +777,7 @@ func (s *Schema) isEmpty() bool {
 			s.MinItems == 0 && s.MaxItems == nil && !s.UniqueItems && len(s.PrefixItems) == 0 && s.Items == nil &&
 			s.Properties == nil && s.Required == nil &&
 			s.AdditionalProperties == nil && s.MaxProperties == nil && s.PropertyNames == nil && s.Discriminator == nil &&
-			len(s.Examples) == 0 && !s.Deprecated &&
+			len(s.Examples) == 0 && !s.Deprecated && !s.ReadOnly && !s.WriteOnly &&
 			s.ContentMediaType == "" && s.ContentEncoding == "" &&
 			s.Const == nil &&
 			s.Example == nil)
