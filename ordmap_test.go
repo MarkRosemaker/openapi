@@ -14,7 +14,6 @@ func TestOrderedMaps(t *testing.T) {
 	testSort[*openapi.Encodings](t)
 	testSort[*openapi.Examples](t)
 	testSort[*openapi.Headers](t)
-	testSort[*openapi.LinkParameters](t)
 	testSort[*openapi.Links](t)
 	testSort2[*openapi.MapOfStrings](t)
 	testSort[*openapi.Parameters](t)

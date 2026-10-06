@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	//go:embed examples/openapi.json
+	//go:embed testdata/openapi.json
 	exampleJSON []byte
-	//go:embed examples/openapi.yaml
+	//go:embed testdata/openapi.yaml
 	exampleYAML []byte
 )
 
@@ -25,7 +25,7 @@ func TestLoadFromFile(t *testing.T) {
 	t.Run("example json file", func(t *testing.T) {
 		t.Parallel()
 
-		doc, err := openapi.LoadFromFile("examples/openapi.json")
+		doc, err := openapi.LoadFromFile("testdata/openapi.json")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -38,7 +38,7 @@ func TestLoadFromFile(t *testing.T) {
 	t.Run("example yaml file", func(t *testing.T) {
 		t.Parallel()
 
-		doc, err := openapi.LoadFromFile("examples/openapi.yaml")
+		doc, err := openapi.LoadFromFile("testdata/openapi.yaml")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -61,7 +61,7 @@ func TestLoadFromFile_Error(t *testing.T) {
 	})
 
 	t.Run("invalid extension", func(t *testing.T) {
-		if _, err := openapi.LoadFromFile("examples/invalid.txt"); err == nil {
+		if _, err := openapi.LoadFromFile("testdata/invalid.txt"); err == nil {
 			t.Fatal("expected error")
 		} else if want := "unsupported file extension: .txt"; err.Error() != want {
 			t.Fatalf("got: %v, want: %v", err, want)

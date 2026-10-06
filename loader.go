@@ -3,6 +3,7 @@ package openapi
 import (
 	"bytes"
 	"encoding/json/jsontext"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -65,9 +66,10 @@ func (l *loader) LoadFromFile(location string) (*Document, error) {
 		}
 	}()
 
-	return doc, errorsJoin(err, f.Close())
+	return doc, errors.Join(err, f.Close())
 }
 
+// LoadFromData reads an OpenAPI specification in JSON or YAML from data.
 func LoadFromData(data []byte) (*Document, error) {
 	return newLoader().LoadFromData(data)
 }

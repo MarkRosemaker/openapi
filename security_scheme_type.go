@@ -6,8 +6,10 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
+// SecuritySchemeType is the kind of a security scheme.
 type SecuritySchemeType string
 
+// The kinds of security scheme.
 const (
 	SecuritySchemeTypeAPIKey        SecuritySchemeType = "apiKey"
 	SecuritySchemeTypeHTTP          SecuritySchemeType = "http"

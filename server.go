@@ -19,6 +19,7 @@ type Server struct {
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
+// Validate returns an error if the Server breaks the specification.
 func (s *Server) Validate() error {
 	if s.URL == "" {
 		return &errpath.ErrField{Field: "url", Err: &errpath.ErrRequired{}}

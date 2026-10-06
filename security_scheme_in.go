@@ -6,8 +6,10 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
+// SecuritySchemeIn is where an API key is sent.
 type SecuritySchemeIn string
 
+// The places an API key can be sent in.
 const (
 	SecuritySchemeInQuery  SecuritySchemeIn = "query"
 	SecuritySchemeInHeader SecuritySchemeIn = "header"

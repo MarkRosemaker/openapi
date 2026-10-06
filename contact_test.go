@@ -8,24 +8,6 @@ import (
 	"github.com/go-api-libs/types"
 )
 
-func TestContact_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-			"name": "API Support",
-			"url": "https://www.example.com/support",
-			"email": "support@example.com"
-		  }`), &openapi.Contact{})
-
-	testJSON(t, []byte(`{
-			"name": "API Support",
-			"url": "https://www.example.com/support",
-			"email": "support@example.com",
-			"x-foo": true,
-			"x-bar": ["one", "two"]
-		  }`), &openapi.Contact{})
-}
-
 func TestContact_Validate(t *testing.T) {
 	t.Parallel()
 

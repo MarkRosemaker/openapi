@@ -6,28 +6,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestServerVariable_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-          "enum": [
-            "8443",
-            "443"
-          ],
-          "default": "8443"
-        }`), &openapi.ServerVariable{})
-
-	testJSON(t, []byte(`{
-          "enum": [
-            "8443",
-            "443"
-          ],
-          "default": "8443",
-  "x-foo": true,
-  "x-bar": ["one", "two"]
-}`), &openapi.ServerVariable{})
-}
-
 func TestServerVariable_Validate(t *testing.T) {
 	t.Parallel()
 

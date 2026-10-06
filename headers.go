@@ -9,8 +9,10 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// Headers maps header names to headers or references to them, in the order they were read.
 type Headers map[string]*HeaderRef
 
+// Validate returns an error if the Headers breaks the specification.
 func (hs Headers) Validate() error {
 	for k, h := range hs.ByIndex() {
 		if err := validateKey(k); err != nil {

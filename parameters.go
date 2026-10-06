@@ -9,8 +9,10 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// Parameters maps names to reusable parameters or references to them, in the order they were read.
 type Parameters map[string]*ParameterRef
 
+// Validate returns an error if the Parameters breaks the specification.
 func (ps Parameters) Validate() error {
 	for name, p := range ps.ByIndex() {
 		if err := validateKey(name); err != nil {

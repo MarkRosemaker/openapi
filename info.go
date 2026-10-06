@@ -29,6 +29,7 @@ type Info struct {
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
+// Validate returns an error if the Info breaks the specification.
 func (i *Info) Validate() error {
 	if i.Title == "" {
 		return &errpath.ErrField{Field: "title", Err: &errpath.ErrRequired{}}

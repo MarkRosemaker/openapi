@@ -28,6 +28,7 @@ type Reference struct {
 	Description string `json:"description,omitempty" yaml:"description,omitempty"`
 }
 
+// Validate returns an error if the Reference breaks the specification.
 func (r *Reference) Validate() error {
 	if r.Identifier == "" {
 		return &errpath.ErrField{Field: "$ref", Err: &errpath.ErrRequired{}}

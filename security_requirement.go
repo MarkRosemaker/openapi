@@ -24,6 +24,7 @@ type SecurityRequirement map[SecuritySchemeName][]string
 // SecuritySchemeName is the name of a security scheme defined in the Security Schemes under the Components Object.
 type SecuritySchemeName string
 
+// Validate returns an error if the SecurityRequirement breaks the specification.
 func (sr SecurityRequirement) Validate() error {
 	for name, scopes := range sr {
 		if name == "" {
@@ -48,6 +49,7 @@ func (sr SecurityRequirement) Validate() error {
 	return nil
 }
 
+// Equals reports whether both requirements name the same schemes with the same scopes.
 func (sr SecurityRequirement) Equals(other SecurityRequirement) bool {
 	return maps.EqualFunc(sr, other, slices.Equal)
 }

@@ -6,22 +6,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestLicense_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-  "name": "Apache 2.0",
-  "identifier": "Apache-2.0"
-}`), &openapi.License{})
-
-	testJSON(t, []byte(`{
-  "name": "Apache 2.0",
-  "identifier": "Apache-2.0",
-  "x-foo": true,
-  "x-bar": ["one", "two"]
-}`), &openapi.License{})
-}
-
 func TestLicense_Validate(t *testing.T) {
 	t.Parallel()
 

@@ -62,6 +62,7 @@ func validateKey(key string) error {
 	}}
 }
 
+// Validate returns an error if the Components breaks the specification.
 func (c *Components) Validate() error {
 	for name := range c.Schemas.ByIndex() {
 		if err := validateKey(name); err != nil {
@@ -134,7 +135,7 @@ func (c *Components) Validate() error {
 	return nil
 }
 
-// For each field that is a map, sorts the map by key.
+// SortMaps sorts each of the components' maps by key.
 func (c *Components) SortMaps() {
 	c.Schemas.Sort()
 	c.Responses.Sort()

@@ -18,6 +18,7 @@ type OAuthFlowImplicit struct {
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
+// Validate returns an error if the OAuthFlowImplicit breaks the specification.
 func (f *OAuthFlowImplicit) Validate() error {
 	if f.AuthorizationURL == nil {
 		return &errpath.ErrField{Field: "authorizationUrl", Err: &errpath.ErrRequired{}}
@@ -43,6 +44,7 @@ type OAuthFlowPassword struct {
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
+// Validate returns an error if the OAuthFlowPassword breaks the specification.
 func (f *OAuthFlowPassword) Validate() error {
 	if f.TokenURL == nil {
 		return &errpath.ErrField{Field: "tokenUrl", Err: &errpath.ErrRequired{}}
@@ -73,6 +75,7 @@ type OAuthFlowAuthorizationCode struct {
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
+// Validate returns an error if the OAuthFlowAuthorizationCode breaks the specification.
 func (f *OAuthFlowAuthorizationCode) Validate() error {
 	if f.AuthorizationURL == nil {
 		return &errpath.ErrField{Field: "authorizationUrl", Err: &errpath.ErrRequired{}}

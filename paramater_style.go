@@ -6,7 +6,7 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// In order to support common ways of serializing simple parameters, a set of `style` values are defined.
+// ParameterStyle is how a parameter is serialized. In order to support common ways of serializing simple parameters, a set of `style` values are defined.
 // Assume a parameter named `color` has one of the following values:
 //
 //	string -> "blue"
@@ -30,16 +30,17 @@ import (
 //	| deepObject     | true      | n/a     | n/a         | n/a                                 | color[R]=100&color[G]=200&color[B]=150 |
 type ParameterStyle string
 
+// The styles a parameter can be serialized in.
 const (
 	ParameterStyleMatrix ParameterStyle = "matrix"
 	ParameterStyleLabel  ParameterStyle = "label"
 	ParameterStyleForm   ParameterStyle = "form"
 	ParameterStyleSimple ParameterStyle = "simple"
-	// Space separated array or object values. This option replaces `collectionFormat` equal to `ssv` from OpenAPI 2.0.
+	// ParameterStyleSpaceDelimited separates array or object values by spaces. This option replaces `collectionFormat` equal to `ssv` from OpenAPI 2.0.
 	ParameterStyleSpaceDelimited ParameterStyle = "spaceDelimited"
-	// Pipe separated array or object values. This option replaces `collectionFormat` equal to `pipes` from OpenAPI 2.0.
+	// ParameterStylePipeDelimited separates array or object values by pipes. This option replaces `collectionFormat` equal to `pipes` from OpenAPI 2.0.
 	ParameterStylePipeDelimited ParameterStyle = "pipeDelimited"
-	// Provides a simple way of rendering nested objects using form parameters.
+	// ParameterStyleDeepObject provides a simple way of rendering nested objects using form parameters.
 	ParameterStyleDeepObject ParameterStyle = "deepObject"
 )
 
@@ -48,6 +49,7 @@ var allParameterStyles = []ParameterStyle{
 	ParameterStyleSpaceDelimited, ParameterStylePipeDelimited, ParameterStyleDeepObject,
 }
 
+// Validate returns an error if the ParameterStyle breaks the specification.
 func (s ParameterStyle) Validate() error {
 	if slices.Contains(allParameterStyles, s) {
 		return nil

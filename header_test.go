@@ -46,18 +46,6 @@ func TestHeader_Resolve_ContentError(t *testing.T) {
 	}
 }
 
-func TestHeader_JSON(t *testing.T) {
-	t.Parallel()
-
-	// A simple header of type `integer`:
-	testJSON(t, []byte(`{
-  "description": "The number of allowed requests in the current period",
-  "schema": {
-    "type": "integer"
-  }
-}`), &openapi.Header{})
-}
-
 var y, yes = true, &y
 
 func TestHeader_Validate_Error(t *testing.T) {

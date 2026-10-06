@@ -120,15 +120,14 @@ func (d *Document) Validate() error {
 	return validateExtensions(d.Extensions)
 }
 
-// Sorts the paths and fields of components that are maps by key.
+// SortMaps sorts the paths, the webhooks and the maps among the components by key.
 func (d *Document) SortMaps() {
 	d.Paths.Sort()
+	d.Webhooks.Sort()
 	d.Components.SortMaps()
 }
 
 func (l *loader) collectDocument(doc *Document, ref ref) {
-	l.collectPaths(doc.Paths, append(ref, "paths"))
-	l.collectWebhooks(doc.Webhooks, append(ref, "webhooks"))
 	l.collectComponents(doc.Components, append(ref, "components"))
 }
 

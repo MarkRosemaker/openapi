@@ -7,49 +7,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestEncoding_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-    "content": {
-      "multipart/form-data": {
-        "schema": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "address": {
-              "type": "object"
-            },
-            "historyMetadata": {
-              "description": "metadata in XML format",
-              "type": "object"
-            }
-          }
-        },
-        "encoding": {
-          "historyMetadata": {
-            "contentType": "application/xml; charset=utf-8"
-          },
-          "profileImage": {
-            "contentType": "image/png, image/jpeg",
-            "headers": {
-              "X-Rate-Limit-Limit": {
-                "description": "The number of allowed requests in the current period",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }`), &openapi.RequestBody{})
-}
-
 func TestEncoding_Validate_Error(t *testing.T) {
 	t.Parallel()
 

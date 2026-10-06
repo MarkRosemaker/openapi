@@ -9,8 +9,10 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// RequestBodies maps names to reusable request bodies or references to them, in the order they were read.
 type RequestBodies map[string]*RequestBodyRef
 
+// Validate returns an error if the RequestBodies breaks the specification.
 func (rs RequestBodies) Validate() error {
 	for k, r := range rs.ByIndex() {
 		if err := validateKey(k); err != nil {
