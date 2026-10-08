@@ -9,8 +9,10 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// CallbackRefs maps names to callbacks or references to them, in the order they were read.
 type CallbackRefs map[string]*CallbackRef
 
+// Validate returns an error if the CallbackRefs breaks the specification.
 func (cs CallbackRefs) Validate() error {
 	for name, c := range cs.ByIndex() {
 		if err := validateKey(name); err != nil {

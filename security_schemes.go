@@ -9,8 +9,10 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// SecuritySchemes maps names to security schemes or references to them, in the order they were read.
 type SecuritySchemes map[SecuritySchemeName]*SecuritySchemeRef
 
+// Validate returns an error if the SecuritySchemes breaks the specification.
 func (ss SecuritySchemes) Validate() error {
 	for name, s := range ss.ByIndex() {
 		if err := validateKey(string(name)); err != nil {

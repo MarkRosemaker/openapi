@@ -9,6 +9,7 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// PathItems maps names to reusable path items or references to them, in the order they were read.
 type PathItems map[string]*PathItemRef
 
 // Validate checks that all keys and values are valid.

@@ -79,7 +79,7 @@ func TestSchema_Recursion(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			testJSON(t, docWithSchemas(schemas), &openapi.Document{})
+			testJSON(t, docWithSchemas(schemas))
 		})
 	}
 }

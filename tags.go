@@ -6,9 +6,10 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// A list of tags used by the document with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the Operation Object must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic.
+// Tags is a list of tags used by the document with additional metadata. The order of the tags can be used to reflect on their order by the parsing tools. Not all tags that are used by the Operation Object must be declared. The tags that are not declared MAY be organized randomly or based on the tools' logic.
 type Tags []*Tag
 
+// Validate returns an error if the Tags breaks the specification.
 func (tags Tags) Validate() error {
 	// Each tag name in the list MUST be unique.
 	names := map[string]error{}

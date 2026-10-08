@@ -9,7 +9,7 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
-// The content of a request body. The key is a media type or media type range, see [RFC7231 Appendix D], and the value describes it. For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
+// Content is the content of a request body. The key is a media type or media type range, see [RFC7231 Appendix D], and the value describes it. For requests that match multiple keys, only the most specific key is applicable. e.g. text/plain overrides text/*
 // [Specification]
 // ([Specification])
 //

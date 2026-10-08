@@ -15,6 +15,7 @@ type parameterID struct {
 	Location ParameterLocation
 }
 
+// Validate returns an error if the ParameterList breaks the specification.
 func (p ParameterList) Validate() error {
 	// The list MUST NOT include duplicated parameters. A unique parameter is defined by a combination of a name and location.
 	params := make(map[parameterID]error, len(p))

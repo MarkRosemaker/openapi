@@ -24,6 +24,7 @@ type Response struct {
 	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
+// Validate returns an error if the Response breaks the specification.
 func (r *Response) Validate() error {
 	if r.Description == "" {
 		return &errpath.ErrField{Field: "description", Err: &errpath.ErrRequired{}}

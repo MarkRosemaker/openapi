@@ -6,22 +6,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestServer_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-	"url": "https://development.gigantic-server.com/v1",
-	"description": "Development server"
-  }`), &openapi.Server{})
-
-	testJSON(t, []byte(`{
-	"url": "https://development.gigantic-server.com/v1",
-	"description": "Development server",
-  "x-foo": true,
-  "x-bar": ["one", "two"]
-}`), &openapi.Server{})
-}
-
 func TestServer_Validate(t *testing.T) {
 	t.Parallel()
 

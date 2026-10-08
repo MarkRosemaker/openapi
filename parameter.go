@@ -124,31 +124,35 @@ func (p *Parameter) Validate() error {
 		}
 	}
 
+	var schemaType DataType
+	if p.Schema != nil {
+		schemaType = p.Schema.derefType()
+	}
+
+	arrayOrObject := schemaType == TypeArray || schemaType == TypeObject
+
 	if p.Style != "" {
 		if err := p.Style.Validate(); err != nil {
 			return &errpath.ErrField{Field: "style", Err: err}
 		}
-	} else if p.In == ParameterLocationQuery && p.Schema != nil &&
-		(p.Schema.derefType() == TypeArray || p.Schema.derefType() == TypeObject) {
+	} else if p.In == ParameterLocationQuery && arrayOrObject {
 		// Form style is the default for query parameters in OpenAPI 3.0+, regardless of whether the parameter is a primitive, array, or object (when style is omitted).
 		// We set the default explicitly, but just for array and object (to not clutter the specification) to make things clearer.
 		p.Style = ParameterStyleForm
 	}
 
-	arrayOrObject := p.Schema != nil &&
-		(p.Schema.derefType() == TypeArray || p.Schema.derefType() == TypeObject)
 	if p.Explode != nil {
 		if p.Schema == nil {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
-				Value:   true,
+				Value:   *p.Explode,
 				Message: "property has no effect when schema is not present",
 			}}
 		}
 
 		if !arrayOrObject {
 			return &errpath.ErrField{Field: "explode", Err: &errpath.ErrInvalid[bool]{
-				Value:   true,
-				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", p.Schema.derefType()),
+				Value:   *p.Explode,
+				Message: fmt.Sprintf("property has no effect when schema type is not array or object, got %q", schemaType),
 			}}
 		}
 	} else if arrayOrObject && p.Style == ParameterStyleForm {

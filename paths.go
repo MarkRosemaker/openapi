@@ -12,7 +12,7 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
-// Holds the relative paths to the individual endpoints and their operations.
+// Paths holds the relative paths to the individual endpoints and their operations.
 // The path is appended to the URL from the Server Object in order to construct the full URL. The Paths MAY be empty, due to Access Control List (ACL) constraints.
 //
 // Note that according to the specification, this object MAY be extended with Specification Extensions, but we do not support that in this implementation.
@@ -21,6 +21,7 @@ import (
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#paths-object
 type Paths map[Path]*PathItem
 
+// Validate returns an error if the Paths breaks the specification.
 func (ps Paths) Validate() error {
 	// The id of an operation MUST be unique among all operations described in the API. The operationId value is case-sensitive.
 	opIDs := map[string]error{}

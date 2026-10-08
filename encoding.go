@@ -32,6 +32,7 @@ type Encoding struct {
 func getIndexEncoding(mt *Encoding) int                { return mt.idx }
 func setIndexEncoding(mt *Encoding, idx int) *Encoding { mt.idx = idx; return mt }
 
+// Validate returns an error if the Encoding breaks the specification.
 func (e *Encoding) Validate() error {
 	if err := e.Headers.Validate(); err != nil {
 		return &errpath.ErrField{Field: "headers", Err: err}

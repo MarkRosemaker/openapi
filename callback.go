@@ -21,6 +21,7 @@ import (
 // [runtime expression]: https://spec.openapis.org/oas/v3.1.0#key-expression
 type Callback map[RuntimeExpression]*PathItemRef
 
+// Validate returns an error if the Callback breaks the specification.
 func (c Callback) Validate() error {
 	for expr, p := range c.ByIndex() {
 		if err := p.Validate(); err != nil {

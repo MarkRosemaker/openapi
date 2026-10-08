@@ -12,6 +12,7 @@ import (
 // Encodings is a map between a property name and its encoding information.
 type Encodings map[string]*Encoding
 
+// Validate returns an error if the Encodings breaks the specification.
 func (es Encodings) Validate() error {
 	for k, e := range es.ByIndex() {
 		if err := e.Validate(); err != nil {

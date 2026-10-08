@@ -12,7 +12,7 @@ import (
 type StatusCode string
 
 const (
-	// Use default to documentat responses other than the ones declared for specific HTTP response codes. Use as a field in the Responses map to cover undeclared responses.
+	// StatusCodeDefault documents responses other than the ones declared for specific HTTP response codes. Use as a field in the Responses map to cover undeclared responses.
 	StatusCodeDefault StatusCode = "default"
 )
 
@@ -20,7 +20,7 @@ const (
 // If the status code is `"default"` or an invalid status code, it returns an empty string.
 func (sc StatusCode) StatusText() string {
 	switch sc {
-	case "default":
+	case StatusCodeDefault:
 		return ""
 	default:
 		code, _ := strconv.Atoi(string(sc))
@@ -33,6 +33,7 @@ func (sc StatusCode) StatusText() string {
 	}
 }
 
+// Validate returns an error if the StatusCode breaks the specification.
 func (sc StatusCode) Validate() error {
 	if sc == StatusCodeDefault {
 		return nil
@@ -54,6 +55,7 @@ func (sc StatusCode) Validate() error {
 	return nil
 }
 
+// IsSuccess reports whether the status code is in the 2XX range.
 func (sc StatusCode) IsSuccess() bool {
 	// Check if the status code is a range definition,
 	// e.g. `1XX`, `2XX`, `3XX`, `4XX`, and `5XX`.

@@ -23,11 +23,13 @@ import (
 // [RFC7231]: https://datatracker.ietf.org/doc/html/rfc7231#appendix-D
 type MediaRange string
 
+// Media ranges the library refers to by name.
 const (
 	MediaRangeJSON = "application/json"
 	MediaRangeHTML = "text/html"
 )
 
+// Validate returns an error if the MediaRange breaks the specification.
 func (mr MediaRange) Validate() error {
 	_, _, err := mime.ParseMediaType(string(mr))
 	return err

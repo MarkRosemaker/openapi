@@ -21,6 +21,7 @@ type OAuthFlows struct {
 	Extensions Extensions `json:",embed" yaml:",embed"`
 }
 
+// Validate returns an error if the OAuthFlows breaks the specification.
 func (f *OAuthFlows) Validate() error {
 	if f.Implicit != nil {
 		if err := f.Implicit.Validate(); err != nil {

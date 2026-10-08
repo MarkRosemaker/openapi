@@ -7,7 +7,7 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// Each Media Type Object provides schema and examples for the media type identified by its key.
+// MediaType provides, as each Media Type Object does, schema and examples for the media type identified by its key.
 //
 // ([Specification])
 //

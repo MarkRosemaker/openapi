@@ -10,128 +10,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestSchema_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-		"type": [
-			"object",
-			"null"
-		],
-		"example": null
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"type": "string",
-		"enum": [
-			"side",
-			"low top-down",
-			"high top-down"
-		],
-		"default": "side"
-	}`), &openapi.Schema{})
-
-	// prefixItems: a tuple-shaped array, positionally typed, with items
-	// covering any element beyond the two listed here.
-	testJSON(t, []byte(`{
-		"type": "array",
-		"prefixItems": [
-			{
-				"type": "string"
-			},
-			{
-				"type": "integer"
-			}
-		],
-		"items": {
-			"type": "boolean"
-		}
-	}`), &openapi.Schema{})
-
-	// additionalProperties: a bare boolean, like any JSON Schema, or a schema
-	// for the values -- each written back exactly as it was read.
-	testJSON(t, []byte(`{
-		"type": "object",
-		"properties": {
-			"id": {
-				"type": "string"
-			}
-		},
-		"additionalProperties": false
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"type": "object",
-		"additionalProperties": true
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"type": "object",
-		"additionalProperties": {
-			"type": "integer"
-		}
-	}`), &openapi.Schema{})
-
-	// a type array of one type and "null": the 3.1 form of nullable.
-	testJSON(t, []byte(`{
-		"title": "Boolean",
-		"description": "true, false or null",
-		"type": [
-			"boolean",
-			"null"
-		]
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"type": "null"
-	}`), &openapi.Schema{})
-
-	// pixellab: a map whose keys are compass directions, and an image size in steps of 4
-	testJSON(t, []byte(`{
-		"type": "object",
-		"additionalProperties": {
-			"type": "string"
-		},
-		"propertyNames": {
-			"enum": [
-				"north",
-				"south"
-			]
-		}
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"type": "integer",
-		"multipleOf": 4
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"type": "integer",
-		"const": 400
-	}`), &openapi.Schema{})
-
-	// a present but empty value differs from an absent one, so it is written back.
-	testJSON(t, []byte(`{
-		"type": "object",
-		"additionalProperties": {}
-	}`), &openapi.Schema{})
-
-	// no value is valid: enum lists none, and not excludes everything.
-	testJSON(t, []byte(`{
-		"type": "string",
-		"enum": []
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"not": {}
-	}`), &openapi.Schema{})
-
-	testJSON(t, []byte(`{
-		"type": "object",
-		"default": {}
-	}`), &openapi.Schema{})
-}
-
 func TestSchema_UnmarshalTypeArray(t *testing.T) {
 	t.Parallel()
 
@@ -435,6 +313,10 @@ func TestSchema_Validate_Error(t *testing.T) {
 		{openapi.Schema{
 			Extensions: jsontext.Value(`{"minContains":1}`),
 		}, `minContains: unknown field or extension without "x-" prefix`},
+		{openapi.Schema{
+			Type:  openapi.TypeArray,
+			Items: &openapi.Schema{Extensions: jsontext.Value(`{"minContains":1}`)},
+		}, `items.minContains: unknown field or extension without "x-" prefix`},
 		{openapi.Schema{
 			Type:         openapi.TypeInteger,
 			ExclusiveMin: new(0.5),

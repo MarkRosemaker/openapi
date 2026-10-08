@@ -2,7 +2,7 @@ package openapi
 
 import "github.com/MarkRosemaker/errpath"
 
-// Runtime expressions allow defining values based on information that will only be available within the HTTP message in an actual API call.
+// RuntimeExpression is a runtime expression. Runtime expressions allow defining values based on information that will only be available within the HTTP message in an actual API call.
 // This mechanism is used by Link Objects and Callback Objects.
 //
 // The runtime expression is defined by the following [ABNF] syntax
@@ -49,6 +49,7 @@ import "github.com/MarkRosemaker/errpath"
 // [RFC7230]: https://tools.ietf.org/html/rfc7230#section-3.2.6
 type RuntimeExpression string
 
+// Validate returns an error if the RuntimeExpression breaks the specification.
 func (expr RuntimeExpression) Validate() error {
 	if expr == "" {
 		return &errpath.ErrRequired{}

@@ -7,8 +7,7 @@ Work not yet done. An entry is deleted once it is.
 `Validate` rejects what the specifications forbid, a MUST. Real documents
 also break what they only advise against, a SHOULD or RECOMMENDED, and
 rejecting those would refuse documents that are legal. Notion's
-specification, in `examples/notion/openapi-undocumented.json`, has
-`"enum": []` twice: JSON Schema 2020-12 says an enum's array "SHOULD have at
+undocumented specification had `"enum": []` twice: JSON Schema 2020-12 says an enum's array "SHOULD have at
 least one element", and an empty one allows no value at all. Downstream it
 was taken for a plain string and merged with five unrelated ones.
 

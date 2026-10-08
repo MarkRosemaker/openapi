@@ -7,31 +7,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestOAuthFlows_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-  "type": "oauth2",
-  "flows": {
-    "implicit": {
-      "authorizationUrl": "https://example.com/api/oauth/dialog",
-      "scopes": {
-        "write:pets": "modify pets in your account",
-        "read:pets": "read your pets"
-      }
-    },
-    "authorizationCode": {
-      "authorizationUrl": "https://example.com/api/oauth/dialog",
-      "tokenUrl": "https://example.com/api/oauth/token",
-      "scopes": {
-        "write:pets": "modify pets in your account",
-        "read:pets": "read your pets"
-      }
-    }
-  }
-}`), &openapi.SecurityScheme{})
-}
-
 func TestOAuthFlows_Validate_Error(t *testing.T) {
 	t.Parallel()
 

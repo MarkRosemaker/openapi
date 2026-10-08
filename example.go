@@ -24,6 +24,7 @@ type Example struct {
 	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
+// Validate returns an error if the Example breaks the specification.
 func (ex *Example) Validate() error {
 	if ex.Value != nil && ex.ExternalValue != nil {
 		return fmt.Errorf("value and externalValue are mutually exclusive")

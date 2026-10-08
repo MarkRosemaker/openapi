@@ -8,7 +8,7 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// An object representing a Server Variable for server URL template substitution.
+// ServerVariable is an object representing a Server Variable for server URL template substitution.
 // ([Specification])
 //
 // [Specification]: https://spec.openapis.org/oas/v3.1.0#server-variable-object
@@ -26,6 +26,7 @@ type ServerVariable struct {
 	idx int
 }
 
+// Validate returns an error if the ServerVariable breaks the specification.
 func (s *ServerVariable) Validate() error {
 	// either the array has entries or it is not defined
 	if s.Enum != nil && len(s.Enum) == 0 {

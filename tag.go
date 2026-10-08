@@ -6,7 +6,7 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// Adds metadata to a single tag that is used by the [Operation] object.
+// Tag adds metadata to a single tag that is used by the [Operation] object.
 // It is not mandatory to have a Tag object per tag defined in the Operation object instances.
 //
 // ([Specification])

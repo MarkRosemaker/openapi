@@ -7,46 +7,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestInfo_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-  "title": "Sample Pet Store App",
-  "summary": "A pet store manager.",
-  "description": "This is a sample server for a pet store.",
-  "termsOfService": "https://example.com/terms/",
-  "contact": {
-    "name": "API Support",
-    "url": "https://www.example.com/support",
-    "email": "support@example.com"
-  },
-  "license": {
-    "name": "Apache 2.0",
-    "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-  },
-  "version": "1.0.1"
-}`), &openapi.Info{})
-
-	testJSON(t, []byte(`{
-  "title": "Sample Pet Store App",
-  "summary": "A pet store manager.",
-  "description": "This is a sample server for a pet store.",
-  "termsOfService": "https://example.com/terms/",
-  "contact": {
-    "name": "API Support",
-    "url": "https://www.example.com/support",
-    "email": "support@example.com"
-  },
-  "license": {
-    "name": "Apache 2.0",
-    "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-  },
-  "version": "1.0.1",
-  "x-foo": true,
-  "x-bar": ["one", "two"]
-}`), &openapi.Info{})
-}
-
 func TestInfo_Validate(t *testing.T) {
 	t.Parallel()
 

@@ -28,8 +28,8 @@ type Operation struct {
 	RequestBody *RequestBodyRef `json:"requestBody,omitzero" yaml:"requestBody,omitempty"`
 	// The list of possible responses as they are returned from executing this operation.
 	Responses OperationResponses `json:"responses,omitempty" yaml:"responses,omitempty"`
-	// A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a Callback Object that describes a request that may be initiated by the API provider and the expected responses.
-	Callbacks Callbacks `json:"callbacks,omitempty" yaml:"callbacks,omitempty"`
+	// A map of possible out-of band callbacks related to the parent operation. The key is a unique identifier for the Callback Object. Each value in the map is a Callback Object, or a Reference Object to one, that describes a request that may be initiated by the API provider and the expected responses.
+	Callbacks CallbackRefs `json:"callbacks,omitempty" yaml:"callbacks,omitempty"`
 	// Declares this operation to be deprecated. Consumers SHOULD refrain from usage of the declared operation. Default value is `false`.
 	Deprecated bool `json:"deprecated,omitempty,omitzero" yaml:"deprecated,omitempty"`
 	// A declaration of which security mechanisms can be used for this operation. The list of values includes alternative security requirement objects that can be used. Only one of the security requirement objects need to be satisfied to authorize a request. To make security optional, an empty security requirement (`{}`) can be included in the array. This definition overrides any declared top-level `security`. To remove a top-level security declaration, an empty array can be used.
@@ -94,8 +94,11 @@ func (o *Operation) Validate() error {
 		return &errpath.ErrField{Field: "responses", Err: err}
 	}
 
-	if err := o.Callbacks.Validate(); err != nil {
-		return &errpath.ErrField{Field: "callbacks", Err: err}
+	// unlike a component's, the key is any identifier
+	for name, c := range o.Callbacks.ByIndex() {
+		if err := c.Validate(); err != nil {
+			return &errpath.ErrField{Field: "callbacks", Err: &errpath.ErrKey{Key: name, Err: err}}
+		}
 	}
 
 	if err := o.Security.Validate(); err != nil {
@@ -124,7 +127,7 @@ func (l *loader) resolveOperation(o *Operation) error {
 		return &errpath.ErrField{Field: "responses", Err: err}
 	}
 
-	if err := l.resolveCallbacks(o.Callbacks); err != nil {
+	if err := l.resolveCallbackRefs(o.Callbacks); err != nil {
 		return &errpath.ErrField{Field: "callbacks", Err: err}
 	}
 

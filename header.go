@@ -33,6 +33,7 @@ type Header struct {
 	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
+// Validate returns an error if the Header breaks the specification.
 func (h *Header) Validate() error {
 	h.Description = strings.TrimSpace(h.Description)
 

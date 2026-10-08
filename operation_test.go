@@ -7,148 +7,6 @@ import (
 	"github.com/MarkRosemaker/openapi"
 )
 
-func TestOperation_JSON(t *testing.T) {
-	t.Parallel()
-
-	testJSON(t, []byte(`{
-  "tags": [
-    "pet"
-  ],
-  "summary": "Updates a pet in the store with form data",
-  "operationId": "updatePetWithForm",
-  "parameters": [
-    {
-      "name": "petId",
-      "in": "path",
-      "description": "ID of pet that needs to be updated",
-      "required": true,
-      "schema": {
-        "type": "string"
-      }
-    }
-  ],
-  "requestBody": {
-    "content": {
-      "application/x-www-form-urlencoded": {
-        "schema": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "description": "Updated name of the pet",
-              "type": "string"
-            },
-            "status": {
-              "description": "Updated status of the pet",
-              "type": "string"
-            }
-          },
-          "required": ["status"]
-        }
-      }
-    }
-  },
-  "responses": {
-    "200": {
-      "description": "Pet updated.",
-      "content": {
-        "application/json": {},
-        "application/xml": {}
-      }
-    },
-    "405": {
-      "description": "Method Not Allowed",
-      "content": {
-        "application/json": {},
-        "application/xml": {}
-      }
-    }
-  },
-  "security": [
-    {
-      "petstore_auth": [
-        "write:pets",
-        "read:pets"
-      ]
-    }
-  ]
-}`), &openapi.Operation{})
-
-	testJSON(t, []byte(`{
-  "tags": [
-    "pet"
-  ],
-  "summary": "Updates a pet in the store with form data",
-  "operationId": "updatePetWithForm",
-  "parameters": [
-    {
-      "name": "petId",
-      "in": "path",
-      "description": "ID of pet that needs to be updated",
-      "required": true,
-      "schema": {
-        "type": "string"
-      }
-    }
-  ],
-  "requestBody": {
-    "content": {
-      "application/x-www-form-urlencoded": {
-        "schema": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "description": "Updated name of the pet",
-              "type": "string"
-            },
-            "status": {
-              "description": "Updated status of the pet",
-              "type": "string"
-            }
-          },
-          "required": ["status"]
-        }
-      }
-    }
-  },
-  "responses": {
-    "200": {
-      "description": "Pet updated.",
-      "content": {
-        "application/json": {},
-        "application/xml": {}
-      }
-    },
-    "405": {
-      "description": "Method Not Allowed",
-      "content": {
-        "application/json": {},
-        "application/xml": {}
-      }
-    }
-  },
-  "security": [
-    {
-      "petstore_auth": [
-        "write:pets",
-        "read:pets"
-      ]
-    }
-  ],
-  "x-foo": "bar",
-  "x-bar": 42
-}`), &openapi.Operation{})
-
-	// an empty security list removes the document's requirements, unlike an absent one.
-	testJSON(t, []byte(`{
-  "responses": {
-    "200": {
-      "description": "OK"
-    }
-  },
-  "security": []
-}`), &openapi.Operation{})
-}
-
 func TestOperation_Validate_Error(t *testing.T) {
 	t.Parallel()
 
@@ -180,14 +38,14 @@ func TestOperation_Validate_Error(t *testing.T) {
 			},
 		}, `responses["200"].description is required`},
 		{openapi.Operation{
-			Callbacks: openapi.Callbacks{
-				"foo": {
+			Callbacks: openapi.CallbackRefs{
+				"foo": {Value: &openapi.Callback{
 					"{$request.query.callbackUrl}/data": &openapi.PathItemRef{
 						Value: &openapi.PathItem{
 							Extensions: jsontext.Value(`{"bar":"buz"}`),
 						},
 					},
-				},
+				}},
 			},
 		}, `callbacks["foo"]["{$request.query.callbackUrl}/data"].bar: ` + openapi.ErrUnknownField.Error()},
 		{openapi.Operation{

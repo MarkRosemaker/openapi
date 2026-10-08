@@ -4,155 +4,59 @@ import (
 	"bytes"
 	"encoding/json/jsontext"
 	"encoding/json/v2"
-	"path/filepath"
-	"reflect"
 	"testing"
 
 	"github.com/MarkRosemaker/jsonutil"
 	"github.com/MarkRosemaker/openapi"
 )
 
-var jsonOpts = json.JoinOptions([]json.Options{
-	// unevaluatedProperties is set to false in most objects according to the OpenAPI specification
-	// also protect against deleting unknown fields when overwriting later
+// jsonOpts are the library's own options, which tests of a single object encode it with.
+var jsonOpts = json.JoinOptions(
 	json.RejectUnknownMembers(true),
-	json.WithMarshalers(json.JoinMarshalers(
-		json.MarshalToFunc(jsonutil.URLMarshal),
-	)),
-	json.WithUnmarshalers(json.JoinUnmarshalers(
-		json.UnmarshalFromFunc(jsonutil.URLUnmarshal),
-	)),
-	jsontext.WithIndent("  "), // indent with two spaces
-}...)
+	json.WithMarshalers(json.MarshalToFunc(jsonutil.URLMarshal)),
+	json.WithUnmarshalers(json.UnmarshalFromFunc(jsonutil.URLUnmarshal)),
+	jsontext.WithIndent("  "),
+)
 
-// resolveSchemaRefs points every unresolved schema reference within v at an empty schema.
-func resolveSchemaRefs(v reflect.Value) {
-	switch v.Kind() {
-	case reflect.Pointer, reflect.Interface:
-		if v.IsNil() {
-			return
-		}
-
-		if r, ok := v.Interface().(*openapi.SchemaRef); ok {
-			if r.Value == nil {
-				r.Value = &openapi.Schema{}
-			}
-
-			return
-		}
-
-		resolveSchemaRefs(v.Elem())
-	case reflect.Struct:
-		for i := range v.NumField() {
-			if v.Type().Field(i).IsExported() {
-				resolveSchemaRefs(v.Field(i))
-			}
-		}
-	case reflect.Slice, reflect.Array:
-		for i := range v.Len() {
-			resolveSchemaRefs(v.Index(i))
-		}
-	case reflect.Map:
-		for _, k := range v.MapKeys() {
-			resolveSchemaRefs(v.MapIndex(k))
-		}
-	default: // nothing within can hold a schema
-	}
-}
-
-func resolveExamples(examples openapi.Examples) {
-	for _, ex := range examples {
-		if ex.Ref != nil && ex.Value == nil {
-			ex.Value = &openapi.Example{}
-		}
-	}
-}
-
-type validator interface{ Validate() error }
-
-func testJSON(t *testing.T, exampleJSON []byte, v validator) {
+// testJSON loads and validates the document data and writes it back, which must give data again, up to indentation.
+func testJSON(t *testing.T, data []byte) *openapi.Document {
 	t.Helper()
 
-	switch v.(type) {
-	case *openapi.Document:
-		doc, err := openapi.LoadFromDataJSON(exampleJSON)
-		if err != nil {
-			t.Fatalf("load from data: %v", err)
-		}
-
-		v = doc
-
-		if _, err = doc.ToJSON(); err != nil {
-			t.Fatalf("to json: %v", err)
-		}
-
-		if err := doc.WriteToFile(filepath.Join(t.TempDir(), "foo", "openapi.json")); err != nil {
-			t.Fatalf("write to file: %v", err)
-		}
-	default:
-		if err := json.Unmarshal(exampleJSON, v, jsonOpts); err != nil {
-			t.Fatalf("initial unmarshal: %v", err)
-		}
+	doc, err := openapi.LoadFromDataJSON(data)
+	if err != nil {
+		t.Fatalf("load: %v", err)
 	}
 
-	// manually add unresolved references
-	fixReferences(v)
-
-	if err := v.Validate(); err != nil {
+	if err := doc.Validate(); err != nil {
 		t.Fatalf("validate: %v", err)
 	}
 
-	// a document is written the way users write it, with the library's own options.
-	var (
-		b   []byte
-		err error
-	)
-	if doc, ok := v.(*openapi.Document); ok {
-		b, err = doc.ToJSON()
-	} else {
-		b, err = json.Marshal(v, jsonOpts)
+	b, err := doc.ToJSON()
+	if err != nil {
+		t.Fatalf("to json: %v", err)
 	}
 
-	if err != nil {
+	got, want := jsontext.Value(b), jsontext.Value(bytes.Clone(data))
+	if err := got.Indent(); err != nil {
 		t.Fatal(err)
 	}
-
-	got := jsontext.Value(b)
-	want := jsontext.Value(exampleJSON)
 
 	if err := want.Indent(); err != nil {
 		t.Fatal(err)
 	}
 
-	if err := got.Indent(); err != nil {
-		t.Fatal(err)
+	if bytes.Equal(got, want) {
+		return doc
 	}
 
-	// NOTE: we want to avoid this dependency
-	// require.Equal(t, string(want), string(got))
-
-	if !bytes.Equal(want, got) {
-		t.Fatalf("not equal, want:\n%s\ngot:\n%s", exampleJSON, got)
-	}
-}
-
-func fixReferences(v validator) {
-	switch v := v.(type) {
-	case *openapi.Content:
-		for _, mt := range *v {
-			resolveExamples(mt.Examples)
+	gotLines, wantLines := bytes.Split(got, []byte("\n")), bytes.Split(want, []byte("\n"))
+	for i := range min(len(gotLines), len(wantLines)) {
+		if !bytes.Equal(gotLines[i], wantLines[i]) {
+			t.Fatalf("line %d: got %s, want %s", i+1, bytes.TrimSpace(gotLines[i]), bytes.TrimSpace(wantLines[i]))
 		}
-	case *openapi.ParameterList:
-		for _, p := range *v {
-			resolveExamples(p.Value.Examples)
-		}
-	case *openapi.OperationResponses:
-		for _, r := range *v {
-			resolveExamples(r.Value.Content[openapi.MediaRangeJSON].Examples)
-		}
-	case *openapi.Components:
-		v.Responses["GeneralError"].Value.Content[openapi.MediaRangeJSON].Schema.Ref.Value = v.Schemas["GeneralError"]
 	}
 
-	resolveSchemaRefs(reflect.ValueOf(v))
+	t.Fatalf("got %d lines, want %d", len(gotLines), len(wantLines))
+
+	return nil
 }

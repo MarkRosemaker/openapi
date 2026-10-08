@@ -24,6 +24,7 @@ type RequestBody struct {
 	Extensions Extensions `json:",embed" yaml:"-"`
 }
 
+// Validate returns an error if the RequestBody breaks the specification.
 func (r *RequestBody) Validate() error {
 	r.Description = strings.TrimSpace(r.Description)
 

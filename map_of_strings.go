@@ -8,6 +8,7 @@ import (
 	"github.com/MarkRosemaker/ordmap"
 )
 
+// MapOfStrings maps keys to strings, in the order they were read.
 type MapOfStrings map[string]String
 
 // ByIndex returns a sequence of key-value pairs ordered by index.
@@ -39,6 +40,7 @@ func (scs *MapOfStrings) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return ordmap.UnmarshalJSONFrom(scs, dec, setIndexScope)
 }
 
+// String is a value of a [MapOfStrings], which keeps its place in the map.
 type String struct {
 	Value string
 

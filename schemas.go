@@ -15,6 +15,7 @@ type Schemas map[string]*Schema
 // SchemaList is a list of schemas, such as the alternatives of oneOf.
 type SchemaList []*Schema
 
+// Validate returns an error if the Schemas breaks the specification.
 func (ss Schemas) Validate() error {
 	for name, s := range ss.ByIndex() {
 		if err := s.Validate(); err != nil {

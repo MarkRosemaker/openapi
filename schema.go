@@ -6,6 +6,7 @@ import (
 	"encoding/json/v2"
 	"fmt"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -158,8 +159,6 @@ func (s *Schema) Validate() error { return s.validate(false) }
 
 // validate checks the schema; extended says another component schema builds on it through allOf.
 func (s *Schema) validate(extended bool) error {
-	s.Description = strings.TrimSpace(s.Description)
-
 	if s.Ref != nil && s.Ref.Value == nil {
 		return &errpath.ErrField{Field: "$ref", Err: fmt.Errorf("%q was not resolved", s.Ref.Identifier)}
 	}
@@ -171,79 +170,117 @@ func (s *Schema) validate(extended bool) error {
 		}
 	}
 
-	if s.Format != "" {
-		if err := s.Format.Validate(); err != nil {
-			return &errpath.ErrField{Field: "format", Err: err}
+	for _, check := range []func() error{
+		s.validateFormat,
+		s.validateString,
+		s.validateComposition,
+		s.validateNumber,
+		s.validateValueKinds,
+		s.validateArray,
+		s.validateObject,
+		func() error { return s.validateDiscriminator(extended) },
+		s.validateDefault,
+	} {
+		if err := check(); err != nil {
+			return err
 		}
 	}
 
-	// validate if format is valid for type
+	return validateExtensions(s.Extensions)
+}
+
+// keyword is a keyword that applies to one type: its name, whether it is set, and its value, if an error should show it.
+type keyword struct {
+	name  string
+	set   bool
+	value any
+}
+
+// valueOf is what p points to, or nil.
+func valueOf[T any](p *T) any {
+	if p == nil {
+		return nil
+	}
+
+	return *p
+}
+
+// onlyFor reports the first keyword set where the keywords of typ do not apply.
+func (s *Schema) onlyFor(applies bool, typ string, kws ...keyword) error {
+	if applies {
+		return nil
+	}
+
+	for _, kw := range kws {
+		if !kw.set {
+			continue
+		}
+
+		msg := fmt.Sprintf("only valid for %s type, got %s", typ, s.typeOrNone())
+		if kw.value == nil {
+			return &errpath.ErrField{Field: kw.name, Err: &errpath.ErrInvalid[string]{Message: msg}}
+		}
+
+		return &errpath.ErrField{Field: kw.name, Err: &errpath.ErrInvalid[any]{Value: kw.value, Message: msg}}
+	}
+
+	return nil
+}
+
+// validateFormat checks that the format is known and suits the schema's type.
+func (s *Schema) validateFormat() error {
+	if s.Format == "" {
+		return nil
+	}
+
+	if err := s.Format.Validate(); err != nil {
+		return &errpath.ErrField{Field: "format", Err: err}
+	}
+
+	var types string
+
 	switch s.Format {
-	case "": // no format
 	case FormatInt32, FormatInt64, FormatUint, FormatUint32, FormatUint64:
 		if !s.allows(TypeInteger) {
-			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for integer type, got %s", s.typeOrNone()),
-			}}
+			types = "integer"
 		}
 	case FormatFloat, FormatDouble:
 		if !s.allows(TypeNumber) {
-			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
-			}}
+			types = "number"
 		}
-	case FormatEmail, FormatPassword,
-		FormatUUID, FormatURI, FormatURIRef, FormatZipCode,
-		FormatIPv4, FormatIPv6:
+	case FormatEmail, FormatPassword, FormatUUID, FormatURI, FormatURIRef, FormatZipCode, FormatIPv4, FormatIPv6,
+		FormatByte, FormatBinary:
 		if !s.allows(TypeString) {
-			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
-			}}
+			types = "string"
 		}
 	case FormatDuration, FormatDate, FormatDateTime:
-		switch s.Type {
-		case "", TypeInteger, TypeString:
-		default:
-			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for integer or string type, got %s", s.typeOrNone()),
-			}}
-		}
-	case FormatByte, FormatBinary:
-		switch s.Type {
-		case "", TypeString:
-		default:
-			return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
-				Value:   s.Format,
-				Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
-			}}
+		if !s.allows(TypeInteger) && !s.allows(TypeString) {
+			types = "integer or string"
 		}
 	default:
 		return fmt.Errorf("unimplemented format: %s", s.Format)
 	}
 
-	// String
+	if types == "" {
+		return nil
+	}
 
-	if !s.allows(TypeString) {
-		for _, kw := range []struct {
-			field string
-			set   bool
-		}{
-			{"minLength", s.MinLength != 0},
-			{"maxLength", s.MaxLength != nil},
-			{"pattern", s.Pattern != nil},
-			{"contentMediaType", s.ContentMediaType != ""},
-			{"contentEncoding", s.ContentEncoding != ""},
-		} {
-			if kw.set {
-				return &errpath.ErrField{Field: kw.field, Err: &errpath.ErrInvalid[string]{
-					Message: fmt.Sprintf("only valid for string type, got %s", s.typeOrNone()),
-				}}
-			}
-		}
+	return &errpath.ErrField{Field: "format", Err: &errpath.ErrInvalid[Format]{
+		Value:   s.Format,
+		Message: fmt.Sprintf("only valid for %s type, got %s", types, s.typeOrNone()),
+	}}
+}
+
+// validateString checks the keywords of strings.
+func (s *Schema) validateString() error {
+	if err := s.onlyFor(s.allows(TypeString), "string",
+		keyword{"minLength", s.MinLength != 0, nil},
+		keyword{"maxLength", s.MaxLength != nil, nil},
+		keyword{"pattern", s.Pattern != nil, nil},
+		keyword{"contentMediaType", s.ContentMediaType != "", nil},
+		keyword{"contentEncoding", s.ContentEncoding != "", nil},
+	); err != nil {
+		return err
 	}
 
 	if s.MaxLength != nil && s.MinLength > *s.MaxLength {
@@ -253,29 +290,18 @@ func (s *Schema) validate(extended bool) error {
 		}}
 	}
 
-	for i, v := range s.AllOf {
-		if err := v.Validate(); err != nil {
-			return &errpath.ErrField{
-				Field: "allOf",
-				Err:   &errpath.ErrIndex{Index: i, Err: err},
-			}
-		}
-	}
+	return nil
+}
 
-	for i, v := range s.OneOf {
-		if err := v.Validate(); err != nil {
-			return &errpath.ErrField{
-				Field: "oneOf",
-				Err:   &errpath.ErrIndex{Index: i, Err: err},
-			}
-		}
-	}
-
-	for i, v := range s.AnyOf {
-		if err := v.Validate(); err != nil {
-			return &errpath.ErrField{
-				Field: "anyOf",
-				Err:   &errpath.ErrIndex{Index: i, Err: err},
+// validateComposition validates the schemas of allOf, oneOf, anyOf and not.
+func (s *Schema) validateComposition() error {
+	for _, l := range []struct {
+		field   string
+		schemas SchemaList
+	}{{"allOf", s.AllOf}, {"oneOf", s.OneOf}, {"anyOf", s.AnyOf}} {
+		for i, v := range l.schemas {
+			if err := v.Validate(); err != nil {
+				return &errpath.ErrField{Field: l.field, Err: &errpath.ErrIndex{Index: i, Err: err}}
 			}
 		}
 	}
@@ -286,99 +312,46 @@ func (s *Schema) validate(extended bool) error {
 		}
 	}
 
-	// Integer / Number
+	return nil
+}
 
-	// validate min and max
+// validateNumber checks the keywords of numbers: whole numbers for an integer, bounds that leave some value.
+func (s *Schema) validateNumber() error {
+	bounds := []struct {
+		field string
+		value *float64
+	}{
+		{"minimum", s.Min},
+		{"maximum", s.Max},
+		{"exclusiveMinimum", s.ExclusiveMin},
+		{"exclusiveMaximum", s.ExclusiveMax},
+		{"multipleOf", s.MultipleOf},
+	}
+
 	if s.Type == TypeInteger {
-		if s.Min != nil && *s.Min != float64(int(*s.Min)) {
-			return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.Min,
-				Message: "not an integer",
-			}}
-		}
-
-		if s.Max != nil && *s.Max != float64(int(*s.Max)) {
-			return &errpath.ErrField{Field: "maximum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.Max,
-				Message: "not an integer",
-			}}
-		}
-
-		if s.ExclusiveMin != nil && *s.ExclusiveMin != float64(int(*s.ExclusiveMin)) {
-			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.ExclusiveMin,
-				Message: "not an integer",
-			}}
-		}
-
-		if s.ExclusiveMax != nil && *s.ExclusiveMax != float64(int(*s.ExclusiveMax)) {
-			return &errpath.ErrField{Field: "exclusiveMaximum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.ExclusiveMax,
-				Message: "not an integer",
-			}}
-		}
-
-		if s.MultipleOf != nil && *s.MultipleOf != float64(int(*s.MultipleOf)) {
-			return &errpath.ErrField{Field: "multipleOf", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.MultipleOf,
-				Message: "not an integer",
-			}}
+		for _, b := range bounds {
+			if b.value != nil && *b.value != float64(int(*b.value)) {
+				return &errpath.ErrField{Field: b.field, Err: &errpath.ErrInvalid[float64]{
+					Value:   *b.value,
+					Message: "not an integer",
+				}}
+			}
 		}
 	}
 
 	if s.allows(TypeNumber) || s.allows(TypeInteger) {
-		if s.Min != nil && s.Max != nil && *s.Min > *s.Max {
-			return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.Min,
-				Message: fmt.Sprintf("minimum is greater than maximum (%v > %v)", *s.Min, *s.Max),
-			}}
+		if err := s.validateRange(); err != nil {
+			return err
+		}
+	} else {
+		kws := make([]keyword, len(bounds))
+		for i, b := range bounds {
+			kws[i] = keyword{b.field, b.value != nil, valueOf(b.value)}
 		}
 
-		if s.Min != nil && s.ExclusiveMax != nil && *s.Min >= *s.ExclusiveMax {
-			return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.Min,
-				Message: fmt.Sprintf("minimum is not less than exclusiveMaximum (%v >= %v)", *s.Min, *s.ExclusiveMax),
-			}}
+		if err := s.onlyFor(false, "number", kws...); err != nil {
+			return err
 		}
-
-		if s.ExclusiveMin != nil && s.Max != nil && *s.ExclusiveMin >= *s.Max {
-			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.ExclusiveMin,
-				Message: fmt.Sprintf("exclusiveMinimum is not less than maximum (%v >= %v)", *s.ExclusiveMin, *s.Max),
-			}}
-		}
-
-		if s.ExclusiveMin != nil && s.ExclusiveMax != nil && *s.ExclusiveMin >= *s.ExclusiveMax {
-			return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
-				Value:   *s.ExclusiveMin,
-				Message: fmt.Sprintf("exclusiveMinimum is not less than exclusiveMaximum (%v >= %v)", *s.ExclusiveMin, *s.ExclusiveMax),
-			}}
-		}
-	} else if s.Min != nil {
-		return &errpath.ErrField{Field: "minimum", Err: &errpath.ErrInvalid[float64]{
-			Value:   *s.Min,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
-		}}
-	} else if s.Max != nil {
-		return &errpath.ErrField{Field: "maximum", Err: &errpath.ErrInvalid[float64]{
-			Value:   *s.Max,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
-		}}
-	} else if s.ExclusiveMin != nil {
-		return &errpath.ErrField{Field: "exclusiveMinimum", Err: &errpath.ErrInvalid[float64]{
-			Value:   *s.ExclusiveMin,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
-		}}
-	} else if s.ExclusiveMax != nil {
-		return &errpath.ErrField{Field: "exclusiveMaximum", Err: &errpath.ErrInvalid[float64]{
-			Value:   *s.ExclusiveMax,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
-		}}
-	} else if s.MultipleOf != nil {
-		return &errpath.ErrField{Field: "multipleOf", Err: &errpath.ErrInvalid[float64]{
-			Value:   *s.MultipleOf,
-			Message: fmt.Sprintf("only valid for number type, got %s", s.typeOrNone()),
-		}}
 	}
 
 	if s.MultipleOf != nil && *s.MultipleOf <= 0 {
@@ -388,234 +361,219 @@ func (s *Schema) validate(extended bool) error {
 		}}
 	}
 
-	// String / Enum
+	return nil
+}
 
-	// Per JSON Schema 2020-12, enum and const can hold any JSON type; validate each value's kind matches the schema type.
-	if s.Type != "" {
-		for i, ev := range s.Enum {
-			if !s.allowsKindOf(ev) {
-				return &errpath.ErrField{Field: "enum", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
-					Value:   jsonDisplayValue(ev),
-					Message: fmt.Sprintf("must be a %s value", s.Type),
-				}}}
-			}
+// validateRange checks that the lower bound of a number is below its upper bound.
+func (s *Schema) validateRange() error {
+	for _, r := range []struct {
+		field, lowName, highName string
+		low, high                *float64
+		exclusive                bool
+	}{
+		{"minimum", "minimum", "maximum", s.Min, s.Max, false},
+		{"minimum", "minimum", "exclusiveMaximum", s.Min, s.ExclusiveMax, true},
+		{"exclusiveMinimum", "exclusiveMinimum", "maximum", s.ExclusiveMin, s.Max, true},
+		{"exclusiveMinimum", "exclusiveMinimum", "exclusiveMaximum", s.ExclusiveMin, s.ExclusiveMax, true},
+	} {
+		if r.low == nil || r.high == nil {
+			continue
 		}
 
-		if s.Const != nil && !s.allowsKindOf(s.Const) {
-			return &errpath.ErrField{Field: "const", Err: &errpath.ErrInvalid[any]{
-				Value:   jsonDisplayValue(s.Const),
-				Message: fmt.Sprintf("must be a %s value", s.Type),
+		if !r.exclusive && *r.low > *r.high {
+			return &errpath.ErrField{Field: r.field, Err: &errpath.ErrInvalid[float64]{
+				Value:   *r.low,
+				Message: fmt.Sprintf("%s is greater than %s (%v > %v)", r.lowName, r.highName, *r.low, *r.high),
 			}}
 		}
 
-		if s.Example != nil && !s.allowsKindOf(s.Example) {
-			return &errpath.ErrField{Field: "example", Err: &errpath.ErrInvalid[any]{
-				Value:   jsonDisplayValue(s.Example),
-				Message: fmt.Sprintf("must be a %s value", s.Type),
+		if r.exclusive && *r.low >= *r.high {
+			return &errpath.ErrField{Field: r.field, Err: &errpath.ErrInvalid[float64]{
+				Value:   *r.low,
+				Message: fmt.Sprintf("%s is not less than %s (%v >= %v)", r.lowName, r.highName, *r.low, *r.high),
 			}}
-		}
-
-		for i, ev := range s.Examples {
-			if !s.allowsKindOf(ev) {
-				return &errpath.ErrField{Field: "examples", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[any]{
-					Value:   jsonDisplayValue(ev),
-					Message: fmt.Sprintf("must be a %s value", s.Type),
-				}}}
-			}
 		}
 	}
 
-	// Array
+	return nil
+}
 
-	// validate min and max items
-	if s.allows(TypeArray) {
-		if s.MaxItems != nil && s.MinItems > *s.MaxItems {
-			return &errpath.ErrField{Field: "minItems", Err: &errpath.ErrInvalid[uint]{
-				Value:   s.MinItems,
-				Message: fmt.Sprintf("minItems is greater than maxItems (%d > %d)", s.MinItems, *s.MaxItems),
-			}}
-		}
+// validateValueKinds checks that enum, const and the examples are values of the schema's type: per JSON Schema
+// 2020-12 they can hold any JSON value.
+func (s *Schema) validateValueKinds() error {
+	if s.Type == "" {
+		return nil
+	}
 
-		for i, v := range s.PrefixItems {
-			if err := v.Validate(); err != nil {
-				return &errpath.ErrField{
-					Field: "prefixItems",
-					Err:   &errpath.ErrIndex{Index: i, Err: err},
-				}
-			}
-		}
+	if err := s.valuesOfKind("enum", s.Enum); err != nil {
+		return err
+	}
 
-		// empty schema for items indicates a media type of application/octet-stream.
-		if s.Items != nil && !s.Items.isEmpty() {
-			if err := s.Items.Validate(); err != nil {
-				return &errpath.ErrField{Field: "items", Err: err}
-			}
+	if err := s.valueOfKind("const", s.Const); err != nil {
+		return err
+	}
+
+	if err := s.valueOfKind("example", s.Example); err != nil {
+		return err
+	}
+
+	return s.valuesOfKind("examples", s.Examples)
+}
+
+// valuesOfKind reports the first of values that is not of the schema's type.
+func (s *Schema) valuesOfKind(field string, values []jsontext.Value) error {
+	for i, v := range values {
+		if !s.allowsKindOf(v) {
+			return &errpath.ErrField{Field: field, Err: &errpath.ErrIndex{Index: i, Err: s.wrongKind(v)}}
 		}
-	} else if s.MinItems != 0 {
+	}
+
+	return nil
+}
+
+// valueOfKind reports v if it is set and not of the schema's type.
+func (s *Schema) valueOfKind(field string, v jsontext.Value) error {
+	if v == nil || s.allowsKindOf(v) {
+		return nil
+	}
+
+	return &errpath.ErrField{Field: field, Err: s.wrongKind(v)}
+}
+
+func (s *Schema) wrongKind(v jsontext.Value) error {
+	return &errpath.ErrInvalid[any]{Value: jsonDisplayValue(v), Message: fmt.Sprintf("must be a %s value", s.Type)}
+}
+
+// validateArray checks the keywords of arrays.
+func (s *Schema) validateArray() error {
+	if !s.allows(TypeArray) {
+		return s.onlyFor(false, "array",
+			keyword{"minItems", s.MinItems != 0, s.MinItems},
+			keyword{"maxItems", s.MaxItems != nil, valueOf(s.MaxItems)},
+			keyword{"uniqueItems", s.UniqueItems, true},
+			keyword{"prefixItems", len(s.PrefixItems) != 0, nil},
+			keyword{"items", s.Items != nil, nil},
+		)
+	}
+
+	if s.MaxItems != nil && s.MinItems > *s.MaxItems {
 		return &errpath.ErrField{Field: "minItems", Err: &errpath.ErrInvalid[uint]{
 			Value:   s.MinItems,
-			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
-		}}
-	} else if s.MaxItems != nil {
-		return &errpath.ErrField{Field: "maxItems", Err: &errpath.ErrInvalid[uint]{
-			Value:   *s.MaxItems,
-			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
-		}}
-	} else if s.UniqueItems {
-		return &errpath.ErrField{Field: "uniqueItems", Err: &errpath.ErrInvalid[bool]{
-			Value:   true,
-			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
-		}}
-	} else if len(s.PrefixItems) != 0 {
-		return &errpath.ErrField{Field: "prefixItems", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
-		}}
-	} else if s.Items != nil {
-		return &errpath.ErrField{Field: "items", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for array type, got %s", s.typeOrNone()),
+			Message: fmt.Sprintf("minItems is greater than maxItems (%d > %d)", s.MinItems, *s.MaxItems),
 		}}
 	}
 
-	// Object
-
-	if s.allows(TypeObject) {
-		if err := s.Properties.Validate(); err != nil {
-			return &errpath.ErrField{Field: "properties", Err: err}
+	for i, v := range s.PrefixItems {
+		if err := v.Validate(); err != nil {
+			return &errpath.ErrField{Field: "prefixItems", Err: &errpath.ErrIndex{Index: i, Err: err}}
 		}
+	}
 
+	if s.Items != nil {
+		if err := s.Items.Validate(); err != nil {
+			return &errpath.ErrField{Field: "items", Err: err}
+		}
+	}
+
+	return nil
+}
+
+// validateObject checks the keywords of objects.
+func (s *Schema) validateObject() error {
+	if !s.allows(TypeObject) {
+		return s.onlyFor(false, "object",
+			keyword{"properties", s.Properties != nil, nil},
+			keyword{"required", s.Required != nil, nil},
+			keyword{"additionalProperties", s.AdditionalProperties != nil, nil},
+			keyword{"maxProperties", s.MaxProperties != nil, valueOf(s.MaxProperties)},
+			keyword{"propertyNames", s.PropertyNames != nil, nil},
+		)
+	}
+
+	if err := s.Properties.Validate(); err != nil {
+		return &errpath.ErrField{Field: "properties", Err: err}
+	}
+
+	// without a type, required is a constraint on whatever object properties hold
+	if s.Type != "" {
 		for i, r := range s.Required {
-			// without a type, required is a constraint on whatever object properties hold
-			if _, ok := s.Properties[r]; ok || s.Type == "" {
-				continue
-			}
-
-			return &errpath.ErrField{
-				Field: "required",
-				Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[string]{
+			if _, ok := s.Properties[r]; !ok {
+				return &errpath.ErrField{Field: "required", Err: &errpath.ErrIndex{Index: i, Err: &errpath.ErrInvalid[string]{
 					Value:   r,
 					Message: "property does not exist",
-				}},
+				}}}
 			}
 		}
+	}
 
-		if s.AdditionalProperties != nil {
-			if err := s.AdditionalProperties.Validate(); err != nil {
-				return &errpath.ErrField{Field: "additionalProperties", Err: err}
-			}
+	if s.AdditionalProperties != nil {
+		if err := s.AdditionalProperties.Validate(); err != nil {
+			return &errpath.ErrField{Field: "additionalProperties", Err: err}
 		}
+	}
 
-		if s.PropertyNames != nil {
-			if err := s.PropertyNames.Validate(); err != nil {
-				return &errpath.ErrField{Field: "propertyNames", Err: err}
-			}
+	if s.PropertyNames != nil {
+		if err := s.PropertyNames.Validate(); err != nil {
+			return &errpath.ErrField{Field: "propertyNames", Err: err}
 		}
+	}
 
-		if s.MaxProperties != nil && uint(len(s.Required)) > *s.MaxProperties {
-			return &errpath.ErrField{Field: "maxProperties", Err: &errpath.ErrInvalid[uint]{
-				Value:   *s.MaxProperties,
-				Message: fmt.Sprintf("fewer than the %d required properties", len(s.Required)),
-			}}
-		}
-	} else if s.Properties != nil {
-		return &errpath.ErrField{Field: "properties", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
-		}}
-	} else if s.Required != nil {
-		return &errpath.ErrField{Field: "required", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
-		}}
-	} else if s.AdditionalProperties != nil {
-		return &errpath.ErrField{Field: "additionalProperties", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
-		}}
-	} else if s.MaxProperties != nil {
+	if s.MaxProperties != nil && uint(len(s.Required)) > *s.MaxProperties {
 		return &errpath.ErrField{Field: "maxProperties", Err: &errpath.ErrInvalid[uint]{
 			Value:   *s.MaxProperties,
-			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
-		}}
-	} else if s.PropertyNames != nil {
-		return &errpath.ErrField{Field: "propertyNames", Err: &errpath.ErrInvalid[string]{
-			Message: fmt.Sprintf("only valid for object type, got %s", s.typeOrNone()),
+			Message: fmt.Sprintf("fewer than the %d required properties", len(s.Required)),
 		}}
 	}
 
-	if s.Discriminator != nil {
-		// a parent schema may carry the discriminator for the schemas extending it through allOf
-		if len(s.OneOf) == 0 && len(s.AnyOf) == 0 && len(s.AllOf) == 0 && !extended {
-			return &errpath.ErrField{Field: "discriminator", Err: &errpath.ErrInvalid[string]{
-				Message: "only valid with oneOf, anyOf or allOf, or on a component schema another extends through allOf",
-			}}
-		}
+	return nil
+}
 
-		if err := s.Discriminator.Validate(); err != nil {
-			return &errpath.ErrField{Field: "discriminator", Err: err}
-		}
+// validateDiscriminator checks where the discriminator may be: beside a composition, or on a parent another schema
+// extends through allOf.
+func (s *Schema) validateDiscriminator(extended bool) error {
+	if s.Discriminator == nil {
+		return nil
 	}
 
-	// validate default
-	if len(s.Default) > 0 {
-		defaultTypeErr := func() error {
-			return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
-				Value:   jsonDisplayValue(s.Default),
-				Message: fmt.Sprintf("does not match schema type, got %s", s.typeOrNone()),
-			}}
-		}
-
-		switch s.Type {
-		case TypeString:
-			if s.Default.Kind() != jsontext.KindString {
-				return defaultTypeErr()
-			}
-		case TypeNumber:
-			if s.Default.Kind() != jsontext.KindNumber {
-				return defaultTypeErr()
-			}
-		case TypeInteger:
-			if s.Default.Kind() != jsontext.KindNumber || !isJSONInteger(s.Default) {
-				return defaultTypeErr()
-			}
-		case TypeBoolean:
-			if s.Default.Kind() != jsontext.KindTrue && s.Default.Kind() != jsontext.KindFalse {
-				return defaultTypeErr()
-			}
-		case TypeArray:
-			if s.Default.Kind() != jsontext.KindBeginArray {
-				return defaultTypeErr()
-			}
-		case TypeObject:
-			if s.Default.Kind() != jsontext.KindBeginObject {
-				return defaultTypeErr()
-			}
-		case TypeNull:
-			if s.Default.Kind() != jsontext.KindNull {
-				return defaultTypeErr()
-			}
-		}
-
-		if len(s.Enum) > 0 {
-			found := false
-			for _, ev := range s.Enum {
-				if bytes.Equal(ev, s.Default) {
-					found = true
-					break
-				}
-			}
-
-			if !found {
-				parts := make([]string, len(s.Enum))
-				for i, ev := range s.Enum {
-					parts[i] = ev.String()
-				}
-
-				return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
-					Value:   jsonDisplayValue(s.Default),
-					Message: fmt.Sprintf("is not one of the enums ([%s])", strings.Join(parts, " ")),
-				}}
-			}
-		}
+	if len(s.OneOf) == 0 && len(s.AnyOf) == 0 && len(s.AllOf) == 0 && !extended {
+		return &errpath.ErrField{Field: "discriminator", Err: &errpath.ErrInvalid[string]{
+			Message: "only valid with oneOf, anyOf or allOf, or on a component schema another extends through allOf",
+		}}
 	}
 
-	return validateExtensions(s.Extensions)
+	if err := s.Discriminator.Validate(); err != nil {
+		return &errpath.ErrField{Field: "discriminator", Err: err}
+	}
+
+	return nil
+}
+
+// validateDefault checks that the default is a value of the schema's type and, with an enum, one of its values.
+func (s *Schema) validateDefault() error {
+	if len(s.Default) == 0 {
+		return nil
+	}
+
+	if !enumKindMatchesType(s.Default, s.Type) {
+		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
+			Value:   jsonDisplayValue(s.Default),
+			Message: fmt.Sprintf("does not match schema type, got %s", s.typeOrNone()),
+		}}
+	}
+
+	if len(s.Enum) == 0 || slices.ContainsFunc(s.Enum, func(v jsontext.Value) bool { return bytes.Equal(v, s.Default) }) {
+		return nil
+	}
+
+	parts := make([]string, len(s.Enum))
+	for i, v := range s.Enum {
+		parts[i] = v.String()
+	}
+
+	return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
+		Value:   jsonDisplayValue(s.Default),
+		Message: fmt.Sprintf("is not one of the enums ([%s])", strings.Join(parts, " ")),
+	}}
 }
 
 // allows reports whether the schema's keywords for type t apply: it is of type t, or of no type at all.
@@ -766,19 +724,4 @@ func (s *Schema) derefType() DataType {
 	}
 
 	return s.Type
-}
-
-func (s *Schema) isEmpty() bool {
-	return s == nil ||
-		(s.Ref == nil && s.Type == "" && !s.Nullable && s.Format == "" &&
-			len(s.AllOf) == 0 && len(s.OneOf) == 0 && len(s.AnyOf) == 0 && s.Not == nil &&
-			s.Min == nil && s.Max == nil && s.ExclusiveMin == nil && s.ExclusiveMax == nil && s.MultipleOf == nil &&
-			s.MinLength == 0 && s.MaxLength == nil && s.Pattern == nil &&
-			s.MinItems == 0 && s.MaxItems == nil && !s.UniqueItems && len(s.PrefixItems) == 0 && s.Items == nil &&
-			s.Properties == nil && s.Required == nil &&
-			s.AdditionalProperties == nil && s.MaxProperties == nil && s.PropertyNames == nil && s.Discriminator == nil &&
-			len(s.Examples) == 0 && !s.Deprecated && !s.ReadOnly && !s.WriteOnly &&
-			s.ContentMediaType == "" && s.ContentEncoding == "" &&
-			s.Const == nil &&
-			s.Example == nil)
 }

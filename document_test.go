@@ -1,6 +1,7 @@
 package openapi_test
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"testing"
@@ -9,19 +10,41 @@ import (
 	"github.com/go-api-libs/types"
 )
 
-func TestDocument_JSON(t *testing.T) {
+// TestDocument_Golden loads testdata/openapi.json, a document that uses each object and feature the library models once,
+// validates it and writes it back: it must come out as it went in. The file is edited by hand, never regenerated, so a
+// difference is a change in what the library reads, resolves or writes.
+func TestDocument_Golden(t *testing.T) {
 	t.Parallel()
 
-	// security optional via an empty security requirement
-	testJSON(t, []byte(`{
-	  "openapi": "3.1.0",
-	  "info": {
-	    "title": "Sample Pet Store App",
-		"version": "1.0.0"
-	  },
-	  "paths": {"/": {}},
-	  "security": [{}]
-}`), &openapi.Document{})
+	want, err := os.ReadFile("testdata/openapi.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	doc := testJSON(t, want)
+
+	// references are resolved wherever they may appear, inside an operation's callbacks too
+	pets := doc.Paths["/pets"]
+	if pets.Post.Callbacks["onData"].Value == nil ||
+		(*pets.Post.Callbacks["fixedServer"].Value)["http://notificationServer.com?transactionId={$request.body#/id}&email={$request.body#/email}"].Value == nil ||
+		doc.Webhooks["newPet"].Value.Post.RequestBody.Value == nil {
+		t.Error("a reference is not resolved")
+	}
+
+	// a file holds what ToJSON returns
+	path := filepath.Join(t.TempDir(), "dir", "openapi.json")
+	if err := doc.WriteToFile(path); err != nil {
+		t.Fatal(err)
+	}
+
+	written, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if b, err := doc.ToJSON(); err != nil || !bytes.Equal(written, b) {
+		t.Errorf("the file differs from ToJSON: %v", err)
+	}
 }
 
 func TestDocument_Validate(t *testing.T) {
@@ -59,41 +82,6 @@ func TestDocument_Validate(t *testing.T) {
 	}
 
 	if err := doc.Validate(); err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestDocument_Examples(t *testing.T) {
-	t.Parallel()
-
-	if err := filepath.Walk("examples", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || filepath.Ext(path) == ".txt" {
-			return err
-		}
-
-		t.Run(path, func(t *testing.T) {
-			original, err := os.ReadFile(path)
-			if err != nil {
-				t.Fatal(err)
-			}
-
-			switch filepath.Ext(path) {
-			case ".json":
-				testJSON(t, original, &openapi.Document{})
-			case ".yaml":
-				doc, err := openapi.LoadFromData(original)
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				if err := doc.Validate(); err != nil {
-					t.Fatal(err)
-				}
-			}
-		})
-
-		return nil
-	}); err != nil {
 		t.Fatal(err)
 	}
 }

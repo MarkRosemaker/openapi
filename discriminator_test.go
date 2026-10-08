@@ -48,7 +48,7 @@ func TestDiscriminator_Mapping(t *testing.T) {
 	testJSON(t, discriminatorDoc(`{
             "woof": "Dog",
             "meow": "#/components/schemas/Cat"
-          }`), &openapi.Document{})
+          }`))
 }
 
 func TestDiscriminator_MappingUnresolved(t *testing.T) {
