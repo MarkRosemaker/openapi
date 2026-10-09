@@ -11,7 +11,7 @@
 		"unmarshaller",
 		"url"
 	],
-	"coverage": 71.7,
-	"devtoolVersion": "v0.0.0-20261003221119-dc596b955388",
+	"coverage": 71.9,
+	"devtoolVersion": "v0.0.0-20261009161243-122c090a48af",
 	"kind": "library"
 }
