@@ -73,6 +73,8 @@ generated. Your own rules go below that block, where they win — in a
 
 ## Keeping the documents true
 
+- Say what is, concisely. Not what was or how it came to be: that is git's.
+  A warning against a trap says what to do and why.
 - `README/*.md` is the README. If it no longer describes this repository,
   correcting it is part of the work, not a separate errand.
 - `docs/architecture.md` describes the architecture as it stands. Update it
@@ -91,8 +93,9 @@ generated. Your own rules go below that block, where they win — in a
 
 - Comments are one line, and only where the code would otherwise puzzle a
   reader. Never a restatement of what it already says.
-- Linters and scanners are installed at their latest by `make tools`. Do not
-  vendor one or add it to `go.mod` to run it.
+- Linters, scanners and generators are installed at their latest by
+  `make tools`, and `devtool.json` pins the versions installed. A run moves
+  a pin up, never back. Do not vendor one or add it to `go.mod` to run it.
 - Check a claim before writing it down: read the source, run the command.
 - Ask before making a decision that is the owner's — scope, or which of two
   designs. Do not ask about the process above; follow it.

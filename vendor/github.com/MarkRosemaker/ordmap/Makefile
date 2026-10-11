@@ -64,10 +64,10 @@ deps:
 	go get -u ./...
 	$(MAKE) tidy
 
-# Everything a tool writes: the go:generate directives, then the files devtool owns.
+# Everything a tool writes: the files devtool owns, then the go:generate directives, some of which devtool writes.
 generate:
-	go generate ./...
 	devtool update
+	go generate ./...
 
 # For a runner that did not just regenerate: it reports through git, so your own uncommitted edits look like drift.
 verify: generate
