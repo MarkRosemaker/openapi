@@ -4,8 +4,8 @@ github.com/MarkRosemaker/errpath v0.0.0-20261011100139-0f973ba10436 h1:K8rswHZpg
 github.com/MarkRosemaker/errpath v0.0.0-20261011100139-0f973ba10436/go.mod h1:VnXpUlsS3n1gSToedcQl2FCARGoA16CyitbCanUIv+I=
 github.com/MarkRosemaker/json2yaml v0.0.0-20261011100139-2d7c8ec80f68 h1:OioRuqNICzAZvbBCGJA+LCaiB6Y+JtJNNON1A4DwVuo=
 github.com/MarkRosemaker/json2yaml v0.0.0-20261011100139-2d7c8ec80f68/go.mod h1:eUwIjjooIESK1Ymw4bbMdSDF6feAblyZjxyoo5o/W6U=
-github.com/MarkRosemaker/jsonutil v0.0.0-20261011100139-a4e91ee48afc h1:LMBcVLu2DCOg0Kx6SA435dgklk6iQV+EACEuxinqdlk=
-github.com/MarkRosemaker/jsonutil v0.0.0-20261011100139-a4e91ee48afc/go.mod h1:SzjJlgYFlzpbFGvUUoQgfEsWlbai63bvhDPK8J0MNYM=
+github.com/MarkRosemaker/jsonutil v0.0.0-20261015233346-026192cb8989 h1:6bVKt0IPXhMHFfGDCgw4+Bz+w1qSNg2fim8hFlTSdls=
+github.com/MarkRosemaker/jsonutil v0.0.0-20261015233346-026192cb8989/go.mod h1:SzjJlgYFlzpbFGvUUoQgfEsWlbai63bvhDPK8J0MNYM=
 github.com/MarkRosemaker/ordmap v0.0.0-20261014160122-d6113d0a91f7 h1:n6UEIpOB+OyqQRtjhs7uB4/XbjGEVbOyM5fUDzviF/E=
 github.com/MarkRosemaker/ordmap v0.0.0-20261014160122-d6113d0a91f7/go.mod h1:mS4r7p7cdSLfcWIvgBkfkCrIOZfaHz0SIqr/Sli7ndw=
 github.com/MarkRosemaker/yaml v0.0.0-20261011100206-7a238ac9deda h1:6PGhEB9jXFPdOsFTUmIQXTtgfy6nlmD6FGo4XmOyV3Q=

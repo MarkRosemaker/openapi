@@ -33,6 +33,35 @@ func TimeUnmarshalIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 	return nil
 }
 
+// TimeMarshalIntUnixFor returns a marshaler for time.Time that writes, as [TimeMarshalIntUnix] does, the times held by
+// an object member of one of the names given, or by an array such a member holds; see [DateMarshalIntUnixFor].
+func TimeMarshalIntUnixFor(names ...string) func(*jsontext.Encoder, time.Time) error {
+	set := nameSet(names)
+
+	return func(enc *jsontext.Encoder, t time.Time) error {
+		if !set[memberName(enc.StackPointer())] {
+			return errors.ErrUnsupported
+		}
+
+		return TimeMarshalIntUnix(enc, t)
+	}
+}
+
+// TimeUnmarshalIntUnixFor returns an unmarshaler for time.Time that reads, as [TimeUnmarshalIntUnix] does, the times
+// held by an object member of one of the names given, or by an array such a member holds; see
+// [DateMarshalIntUnixFor].
+func TimeUnmarshalIntUnixFor(names ...string) func(*jsontext.Decoder, *time.Time) error {
+	set := nameSet(names)
+
+	return func(dec *jsontext.Decoder, t *time.Time) error {
+		if !set[memberName(dec.StackPointer())] {
+			return errors.ErrUnsupported
+		}
+
+		return TimeUnmarshalIntUnix(dec, t)
+	}
+}
+
 // timeAltLayout is a fallback layout for time strings that don't conform to RFC3339.
 const timeAltLayout = "Mon Jan 2 2006 15:04:05 MST-0700"
 
