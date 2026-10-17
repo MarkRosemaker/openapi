@@ -36,6 +36,11 @@ This package is particularly useful when you need to handle JSON encoding and de
   * `DateUnmarshalIntUnix` unmarshals `civil.Date` from such an integer, reading the day in UTC.
   * `DateMarshalIntUnixFor(names...)` and `DateUnmarshalIntUnixFor(names...)` do as the two above, but only for the
     dates held by an object member of one of the names given, as `TimeMarshalIntUnixFor` does for times.
+  * `DateMarshalBasic` marshals `civil.Date` as a string in ISO 8601's basic form, without separators, such as
+    `"20260320"`.
+  * `DateUnmarshalBasic` unmarshals `civil.Date` from such a string.
+  * `DateMarshalBasicFor(names...)` and `DateUnmarshalBasicFor(names...)` do as the two above, but only for the dates
+    held by an object member of one of the names given.
 * Custom unmarshaler for `float64`:
   * `Float64UnmarshalStringOrNumber` unmarshals `float64` from a number or from a string holding one, such as `"9.5"`:
     for an API that sends numbers as strings, but for the odd number. Null leaves the value as it is. With a field's
