@@ -388,6 +388,12 @@
             "type": "string",
             "writeOnly": true
           },
+          "born": {
+            "description": "a date in ISO 8601's basic form",
+            "type": "string",
+            "format": "date-basic",
+            "example": "20260320"
+          },
           "owner": {
             "description": "a reference with keywords beside it",
             "deprecated": true,

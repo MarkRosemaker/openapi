@@ -249,7 +249,7 @@ func (s *Schema) validateFormat() error {
 			types = "number"
 		}
 	case FormatEmail, FormatPassword, FormatUUID, FormatURI, FormatURIRef, FormatZipCode, FormatIPv4, FormatIPv6,
-		FormatByte, FormatBinary:
+		FormatByte, FormatBinary, FormatDateBasic:
 		if !s.allows(TypeString) {
 			types = "string"
 		}

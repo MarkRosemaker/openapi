@@ -30,6 +30,9 @@ const (
 	FormatBinary Format = "binary"
 	// FormatDate represents a date.
 	FormatDate Format = "date"
+	// FormatDateBasic represents a date in ISO 8601's basic form, without separators, such as "20260320". It is not
+	// one of JSON Schema's formats, whose date is "2026-03-20", but some APIs write a date this way.
+	FormatDateBasic Format = "date-basic"
 	// FormatDateTime represents a date-time.
 	FormatDateTime Format = "date-time"
 	// FormatDuration represents a duration.
@@ -57,7 +60,7 @@ var allFormats = []Format{
 	FormatUint, FormatUint32, FormatUint64,
 	FormatFloat, FormatDouble,
 	FormatByte, FormatBinary,
-	FormatDate, FormatDateTime, FormatDuration,
+	FormatDate, FormatDateBasic, FormatDateTime, FormatDuration,
 	FormatEmail, FormatPassword,
 	FormatUUID,
 	FormatURI, FormatURIRef, FormatZipCode,
