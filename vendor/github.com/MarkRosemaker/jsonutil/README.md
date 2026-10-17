@@ -17,14 +17,37 @@ This package is particularly useful when you need to handle JSON encoding and de
 * Custom marshaler and unmarshaler for `url.URL`:
   * `URLMarshal` marshals `url.URL` as a string.
   * `URLUnmarshal` unmarshals `url.URL` from a string.
-* Custom marshaler and unmarshaler for `time.Duration`:
+* Custom marshalers and unmarshalers for `time.Duration`:
   * `DurationMarshalIntSeconds` marshals `time.Duration` as an integer representing seconds.
   * `DurationUnmarshalIntSeconds` unmarshals `time.Duration` from an integer assuming it represents seconds.
+  * `DurationMarshalString` marshals `time.Duration` as a string in its canonical units, such as `"1h30m"` or `"500ms"`.
+  * `DurationUnmarshalString` unmarshals `time.Duration` from such a string, parsed with `time.ParseDuration`.
+* Custom marshalers and unmarshalers for `time.Time`:
+  * `TimeMarshalIntUnix` marshals `time.Time` as an integer representing unix time.
+  * `TimeUnmarshalIntUnix` unmarshals `time.Time` from an integer assuming it represents unix time.
+  * `TimeUnmarshalStringOrIntUnix` unmarshals `time.Time` from an RFC 3339 string, or a string such as
+    `"Mon Jan 2 2006 15:04:05 MST-0700"`, or an integer representing unix time. Null is the zero time.
+  * `TimeMarshalIntUnixFor(names...)` and `TimeUnmarshalIntUnixFor(names...)` return a marshaler and an unmarshaler
+    that do as `TimeMarshalIntUnix` and `TimeUnmarshalIntUnix` do, but only for the times held by an object member of
+    one of the names given, or by an array such a member holds. Any other time is left to the next (un)marshaler, or to
+    the default string: for an API that writes some times as unix time and others as strings.
+* Custom marshalers and unmarshalers for `civil.Date`:
+  * `DateMarshalIntUnix` marshals `civil.Date` as an integer representing the unix time of its midnight UTC.
+  * `DateUnmarshalIntUnix` unmarshals `civil.Date` from such an integer, reading the day in UTC.
+  * `DateMarshalIntUnixFor(names...)` and `DateUnmarshalIntUnixFor(names...)` do as the two above, but only for the
+    dates held by an object member of one of the names given, as `TimeMarshalIntUnixFor` does for times.
+* Custom unmarshaler for `float64`:
+  * `Float64UnmarshalStringOrNumber` unmarshals `float64` from a number or from a string holding one, such as `"9.5"`:
+    for an API that sends numbers as strings, but for the odd number. Null leaves the value as it is. With a field's
+    `string` option, the value is marshaled as a string too.
 * Custom marshaler for maps with ordered keys:
   * `OrderedMapMarshal[M ~map[K]V, K cmp.Ordered, V any]` marshals `M` so that the keys are sorted.
 * Custom marshaler for `http.Header`:
   * `HTTPHeaderMarshal` marshals the values of `http.Header` as single strings.
   * `HTTPHeaderUnmarshal` unmarshals the values of `http.Header` from single strings.
+* Reading and writing files:
+  * `ReadFile[T any](name, opts...)` reads the JSON file `name` and unmarshals it into a `T`.
+  * `WriteFile[T any](name, data, opts...)` marshals `data` and writes it to the JSON file `name`.
 
 ## Usage
 
@@ -201,6 +224,88 @@ func main() {
 
 	fmt.Println(string(res))
 	// Output: {"Foo":"bar","Baz":"quux"}
+}
+```
+
+### Numbers Sent as Strings
+
+For an API that sends a number as a string, such as `"9.5"`, but now and then as a number, unmarshal with
+`Float64UnmarshalStringOrNumber` and give the field the `string` option, so that it is marshaled as the string again:
+
+```go
+package main
+
+import (
+	"encoding/json/v2"
+	"fmt"
+
+	"github.com/MarkRosemaker/jsonutil"
+)
+
+var jsonOpts = json.WithUnmarshalers(json.UnmarshalFromFunc(jsonutil.Float64UnmarshalStringOrNumber))
+
+type Option struct {
+	Strike float64 `json:"strike,string"`
+}
+
+func main() {
+	for _, in := range []string{`{"strike":"9.5"}`, `{"strike":0.0}`} {
+		out := &Option{}
+		if err := json.Unmarshal([]byte(in), out, jsonOpts); err != nil {
+			panic(err)
+		}
+
+		fmt.Println(out.Strike)
+	}
+
+	res, err := json.Marshal(Option{Strike: 52})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(res))
+	// Output:
+	// 9.5
+	// 0
+	// {"strike":"52"}
+}
+```
+
+### Unix Time for Some Members Only
+
+Where an API writes some dates or times as unix time and others as strings, name the members holding the former:
+
+```go
+package main
+
+import (
+	"encoding/json/v2"
+	"fmt"
+	"time"
+
+	"github.com/MarkRosemaker/jsonutil"
+)
+
+var jsonOpts = json.JoinOptions(
+	json.WithMarshalers(json.MarshalToFunc(jsonutil.TimeMarshalIntUnixFor("at"))),
+	json.WithUnmarshalers(json.UnmarshalFromFunc(jsonutil.TimeUnmarshalIntUnixFor("at"))),
+)
+
+type Event struct {
+	At      time.Time `json:"at"`
+	Created time.Time `json:"created"`
+}
+
+func main() {
+	t := time.Unix(1759190400, 0).UTC()
+
+	res, err := json.Marshal(Event{At: t, Created: t}, jsonOpts)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(res))
+	// Output: {"at":1759190400,"created":"2025-09-30T00:00:00Z"}
 }
 ```
 
