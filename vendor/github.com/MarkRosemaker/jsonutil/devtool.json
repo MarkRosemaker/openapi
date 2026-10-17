@@ -11,8 +11,8 @@
 		"unmarshaller",
 		"url"
 	],
-	"coverage": 76.5,
-	"devtoolVersion": "v0.0.0-20261017132620-b1e2f2c2fa46",
+	"coverage": 77.2,
+	"devtoolVersion": "v0.0.0-20261017144641-7c04d89b0536",
 	"kind": "library",
 	"tools": {
 		"golangci-lint": "v2.15.0",
