@@ -1,0 +1,68 @@
+version: 2
+linters:
+    default: none
+    enable:
+        - dupword
+        - errcheck
+        - exhaustive
+        - govet
+        - noctx
+        - tagalign
+        - testifylint
+        - usetesting
+        - wsl_v5
+    settings:
+        errcheck:
+            exclude-functions:
+                - (*os.File).Close
+                - (io.Closer).Close
+                - (io.ReadCloser).Close
+                - (github.com/spf13/afero.File).Close
+        exhaustive:
+            check:
+                - switch
+                - map
+            default-signifies-exhaustive: true
+        govet:
+            disable:
+                - fieldalignment
+                - shadow
+            enable-all: true
+        tagalign:
+            align: true
+            sort: true
+            order:
+                - json
+                - required
+                - description
+            strict: true
+        testifylint:
+            enable-all: true
+            disable:
+                - require-error
+                - float-compare
+        usetesting:
+            context-background: true
+            os-chdir: true
+            os-mkdir-temp: true
+            os-setenv: true
+            os-temp-dir: true
+            os-create-temp: true
+        wsl_v5:
+            allow-first-in-block: true
+            allow-whole-block: true
+            branch-max-lines: 4
+            cuddle-max-statements: 2
+formatters:
+    enable:
+        - gci
+        - gofumpt
+        - goimports
+    settings:
+        gofumpt:
+            extra:
+                group-params: true
+                clothe-returns: true
+                balance-calls: true
+    exclusions:
+        generated: strict
