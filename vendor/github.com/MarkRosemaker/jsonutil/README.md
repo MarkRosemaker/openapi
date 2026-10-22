@@ -38,7 +38,8 @@ This package is particularly useful when you need to handle JSON encoding and de
     dates held by an object member of one of the names given, as `TimeMarshalIntUnixFor` does for times.
   * `DateMarshalBasic` marshals `civil.Date` as a string in ISO 8601's basic form, without separators, such as
     `"20260320"`.
-  * `DateUnmarshalBasic` unmarshals `civil.Date` from such a string.
+  * `DateUnmarshalBasic` unmarshals `civil.Date` from such a string, or from null as the zero date, which
+    `DateMarshalBasic` writes as null.
   * `DateMarshalBasicFor(names...)` and `DateUnmarshalBasicFor(names...)` do as the two above, but only for the dates
     held by an object member of one of the names given.
 * Custom unmarshaler for `float64`:

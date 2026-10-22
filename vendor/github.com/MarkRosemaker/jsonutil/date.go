@@ -68,8 +68,12 @@ func DateUnmarshalIntUnixFor(names ...string) func(*jsontext.Decoder, *civil.Dat
 }
 
 // DateMarshalBasic is a custom marshaler for civil.Date, marshaling them as strings in ISO 8601's basic form, without
-// separators, such as "20260320".
+// separators, such as "20260320". The zero date marshals as null.
 func DateMarshalBasic(enc *jsontext.Encoder, d civil.Date) error {
+	if d.IsZero() {
+		return enc.WriteToken(jsontext.Null)
+	}
+
 	if d.Year < 0 || d.Year > 9999 {
 		return fmt.Errorf("year %d does not fit four digits", d.Year)
 	}
@@ -84,11 +88,17 @@ func DateMarshalBasic(enc *jsontext.Encoder, d civil.Date) error {
 }
 
 // DateUnmarshalBasic is a custom unmarshaler for civil.Date, unmarshaling them from strings in ISO 8601's basic form,
-// such as "20260320".
+// such as "20260320". Null unmarshals as the zero date.
 func DateUnmarshalBasic(dec *jsontext.Decoder, d *civil.Date) error {
 	v, err := dec.ReadValue()
 	if err != nil {
 		return err
+	}
+
+	if v.Kind() == jsontext.KindNull {
+		*d = civil.Date{}
+
+		return nil
 	}
 
 	// eight digits within quotes; a digit is never escaped, so the raw value is all there is to read
