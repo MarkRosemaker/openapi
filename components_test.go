@@ -34,6 +34,15 @@ func TestComponents_Validate_Error(t *testing.T) {
 			}},
 		}, `parameters["MyParameter"].name is required`},
 		{openapi.Components{
+			Examples: openapi.Examples{" ": &openapi.ExampleRef{Value: &openapi.Example{}}},
+		}, `examples[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
+		{openapi.Components{
+			Headers: openapi.Headers{" ": &openapi.HeaderRef{Value: &openapi.Header{}}},
+		}, `headers[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
+		{openapi.Components{
+			Links: openapi.Links{" ": &openapi.LinkRef{Value: &openapi.Link{}}},
+		}, `links[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`},
+		{openapi.Components{
 			Examples: openapi.Examples{"MyExample": invalidExample},
 		}, `examples["MyExample"]: value and externalValue are mutually exclusive`},
 		{openapi.Components{

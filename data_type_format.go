@@ -1,12 +1,9 @@
 package openapi
 
-import (
-	"slices"
-
-	"github.com/MarkRosemaker/errpath"
-)
-
-// Format defines additional formats to provide fine detail for primitive data types.
+// Format defines additional formats to provide fine detail for primitive data types. It is an open string: the
+// constants below are the formats the library knows, and any other is allowed ([Specification]).
+//
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#data-types
 type Format string
 
 const (
@@ -54,27 +51,3 @@ const (
 	// FormatIPv6 represents an IPv6 address.
 	FormatIPv6 Format = "ipv6"
 )
-
-var allFormats = []Format{
-	FormatInt32, FormatInt64,
-	FormatUint, FormatUint32, FormatUint64,
-	FormatFloat, FormatDouble,
-	FormatByte, FormatBinary,
-	FormatDate, FormatDateBasic, FormatDateTime, FormatDuration,
-	FormatEmail, FormatPassword,
-	FormatUUID,
-	FormatURI, FormatURIRef, FormatZipCode,
-	FormatIPv4, FormatIPv6,
-}
-
-// Validate validates the format.
-func (f Format) Validate() error {
-	if slices.Contains(allFormats, f) {
-		return nil
-	}
-
-	return &errpath.ErrInvalid[Format]{
-		Value: f,
-		Enum:  allFormats,
-	}
-}

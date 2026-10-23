@@ -227,16 +227,11 @@ func (s *Schema) onlyFor(applies bool, typ string, kws ...keyword) error {
 	return nil
 }
 
-// validateFormat checks that the format is known and suits the schema's type.
+// validateFormat checks that a known format suits the schema's type. Any other format is allowed, as the
+// [specification] leaves format open.
+//
+// [specification]: https://spec.openapis.org/oas/v3.1.0#data-types
 func (s *Schema) validateFormat() error {
-	if s.Format == "" {
-		return nil
-	}
-
-	if err := s.Format.Validate(); err != nil {
-		return &errpath.ErrField{Field: "format", Err: err}
-	}
-
 	var types string
 
 	switch s.Format {
@@ -257,8 +252,6 @@ func (s *Schema) validateFormat() error {
 		if !s.allows(TypeInteger) && !s.allows(TypeString) {
 			types = "integer or string"
 		}
-	default:
-		return fmt.Errorf("unimplemented format: %s", s.Format)
 	}
 
 	if types == "" {

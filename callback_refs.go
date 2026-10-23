@@ -15,10 +15,6 @@ type CallbackRefs map[string]*CallbackRef
 // Validate returns an error if the CallbackRefs breaks the specification.
 func (cs CallbackRefs) Validate() error {
 	for name, c := range cs.ByIndex() {
-		if err := validateKey(name); err != nil {
-			return err
-		}
-
 		if err := c.Validate(); err != nil {
 			return &errpath.ErrKey{Key: name, Err: err}
 		}

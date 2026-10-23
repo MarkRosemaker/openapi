@@ -15,10 +15,6 @@ type Links map[string]*LinkRef
 // Validate returns an error if the Links breaks the specification.
 func (ls Links) Validate() error {
 	for expr, l := range ls.ByIndex() {
-		if err := validateKey(expr); err != nil {
-			return err
-		}
-
 		if err := l.Validate(); err != nil {
 			return &errpath.ErrField{Field: expr, Err: err}
 		}

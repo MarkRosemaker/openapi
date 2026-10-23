@@ -15,10 +15,6 @@ type Examples map[string]*ExampleRef
 // Validate validates the map of examples.
 func (exs Examples) Validate() error {
 	for k, ex := range exs.ByIndex() {
-		if err := validateKey(k); err != nil {
-			return err
-		}
-
 		if err := ex.Validate(); err != nil {
 			return &errpath.ErrKey{Key: k, Err: err}
 		}
