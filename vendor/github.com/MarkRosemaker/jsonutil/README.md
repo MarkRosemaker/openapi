@@ -26,11 +26,14 @@ This package is particularly useful when you need to handle JSON encoding and de
   * `TimeMarshalIntUnix` marshals `time.Time` as an integer representing unix time.
   * `TimeUnmarshalIntUnix` unmarshals `time.Time` from an integer assuming it represents unix time.
   * `TimeUnmarshalStringOrIntUnix` unmarshals `time.Time` from an RFC 3339 string, or a string such as
-    `"Mon Jan 2 2006 15:04:05 MST-0700"`, or an integer representing unix time. Null is the zero time.
+    `"Mon Jan 2 2006 15:04:05 MST-0700"`, or an integer representing unix time. Null and the empty string are the
+    zero time.
   * `TimeMarshalIntUnixFor(names...)` and `TimeUnmarshalIntUnixFor(names...)` return a marshaler and an unmarshaler
     that do as `TimeMarshalIntUnix` and `TimeUnmarshalIntUnix` do, but only for the times held by an object member of
     one of the names given, or by an array such a member holds. Any other time is left to the next (un)marshaler, or to
     the default string: for an API that writes some times as unix time and others as strings.
+  * `TimeUnmarshalEmptyAsZero` unmarshals `time.Time` from an empty string as the zero time, and from anything else
+    as `time.Time` itself does.
 * Custom marshalers and unmarshalers for `civil.Date`:
   * `DateMarshalIntUnix` marshals `civil.Date` as an integer representing the unix time of its midnight UTC.
   * `DateUnmarshalIntUnix` unmarshals `civil.Date` from such an integer, reading the day in UTC.
@@ -42,6 +45,8 @@ This package is particularly useful when you need to handle JSON encoding and de
     `DateMarshalBasic` writes as null.
   * `DateMarshalBasicFor(names...)` and `DateUnmarshalBasicFor(names...)` do as the two above, but only for the dates
     held by an object member of one of the names given.
+  * `DateUnmarshalEmptyAsZero` unmarshals `civil.Date` from an empty string as the zero date, and from anything else
+    as `civil.Date` itself does.
 * Custom unmarshaler for `float64`:
   * `Float64UnmarshalStringOrNumber` unmarshals `float64` from a number or from a string holding one, such as `"9.5"`:
     for an API that sends numbers as strings, but for the odd number. Null leaves the value as it is. With a field's

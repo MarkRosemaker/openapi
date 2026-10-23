@@ -153,3 +153,9 @@ func DateUnmarshalBasicFor(names ...string) func(*jsontext.Decoder, *civil.Date)
 		return DateUnmarshalBasic(dec, d)
 	}
 }
+
+// DateUnmarshalEmptyAsZero is a custom unmarshaler for civil.Date that reads an empty string as the zero date, as an
+// API that leaves a date out may send, and anything else as civil.Date itself does.
+func DateUnmarshalEmptyAsZero(dec *jsontext.Decoder, d *civil.Date) error {
+	return unmarshalEmptyAsZero(dec, d)
+}
