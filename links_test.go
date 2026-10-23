@@ -18,10 +18,6 @@ func TestLinks_Validate_Error(t *testing.T) {
 			`foo: operationRef or operationId must be set`,
 		},
 		{
-			openapi.Links{" ": {Value: &openapi.Link{}}},
-			`[" "] (" ") is invalid: must match the regular expression "^[a-zA-Z0-9\\.\\-_]+$"`,
-		},
-		{
 			openapi.Links{"foo": {Value: &openapi.Link{
 				OperationID: "myOperation",
 				Server:      &openapi.Server{},

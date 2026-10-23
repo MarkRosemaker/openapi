@@ -2,6 +2,7 @@ package openapi
 
 import (
 	"fmt"
+	"iter"
 	"regexp"
 
 	"github.com/MarkRosemaker/errpath"
@@ -62,6 +63,18 @@ func validateKey(key string) error {
 	}}
 }
 
+// validateKeys checks the keys of one of the components' maps. The same maps elsewhere, such as a media type's
+// examples or a response's headers, take any key: the regular expression binds the components only.
+func validateKeys[V any](kvs iter.Seq2[string, V]) error {
+	for k := range kvs {
+		if err := validateKey(k); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // Validate returns an error if the Components breaks the specification.
 func (c *Components) Validate() error {
 	for name := range c.Schemas.ByIndex() {
@@ -100,12 +113,20 @@ func (c *Components) Validate() error {
 		return &errpath.ErrField{Field: "parameters", Err: err}
 	}
 
+	if err := validateKeys(c.Examples.ByIndex()); err != nil {
+		return &errpath.ErrField{Field: "examples", Err: err}
+	}
+
 	if err := c.Examples.Validate(); err != nil {
 		return &errpath.ErrField{Field: "examples", Err: err}
 	}
 
 	if err := c.RequestBodies.Validate(); err != nil {
 		return &errpath.ErrField{Field: "requestBodies", Err: err}
+	}
+
+	if err := validateKeys(c.Headers.ByIndex()); err != nil {
+		return &errpath.ErrField{Field: "headers", Err: err}
 	}
 
 	if err := c.Headers.Validate(); err != nil {
@@ -116,8 +137,16 @@ func (c *Components) Validate() error {
 		return &errpath.ErrField{Field: "securitySchemes", Err: err}
 	}
 
+	if err := validateKeys(c.Links.ByIndex()); err != nil {
+		return &errpath.ErrField{Field: "links", Err: err}
+	}
+
 	if err := c.Links.Validate(); err != nil {
 		return &errpath.ErrField{Field: "links", Err: err}
+	}
+
+	if err := validateKeys(c.Callbacks.ByIndex()); err != nil {
+		return &errpath.ErrField{Field: "callbacks", Err: err}
 	}
 
 	if err := c.Callbacks.Validate(); err != nil {

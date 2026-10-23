@@ -6,7 +6,11 @@ import (
 	"github.com/MarkRosemaker/errpath"
 )
 
-// Format defines additional formats to provide fine detail for primitive data types.
+// Format defines additional formats to provide fine detail for primitive data types. It is an open string
+// ([Specification]): the constants below are the formats the library knows, and Validate checks a schema's format
+// against them only in [Document.ValidateStrict].
+//
+// [Specification]: https://spec.openapis.org/oas/v3.1.0#data-types
 type Format string
 
 const (
@@ -67,7 +71,7 @@ var allFormats = []Format{
 	FormatIPv4, FormatIPv6,
 }
 
-// Validate validates the format.
+// Validate reports a format the library does not know.
 func (f Format) Validate() error {
 	if slices.Contains(allFormats, f) {
 		return nil

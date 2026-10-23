@@ -98,10 +98,6 @@ func TestSchema_Validate_Error(t *testing.T) {
 		}, `type ("foo") is invalid, must be one of: "integer", "number", "string", "array", "boolean", "object", "null"`},
 		{openapi.Schema{
 			Type:   openapi.TypeString,
-			Format: "foo",
-		}, `format ("foo") is invalid, must be one of: ` + validFormats},
-		{openapi.Schema{
-			Type:   openapi.TypeString,
 			Format: openapi.FormatInt64,
 		}, `format ("int64") is invalid: only valid for integer type, got string`},
 		{openapi.Schema{

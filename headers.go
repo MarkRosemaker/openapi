@@ -15,10 +15,6 @@ type Headers map[string]*HeaderRef
 // Validate returns an error if the Headers breaks the specification.
 func (hs Headers) Validate() error {
 	for k, h := range hs.ByIndex() {
-		if err := validateKey(k); err != nil {
-			return err
-		}
-
 		if err := h.Validate(); err != nil {
 			return &errpath.ErrKey{Key: k, Err: err}
 		}

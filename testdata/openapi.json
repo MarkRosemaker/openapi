@@ -152,7 +152,7 @@
                   }
                 },
                 "examples": {
-                  "frog": {
+                  "a frog": {
                     "$ref": "#/components/examples/frog"
                   }
                 }
@@ -387,6 +387,11 @@
           "password": {
             "type": "string",
             "writeOnly": true
+          },
+          "notes": {
+            "description": "a format the specification does not define",
+            "type": "string",
+            "format": "markdown"
           },
           "born": {
             "description": "a date in ISO 8601's basic form",
