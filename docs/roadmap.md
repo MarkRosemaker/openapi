@@ -2,23 +2,16 @@
 
 Work not yet done. An entry is deleted once it is.
 
-## Normal and strict validation
+## More strict checks
 
-`Validate` rejects what the specifications forbid, a MUST. Real documents
-also break what they only advise against, a SHOULD or RECOMMENDED, and
-rejecting those would refuse documents that are legal. Notion's
-undocumented specification had `"enum": []` twice: JSON Schema 2020-12 says an enum's array "SHOULD have at
-least one element", and an empty one allows no value at all. Downstream it
-was taken for a plain string and merged with five unrelated ones.
+`Document.ValidateStrict` reports what the specifications allow but a document
+rarely means: an unknown format, and a key outside the components that would
+not do as a component's. Other advice it could check, each with a real case
+first:
 
-A `ValidateStrict` beside `Validate` would also report what is only advised
-against: an empty `enum`, an `example` its schema would reject for more than its
-kind, which `Validate` already checks, a
-response or parameter without a `description`. `Validate` stays as it is,
-so a document that loads today still validates.
-
-Open questions:
-
-- whether strict validation returns every finding or stops at the first, as
-  `Validate` does;
-- which advice to check first; the empty `enum` has a real case.
+- an empty `enum`, which JSON Schema 2020-12 says "SHOULD have at least one
+  element" and which allows no value at all; Notion's undocumented
+  specification had it twice, and downstream it was taken for a plain string;
+- an `example` its schema would reject for more than its kind, which
+  `Validate` already checks;
+- a response or parameter without a `description`.
