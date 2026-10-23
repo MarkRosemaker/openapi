@@ -13,8 +13,8 @@
 		"validation",
 		"yaml"
 	],
-	"coverage": 96.4,
-	"devtoolVersion": "v0.0.0-20261022122323-875628a18236",
+	"coverage": 92.4,
+	"devtoolVersion": "v0.0.0-20261023164423-322ebdf16dc3",
 	"kind": "library",
 	"tools": {
 		"golangci-lint": "v2.15.0",
