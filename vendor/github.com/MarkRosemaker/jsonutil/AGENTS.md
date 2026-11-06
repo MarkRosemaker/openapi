@@ -28,11 +28,13 @@ cost you something.
 - A new idea that arrives while a pull request is open belongs in that
   pull request if it fits, and on `docs/roadmap.md` if it is bigger than it.
   Not in a second branch.
-- Once you have branched, leave `main` alone. Do not go looking for what
+- While a branch is open, leave `main` alone. Do not go looking for what
   has changed on it, and do not merge it in. Reconciling is its own
   instruction, and you will be given it when it is wanted. Where the pull
   request stops being mergeable, say so and stop — that is the instruction
   arriving, and it is not yours to give yourself.
+- Once the pull request has merged, `main` is yours to read again: see
+  [The next step](#the-next-step).
 
 ## Cross-repo dependencies
 
@@ -108,3 +110,21 @@ generated. Your own rules go below that block, where they win — in a
 - Watching a pull request costs nothing, so do not spend a turn subscribing
   or unsubscribing and do not ask which is wanted. If it happens by itself,
   leave it. You will be told when there is a review to act on.
+
+## The next step
+
+End every piece of work — a pull request opened, a review answered, a pull
+request merged — with the next step, in the chat. It keeps the project
+moving towards what this repository is for, as `README/` says, by naming the
+one thing that matters most now.
+
+- **A question is open:** ask it, again if it went unanswered.
+- **A pull request needs more:** say what it needs.
+- **A pull request is ready:** suggest merging it, with its link.
+- **A pull request has merged:** pull `main` and read what changed on it
+  besides your work. The owner changes the roadmap and the code outside the
+  conversation. Then suggest the top one to three ways forward, from the
+  roadmap or from what would close off the work just done.
+
+It is a nudge, not an analysis. Do not rethink it each time: the same
+suggestion again is fine, and wanted, until the owner answers it.
