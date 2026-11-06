@@ -28,11 +28,13 @@ cost you something.
 - A new idea that arrives while a pull request is open belongs in that
   pull request if it fits, and on `docs/roadmap.md` if it is bigger than it.
   Not in a second branch.
-- Once you have branched, leave `main` alone. Do not go looking for what
+- While a branch is open, leave `main` alone. Do not go looking for what
   has changed on it, and do not merge it in. Reconciling is its own
   instruction, and you will be given it when it is wanted. Where the pull
   request stops being mergeable, say so and stop — that is the instruction
   arriving, and it is not yours to give yourself.
+- Once the pull request has merged, `main` is yours to read again: see
+  [The next step](#the-next-step).
 
 ## Cross-repo dependencies
 
@@ -79,15 +81,29 @@ generated. Your own rules go below that block, where they win — in a
   correcting it is part of the work, not a separate errand.
 - `docs/architecture.md` describes the architecture as it stands. Update it
   in the same commit that changes the architecture.
-- `docs/roadmap.md` is work not yet done. Delete an entry when it is done.
-  Something worth doing but outside the current change goes here instead of
-  widening that change.
 - `mk/*.mk` is where a make target goes.
 - `AGENTS/*.md` is this file's repository-specific half, and is held to the
   same standard: true, worth the reading, and never a restatement of what is
   above. A fragment that repeats the generated text costs every reader twice
   and drifts from it the first time the template changes. Say so rather than
   leaving one in place.
+
+## The roadmap
+
+`docs/roadmap.md`, with the files in `docs/roadmap/` it links to, is what
+will be: the work not yet done, and nothing else. The owner adds plans and
+ideas to it outside any conversation.
+
+- A pull request that implements an item removes it in the same pull
+  request: the whole entry or file, or the part that is done.
+- An item you find already implemented, by earlier work or by the owner,
+  goes too, in the pull request at hand.
+- Where part of an item still says something true about the repository,
+  move it into the document that describes what is, such as
+  `docs/architecture.md` or `README/`, rewritten to say what is. Otherwise
+  delete it. Keep no record of what was done: that is git's.
+- Work worth doing outside the current change goes here, rather than
+  widening the change.
 
 ## Code
 
@@ -108,6 +124,24 @@ generated. Your own rules go below that block, where they win — in a
 - Watching a pull request costs nothing, so do not spend a turn subscribing
   or unsubscribing and do not ask which is wanted. If it happens by itself,
   leave it. You will be told when there is a review to act on.
+
+## The next step
+
+End every piece of work — a pull request opened, a review answered, a pull
+request merged — with the next step, in the chat. It keeps the project
+moving towards what this repository is for, as `README/` says, by naming the
+one thing that matters most now.
+
+- **A question is open:** ask it, again if it went unanswered.
+- **A pull request needs more:** say what it needs.
+- **A pull request is ready:** suggest merging it, with its link.
+- **A pull request has merged:** pull `main` and read what changed on it
+  besides your work. The owner changes the roadmap and the code outside the
+  conversation. Then suggest the top one to three ways forward, from the
+  roadmap or from what would close off the work just done.
+
+It is a nudge, not an analysis. Do not rethink it each time: the same
+suggestion again is fine, and wanted, until the owner answers it.
 
 ## Particular to this repository
 
