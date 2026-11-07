@@ -7,8 +7,19 @@ MAKEFLAGS += --no-print-directory
 
 CLEAN_FILES := cover.out
 
+# remove deletes files and directories: with rm, or with PowerShell on
+# Windows, which may have no rm.
+ifeq ($(OS),Windows_NT)
+empty :=
+comma := ,
+remove = powershell -NoProfile -Command "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $(subst $(empty) $(empty),$(comma),$(strip $1)); exit 0"
+else
+remove = rm -rf $1
+endif
+
 # A tool built with an older Go than this module targets refuses to analyse it.
 TOOL_GO := $(shell go env GOVERSION)
+tools: export GOTOOLCHAIN := $(TOOL_GO)
 
 # Where make tools installs, which is GOBIN when that is set. Put on the PATH
 # below so an older copy earlier on yours cannot be the one that runs.
@@ -16,7 +27,9 @@ TOOL_BIN := $(shell go env GOBIN)
 ifeq ($(TOOL_BIN),)
 TOOL_BIN := $(shell go env GOPATH)/bin
 endif
-export PATH := $(TOOL_BIN):$(PATH)
+# A Windows PATH is separated by ;, any other by :, Git Bash's too.
+PATH_SEP := $(if $(findstring ;,$(PATH)),;,:)
+export PATH := $(TOOL_BIN)$(PATH_SEP)$(PATH)
 
 .PHONY: all ci ready lint vet vuln test test-race cover format fix tidy deps generate verify doc tools clean
 
@@ -79,11 +92,11 @@ doc:
 
 # Installs what the targets above shell out to, into $(go env GOPATH)/bin.
 tools:
-	GOTOOLCHAIN=$(TOOL_GO) go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
-	GOTOOLCHAIN=$(TOOL_GO) go install golang.org/x/vuln/cmd/govulncheck@latest
-	GOTOOLCHAIN=$(TOOL_GO) go install golang.org/x/pkgsite/cmd/pkgsite@latest
-	GOTOOLCHAIN=$(TOOL_GO) go install github.com/MarkRosemaker/devtool@latest
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	go install golang.org/x/pkgsite/cmd/pkgsite@latest
+	go install github.com/MarkRosemaker/devtool@latest
 
 # A fragment adds its own with CLEAN_FILES += dist.
 clean:
-	rm -rf $(CLEAN_FILES)
+	$(call remove,$(CLEAN_FILES))
