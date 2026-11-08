@@ -533,3 +533,26 @@ func canonicalJSON(t *testing.T, b []byte) string {
 
 	return string(v)
 }
+
+// A nullable schema may default to null: an optional value that is absent unless set.
+func TestSchema_NullDefaultOnNullable(t *testing.T) {
+	doc, err := openapi.LoadFromData([]byte(`{"openapi":"3.1.0","info":{"title":"t","version":"1"},"paths":{},
+ "components":{"schemas":{"A":{"type":"object","properties":{"x":{"type":["string","null"],"default":null}}}}}}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := doc.Validate(); err != nil {
+		t.Fatal(err)
+	}
+
+	doc, err = openapi.LoadFromData([]byte(`{"openapi":"3.1.0","info":{"title":"t","version":"1"},"paths":{},
+ "components":{"schemas":{"A":{"type":"object","properties":{"x":{"type":"string","default":null}}}}}}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := doc.Validate(); err == nil {
+		t.Fatal("a null default on a schema that is not nullable validated")
+	}
+}

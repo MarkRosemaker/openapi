@@ -547,7 +547,7 @@ func (s *Schema) validateDefault() error {
 		return nil
 	}
 
-	if !enumKindMatchesType(s.Default, s.Type) {
+	if !s.allowsKindOf(s.Default) {
 		return &errpath.ErrField{Field: "default", Err: &errpath.ErrInvalid[any]{
 			Value:   jsonDisplayValue(s.Default),
 			Message: fmt.Sprintf("does not match schema type, got %s", s.typeOrNone()),
