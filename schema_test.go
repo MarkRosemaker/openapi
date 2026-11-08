@@ -5,6 +5,7 @@ import (
 	"encoding/json/v2"
 	"fmt"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/MarkRosemaker/openapi"
@@ -478,4 +479,57 @@ func TestSchema_Validate_Untyped(t *testing.T) {
 	if err := s.Validate(); err == nil || err.Error() != `properties["width"].multipleOf (4) is invalid: only valid for number type, got string` {
 		t.Fatalf("got %v", err)
 	}
+}
+
+// x-nullable, which Swagger 2.0 tools write, is read as null being allowed the way JSON Schema 2020-12 says it, and
+// written back that way, without the extension.
+func TestSchema_MigrateXNullable(t *testing.T) {
+	t.Parallel()
+
+	for _, tc := range []struct{ name, in, want string }{
+		{"typed", `{"type": "string", "format": "date", "x-nullable": true}`, `{"type": ["string", "null"], "format": "date"}`},
+		{"typed already", `{"type": ["integer", "null"], "x-nullable": true}`, `{"type": ["integer", "null"]}`},
+		{"reference", `{"$ref": "#/components/schemas/Pet", "x-nullable": true}`, `{"anyOf": [{"$ref": "#/components/schemas/Pet"}, {"type": "null"}]}`},
+		{"oneOf", `{"oneOf": [{"type": "string"}, {"type": "integer"}], "x-nullable": true}`, `{"oneOf": [{"type": "string"}, {"type": "integer"}, {"type": "null"}]}`},
+		{"anyOf", `{"anyOf": [{"type": "string"}], "x-nullable": true}`, `{"anyOf": [{"type": "string"}, {"type": "null"}]}`},
+		{"any type", `{"description": "anything", "x-nullable": true}`, `{"description": "anything"}`},
+		{"the null type", `{"type": "null", "x-nullable": true}`, `{"type": "null"}`},
+		{"false", `{"type": "string", "x-nullable": false}`, `{"type": "string"}`},
+		{"other extensions kept", `{"type": "string", "x-a": 1, "x-nullable": true, "x-b": 2}`, `{"type": ["string", "null"], "x-a": 1, "x-b": 2}`},
+		{"not a boolean", `{"type": "string", "x-nullable": "yes"}`, `{"type": "string", "x-nullable": "yes"}`},
+		{"nested", `{"type": "object", "properties": {"end": {"type": "string", "x-nullable": true}}}`, `{"type": "object", "properties": {"end": {"type": ["string", "null"]}}}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			var s openapi.Schema
+			if err := json.Unmarshal([]byte(tc.in), &s); err != nil {
+				t.Fatal(err)
+			}
+
+			if !strings.Contains(tc.want, `"x-`) && len(s.Extensions) != 0 {
+				t.Errorf("no extension is left, but Extensions holds %s", s.Extensions)
+			}
+
+			got, err := json.Marshal(&s)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			if g, w := canonicalJSON(t, got), canonicalJSON(t, []byte(tc.want)); g != w {
+				t.Errorf("got  %s\nwant %s", g, w)
+			}
+		})
+	}
+}
+
+func canonicalJSON(t *testing.T, b []byte) string {
+	t.Helper()
+
+	v := jsontext.Value(b)
+	if err := v.Canonicalize(); err != nil {
+		t.Fatalf("%s: %v", b, err)
+	}
+
+	return string(v)
 }
