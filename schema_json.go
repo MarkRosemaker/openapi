@@ -87,7 +87,48 @@ func (s *Schema) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 	s.Type, s.Nullable = v.Type.Type, v.Type.Nullable
 
+	s.migrateXNullable()
+
 	return nil
+}
+
+// migrateXNullable turns the x-nullable extension of Swagger 2.0 tools, which OpenAPI 3.1 has no use for, into how
+// JSON Schema 2020-12 allows null: a type of [X, "null"], or null as an alternative of its own. x-nullable false is
+// the default and dropped; a value other than a boolean is left as it is.
+//
+// See https://spec.openapis.org/oas/v3.1.0#data-types and https://json-schema.org/draft/2020-12/json-schema-validation#name-type.
+func (s *Schema) migrateXNullable() {
+	val, rest, ok := takeExtension(s.Extensions, "x-nullable")
+	if !ok {
+		return
+	}
+
+	var nullable bool
+	if err := json.Unmarshal(val, &nullable); err != nil {
+		return
+	}
+
+	s.Extensions = rest
+
+	if !nullable {
+		return
+	}
+
+	null := &Schema{Type: TypeNull}
+
+	switch {
+	case s.Type == TypeNull:
+	case s.Type != "":
+		s.Nullable = true
+	case s.Ref != nil:
+		s.AnyOf = SchemaList{{Ref: s.Ref}, null}
+		s.Ref = nil
+	case len(s.OneOf) > 0:
+		s.OneOf = append(s.OneOf, null)
+	case len(s.AnyOf) > 0:
+		s.AnyOf = append(s.AnyOf, null)
+	}
+	// a schema of no type and no alternatives allows null already
 }
 
 // MarshalJSONTo marshals a schema, writing a nullable Type X as [X, "null"].

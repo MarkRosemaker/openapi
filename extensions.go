@@ -1,6 +1,7 @@
 package openapi
 
 import (
+	"bytes"
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
@@ -49,4 +50,60 @@ func validateExtensions(ext Extensions) error {
 	}
 
 	return nil
+}
+
+// takeExtension removes the extension named name from ext and returns its value, keeping the order of the others.
+func takeExtension(ext Extensions, name string) (jsontext.Value, Extensions, bool) {
+	if len(ext) == 0 {
+		return nil, ext, false
+	}
+
+	dec := jsontext.NewDecoder(bytes.NewReader(ext))
+	if tok, err := dec.ReadToken(); err != nil || tok.Kind() != jsontext.KindBeginObject {
+		return nil, ext, false
+	}
+
+	var (
+		buf   bytes.Buffer
+		enc   = jsontext.NewEncoder(&buf)
+		value jsontext.Value
+		found bool
+	)
+
+	_ = enc.WriteToken(jsontext.BeginObject)
+
+	for dec.PeekKind() != jsontext.KindEndObject {
+		tok, err := dec.ReadToken()
+		if err != nil {
+			return nil, ext, false
+		}
+
+		key := tok.Clone() // the token is void after the next read
+
+		val, err := dec.ReadValue()
+		if err != nil {
+			return nil, ext, false
+		}
+
+		if key.String() == name {
+			value, found = val.Clone(), true
+			continue
+		}
+
+		_ = enc.WriteToken(key)
+		_ = enc.WriteValue(val)
+	}
+
+	if !found {
+		return nil, ext, false
+	}
+
+	_ = enc.WriteToken(jsontext.EndObject)
+
+	rest := Extensions(bytes.TrimSpace(buf.Bytes()))
+	if string(rest) == "{}" {
+		rest = nil
+	}
+
+	return value, rest, true
 }
