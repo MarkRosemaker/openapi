@@ -1,6 +1,8 @@
 package yaml
 
 import (
+	"bytes"
+	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"io"
 
@@ -24,8 +26,27 @@ func Marshal(in any, opts ...json.Options) ([]byte, error) {
 		return nil, err
 	}
 
+	tagStrings(jsontext.NewDecoder(bytes.NewReader(out)), n)
+
 	// marshal the yaml to bytes
 	return yaml.Marshal(n)
+}
+
+// tagStrings tags the JSON strings in n as !!str, so yaml quotes those that would read back as another type.
+func tagStrings(dec *jsontext.Decoder, n *yaml.Node) {
+	tkn, _ := dec.ReadToken() // json2yaml has already decoded the same bytes without error
+
+	switch tkn.Kind() {
+	case '"':
+		n.Tag = "!!str"
+	case '{', '[':
+		for _, c := range n.Content {
+			tagStrings(dec, c)
+		}
+
+		_, _ = dec.ReadToken() // the closing '}' or ']'
+	default: // other scalars keep the tag yaml resolves from their value
+	}
 }
 
 // Unmarshal decodes a []byte input into a Go value according to the provided

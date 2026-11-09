@@ -6,7 +6,7 @@ require (
 	github.com/MarkRosemaker/errpath v0.0.0-20261109120451-91cd29644c73
 	github.com/MarkRosemaker/jsonutil v0.0.0-20261109120454-26f22c55639c
 	github.com/MarkRosemaker/ordmap v0.0.0-20261109120513-91fe4bc7e3db
-	github.com/MarkRosemaker/yaml v0.0.0-20261109120525-183cb2f5021f
+	github.com/MarkRosemaker/yaml v0.0.0-20261109134148-916ecfa7e164
 	github.com/go-api-libs/types v0.0.0-20261109120451-6cd1daca4971
 )
 
