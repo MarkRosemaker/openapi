@@ -13,7 +13,7 @@ github.com/MarkRosemaker/jsonutil
 # github.com/MarkRosemaker/ordmap v0.0.0-20261109120513-91fe4bc7e3db
 ## explicit; go 1.27
 github.com/MarkRosemaker/ordmap
-# github.com/MarkRosemaker/yaml v0.0.0-20261109134148-916ecfa7e164
+# github.com/MarkRosemaker/yaml v0.0.0-20261109161623-86a6a512ccb9
 ## explicit; go 1.27
 github.com/MarkRosemaker/yaml
 # github.com/MarkRosemaker/yaml2json v0.0.0-20261109120453-1b901dbf7e8f
