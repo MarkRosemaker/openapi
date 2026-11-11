@@ -4,7 +4,7 @@ go 1.27
 
 require (
 	github.com/MarkRosemaker/errpath v0.0.0-20261109120451-91cd29644c73
-	github.com/MarkRosemaker/jsonutil v0.0.0-20261111023756-6c211037c3df
+	github.com/MarkRosemaker/jsonutil v0.0.0-20261111050223-68d2dd492e9f
 	github.com/MarkRosemaker/ordmap v0.0.0-20261109211921-475c54164ef0
 	github.com/MarkRosemaker/yaml v0.0.0-20261109161623-86a6a512ccb9
 	github.com/go-api-libs/types v0.0.0-20261109120451-6cd1daca4971
