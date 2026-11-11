@@ -66,13 +66,14 @@ func TimeUnmarshalIntUnixFor(names ...string) func(*jsontext.Decoder, *time.Time
 const timeAltLayout = "Mon Jan 2 2006 15:04:05 MST-0700"
 
 // TimeUnmarshalStringOrIntUnix unmarshals a time.Time from either an RFC3339 or
-// timeAltLayout string, or an integer representing unix seconds. Null and the empty string decode as the zero time.
+// timeAltLayout string, or an integer representing unix seconds or, from 10^11 on, unix milliseconds (see
+// [unixSecondsOrMilli]). Null and the empty string decode as the zero time.
 func TimeUnmarshalStringOrIntUnix(dec *jsontext.Decoder, d *time.Time) error {
 	return timeUnmarshalStringOrIntUnix([]string{time.RFC3339, timeAltLayout})(dec, d)
 }
 
 // timeUnmarshalStringOrIntUnix returns a custom unmarshaler for time.Time that unmarshals
-// from either an integer representing unix seconds or a string, tried against each of the
+// from either an integer representing unix seconds or milliseconds or a string, tried against each of the
 // given layouts (see time.Parse) in order until one succeeds. Nulls decode as the zero time.
 func timeUnmarshalStringOrIntUnix(layouts []string) func(dec *jsontext.Decoder, d *time.Time) error {
 	return func(dec *jsontext.Decoder, d *time.Time) error {
@@ -83,16 +84,12 @@ func timeUnmarshalStringOrIntUnix(layouts []string) func(dec *jsontext.Decoder, 
 
 		switch tkn.Kind() {
 		case jsontext.KindNumber:
-			seconds, err := tkn.Int()
+			n, err := tkn.Int()
 			if err != nil {
 				return err
 			}
 
-			if seconds == 0 {
-				*d = time.Time{}
-			} else {
-				*d = time.Unix(seconds, 0)
-			}
+			*d = unixSecondsOrMilli(n)
 		case jsontext.KindString:
 			s := tkn.String()
 			if s == "" {
@@ -118,6 +115,23 @@ func timeUnmarshalStringOrIntUnix(layouts []string) func(dec *jsontext.Decoder, 
 		}
 
 		return nil
+	}
+}
+
+// unixMilliFrom is where an integer stops being unix seconds and becomes unix milliseconds: 10^11 seconds is in the
+// year 5138, while 10^11 milliseconds is in March 1973, so an API sending either is read right for any time since.
+const unixMilliFrom = 1e11
+
+// unixSecondsOrMilli returns the time n holds: unix seconds, or unix milliseconds where n is that large (see
+// unixMilliFrom), as APIs written in JavaScript tend to send. Zero is the zero time.
+func unixSecondsOrMilli(n int64) time.Time {
+	switch {
+	case n == 0:
+		return time.Time{}
+	case n >= unixMilliFrom || n <= -unixMilliFrom:
+		return time.UnixMilli(n)
+	default:
+		return time.Unix(n, 0)
 	}
 }
 
