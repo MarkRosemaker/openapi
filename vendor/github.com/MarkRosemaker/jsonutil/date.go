@@ -159,3 +159,14 @@ func DateUnmarshalBasicFor(names ...string) func(*jsontext.Decoder, *civil.Date)
 func DateUnmarshalEmptyAsZero(dec *jsontext.Decoder, d *civil.Date) error {
 	return unmarshalEmptyAsZero(dec, d)
 }
+
+// DateMarshalZeroAsNull is a custom marshaler for civil.Date that writes the zero date as null, where civil.Date
+// itself would write "0000-00-00", a date that does not exist and that no decoder reads back; null reads back as the
+// zero date. It leaves every other date to civil.Date itself, or to a marshaler joined after it.
+func DateMarshalZeroAsNull(enc *jsontext.Encoder, d civil.Date) error {
+	if !d.IsZero() {
+		return errors.ErrUnsupported
+	}
+
+	return enc.WriteToken(jsontext.Null)
+}
