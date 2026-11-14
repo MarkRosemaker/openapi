@@ -56,6 +56,9 @@ the work in hand cannot go on without the fix.
   behind.
 - `make all` adds `govulncheck`, which reads the vulnerability database over
   the network. Run it where you have one; say so where you do not.
+- A pull request runs `.github/workflows/test.yml`: golangci-lint, then the
+  tests with the race detector. It is generated whole, so a check of your own
+  goes in a workflow beside it.
 - One commit per piece of work, not one per session.
 - Push each commit as soon as it is made.
 - Open the pull request yourself once there is something to review. Do not

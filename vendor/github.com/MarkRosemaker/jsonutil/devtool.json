@@ -12,7 +12,7 @@
 		"url"
 	],
 	"coverage": 81.7,
-	"devtoolVersion": "v0.0.0-20261111151405-74b88b97acbc",
+	"devtoolVersion": "v0.0.0-20261113131345-0c3482042beb",
 	"kind": "library",
 	"tools": {
 		"golangci-lint": "v2.15.0",
