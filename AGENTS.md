@@ -112,6 +112,9 @@ ideas to it outside any conversation.
 
 - Comments are one line, and only where the code would otherwise puzzle a
   reader. Never a restatement of what it already says.
+- Fail at startup when something required is missing, such as an
+  environment variable, rather than fall back to a default.
+- Keep one way to do each thing.
 - Linters, scanners and generators are installed at their latest by
   `make tools`, and `devtool.json` pins the versions installed. A run moves
   a pin up, never back. Do not vendor one or add it to `go.mod` to run it.
