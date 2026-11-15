@@ -1,7 +1,7 @@
 {
 	"description": "Provides a generic ordered map implementation, primarily designed for JSON v2 marshalling and unmarshalling. Includes helper functions to easily define your own custom ordered maps with minimal boilerplate code.",
 	"coverage": 97,
-	"devtoolVersion": "v0.0.0-20261114134623-f0f0252835dc",
+	"devtoolVersion": "v0.0.0-20261115154222-36316578e5dc",
 	"kind": "library",
 	"tools": {
 		"golangci-lint": "v2.15.0",
