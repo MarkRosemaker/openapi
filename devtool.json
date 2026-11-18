@@ -14,11 +14,11 @@
 		"yaml"
 	],
 	"coverage": 92.4,
-	"devtoolVersion": "v0.0.0-20261117111158-3f0860bf5abf",
+	"devtoolVersion": "v0.0.0-20261118133811-97246f04510d",
 	"kind": "library",
 	"tools": {
 		"golangci-lint": "v2.15.0",
 		"govulncheck": "v1.10.0",
-		"pkgsite": "v0.6.0"
+		"pkgsite": "v0.7.0"
 	}
 }
