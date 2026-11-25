@@ -399,6 +399,12 @@
             "format": "date-basic",
             "example": "20260320"
           },
+          "seen": {
+            "description": "a time in unix milliseconds",
+            "type": "integer",
+            "format": "date-time-ms",
+            "example": 1795464914000
+          },
           "owner": {
             "description": "a reference with keywords beside it",
             "deprecated": true,
