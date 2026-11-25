@@ -62,6 +62,62 @@ func TimeUnmarshalIntUnixFor(names ...string) func(*jsontext.Decoder, *time.Time
 	}
 }
 
+// TimeMarshalIntUnixMilli is a custom marshaler for time.Time, marshaling them as integers representing unix time in
+// milliseconds.
+func TimeMarshalIntUnixMilli(enc *jsontext.Encoder, t time.Time) error {
+	if t.IsZero() {
+		return enc.WriteToken(jsontext.Int(0))
+	}
+
+	return enc.WriteToken(jsontext.Int(t.UnixMilli()))
+}
+
+// TimeUnmarshalIntUnixMilli is a custom unmarshaler for time.Time, unmarshaling them from integers representing unix
+// time in milliseconds.
+func TimeUnmarshalIntUnixMilli(dec *jsontext.Decoder, d *time.Time) error {
+	var ms int64
+	if err := json.UnmarshalDecode(dec, &ms); err != nil {
+		return err
+	}
+
+	if ms == 0 {
+		*d = time.Time{}
+	} else {
+		*d = time.UnixMilli(ms)
+	}
+
+	return nil
+}
+
+// TimeMarshalIntUnixMilliFor returns a marshaler for time.Time that writes, as [TimeMarshalIntUnixMilli] does, the times
+// held by an object member of one of the names given, or by an array such a member holds; see [DateMarshalIntUnixFor].
+func TimeMarshalIntUnixMilliFor(names ...string) func(*jsontext.Encoder, time.Time) error {
+	set := nameSet(names)
+
+	return func(enc *jsontext.Encoder, t time.Time) error {
+		if !set[memberName(enc.StackPointer())] {
+			return errors.ErrUnsupported
+		}
+
+		return TimeMarshalIntUnixMilli(enc, t)
+	}
+}
+
+// TimeUnmarshalIntUnixMilliFor returns an unmarshaler for time.Time that reads, as [TimeUnmarshalIntUnixMilli] does, the
+// times held by an object member of one of the names given, or by an array such a member holds; see
+// [DateMarshalIntUnixFor].
+func TimeUnmarshalIntUnixMilliFor(names ...string) func(*jsontext.Decoder, *time.Time) error {
+	set := nameSet(names)
+
+	return func(dec *jsontext.Decoder, t *time.Time) error {
+		if !set[memberName(dec.StackPointer())] {
+			return errors.ErrUnsupported
+		}
+
+		return TimeUnmarshalIntUnixMilli(dec, t)
+	}
+}
+
 // timeAltLayout is a fallback layout for time strings that don't conform to RFC3339.
 const timeAltLayout = "Mon Jan 2 2006 15:04:05 MST-0700"
 
