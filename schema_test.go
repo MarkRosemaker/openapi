@@ -118,6 +118,10 @@ func TestSchema_Validate_Error(t *testing.T) {
 			Format: openapi.FormatDuration,
 		}, `format ("duration") is invalid: only valid for integer or string type, got boolean`},
 		{openapi.Schema{
+			Type:   openapi.TypeString,
+			Format: openapi.FormatDateTimeMs,
+		}, `format ("date-time-ms") is invalid: only valid for integer type, got string`},
+		{openapi.Schema{
 			Type:  openapi.TypeBoolean,
 			Items: &openapi.Schema{},
 		}, `items is invalid: only valid for array type, got boolean`},

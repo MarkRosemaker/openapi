@@ -235,7 +235,7 @@ func (s *Schema) validateFormat() error {
 	var types string
 
 	switch s.Format {
-	case FormatInt32, FormatInt64, FormatUint, FormatUint32, FormatUint64:
+	case FormatInt32, FormatInt64, FormatUint, FormatUint32, FormatUint64, FormatDateTimeMs:
 		if !s.allows(TypeInteger) {
 			types = "integer"
 		}

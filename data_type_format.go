@@ -39,6 +39,9 @@ const (
 	FormatDateBasic Format = "date-basic"
 	// FormatDateTime represents a date-time.
 	FormatDateTime Format = "date-time"
+	// FormatDateTimeMs represents a date-time written as an integer of unix milliseconds, such as 1795464914000. It is
+	// not one of JSON Schema's formats, but some APIs write a time this way.
+	FormatDateTimeMs Format = "date-time-ms"
 	// FormatDuration represents a duration.
 	FormatDuration Format = "duration"
 	// FormatEmail represents an email.
@@ -64,7 +67,7 @@ var allFormats = []Format{
 	FormatUint, FormatUint32, FormatUint64,
 	FormatFloat, FormatDouble,
 	FormatByte, FormatBinary,
-	FormatDate, FormatDateBasic, FormatDateTime, FormatDuration,
+	FormatDate, FormatDateBasic, FormatDateTime, FormatDateTimeMs, FormatDuration,
 	FormatEmail, FormatPassword,
 	FormatUUID,
 	FormatURI, FormatURIRef, FormatZipCode,
