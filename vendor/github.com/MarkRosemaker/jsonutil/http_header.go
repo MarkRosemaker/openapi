@@ -39,7 +39,8 @@ func HTTPHeaderMarshal(enc *jsontext.Encoder, m http.Header) error {
 	return enc.WriteToken(jsontext.EndObject)
 }
 
-// HTTPHeaderUnmarshal is a custom unmarshaler for http.Header, unmarshaling values as single strings.
+// HTTPHeaderUnmarshal is a custom unmarshaler for http.Header, unmarshaling values as single strings or, as other tools
+// record them, lists of strings.
 func HTTPHeaderUnmarshal(dec *jsontext.Decoder, h *http.Header) error {
 	tkn, err := dec.ReadToken()
 	if err != nil {
@@ -73,14 +74,39 @@ func HTTPHeaderUnmarshal(dec *jsontext.Decoder, h *http.Header) error {
 			return err
 		}
 
-		if val.Kind() != jsontext.KindString {
+		switch val.Kind() {
+		case jsontext.KindString:
+			h.Set(key, val.String())
+		case jsontext.KindBeginArray:
+			if err := headerValues(dec, h, key); err != nil {
+				return err
+			}
+		default:
 			return fmt.Errorf("expected string value, got %s", val.Kind())
 		}
-
-		h.Set(key, val.String())
 	}
 
 	_, err = dec.ReadToken() // consume jsontext.KindEndObject
+
+	return err
+}
+
+// headerValues adds the strings of a list, whose start dec has read, to h under key.
+func headerValues(dec *jsontext.Decoder, h *http.Header, key string) error {
+	for dec.PeekKind() != jsontext.KindEndArray {
+		v, err := dec.ReadToken()
+		if err != nil {
+			return err
+		}
+
+		if v.Kind() != jsontext.KindString {
+			return fmt.Errorf("expected string value, got %s", v.Kind())
+		}
+
+		h.Add(key, v.String())
+	}
+
+	_, err := dec.ReadToken() // consume jsontext.KindEndArray
 
 	return err
 }
