@@ -107,6 +107,8 @@ type Schema struct {
 	PropertyNames *Schema `json:"propertyNames,omitzero" yaml:"propertyNames,omitempty"`
 	// Tells which of the composed schemas a payload is, by the value of one of its properties.
 	Discriminator *Discriminator `json:"discriminator,omitzero" yaml:"discriminator,omitempty"`
+	// How the schema is written as XML.
+	XML *XML `json:"xml,omitzero" yaml:"xml,omitempty"`
 
 	// special encoding for binary data
 	ContentMediaType string `json:"contentMediaType,omitempty" yaml:"contentMediaType,omitempty"`
@@ -179,6 +181,7 @@ func (s *Schema) validate(extended bool) error {
 		s.validateArray,
 		s.validateObject,
 		func() error { return s.validateDiscriminator(extended) },
+		s.validateXML,
 		s.validateDefault,
 	} {
 		if err := check(); err != nil {
@@ -516,6 +519,19 @@ func (s *Schema) validateObject() error {
 			Value:   *s.MaxProperties,
 			Message: fmt.Sprintf("fewer than the %d required properties", len(s.Required)),
 		}}
+	}
+
+	return nil
+}
+
+// validateXML checks how the schema is written as XML, if it says.
+func (s *Schema) validateXML() error {
+	if s.XML == nil {
+		return nil
+	}
+
+	if err := s.XML.Validate(); err != nil {
+		return &errpath.ErrField{Field: "xml", Err: err}
 	}
 
 	return nil
