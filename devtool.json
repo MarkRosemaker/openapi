@@ -14,7 +14,7 @@
 		"yaml"
 	],
 	"coverage": 92.4,
-	"devtoolVersion": "v0.0.0-20261118133811-97246f04510d",
+	"devtoolVersion": "v0.0.0-20261127001746-34d10457ea40",
 	"kind": "library",
 	"tools": {
 		"golangci-lint": "v2.15.0",
