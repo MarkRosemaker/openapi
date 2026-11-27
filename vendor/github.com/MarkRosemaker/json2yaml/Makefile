@@ -74,7 +74,7 @@ tidy:
 	go mod vendor
 
 deps:
-	go get -u ./...
+	go get -u -t ./...
 	$(MAKE) tidy
 
 # Everything a tool writes: the files devtool owns, then the go:generate directives, some of which devtool writes.

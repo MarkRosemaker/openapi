@@ -1,25 +1,25 @@
 # cloud.google.com/go v0.123.0
 ## explicit; go 1.24.0
 cloud.google.com/go/civil
-# github.com/MarkRosemaker/errpath v0.0.0-20261118230255-99e20cb3445a
+# github.com/MarkRosemaker/errpath v0.0.0-20261127001931-41afc0b86075
 ## explicit; go 1.23.2
 github.com/MarkRosemaker/errpath
-# github.com/MarkRosemaker/json2yaml v0.0.0-20261118230255-853c75cf2bf9
+# github.com/MarkRosemaker/json2yaml v0.0.0-20261127001931-55b661ab603c
 ## explicit; go 1.27
 github.com/MarkRosemaker/json2yaml
-# github.com/MarkRosemaker/jsonutil v0.0.0-20261126020829-395163231ad4
+# github.com/MarkRosemaker/jsonutil v0.0.0-20261127001933-b07dbcceebd6
 ## explicit; go 1.27
 github.com/MarkRosemaker/jsonutil
-# github.com/MarkRosemaker/ordmap v0.0.0-20261124050216-f3096eb875be
+# github.com/MarkRosemaker/ordmap v0.0.0-20261127001949-5d682e0c3100
 ## explicit; go 1.27
 github.com/MarkRosemaker/ordmap
-# github.com/MarkRosemaker/yaml v0.0.0-20261118230544-f88f96ca5149
+# github.com/MarkRosemaker/yaml v0.0.0-20261127001955-6df1e561eef1
 ## explicit; go 1.27
 github.com/MarkRosemaker/yaml
-# github.com/MarkRosemaker/yaml2json v0.0.0-20261118230255-06c4fe76a5b8
+# github.com/MarkRosemaker/yaml2json v0.0.0-20261127001931-8d8f24890a05
 ## explicit; go 1.27
 github.com/MarkRosemaker/yaml2json
-# github.com/go-api-libs/types v0.0.0-20261118230255-0e16a3d7de5d
+# github.com/go-api-libs/types v0.0.0-20261127001931-55d1cb77be3b
 ## explicit; go 1.27
 github.com/go-api-libs/types
 # golang.org/x/exp v0.0.0-20261124000051-d6646c509b6d
